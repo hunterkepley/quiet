@@ -15,6 +15,6 @@ type Images struct {
 
 func loadImages() {
 	images = Images{
-		loadPicture("Art/Objects/Scenery/box1.png"),
+		loadPicture("./Art/Objects/Scenery/box1.png"),
 	}
 }

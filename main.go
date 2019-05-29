@@ -5,6 +5,8 @@ import (
 	"image/color"
 	"time"
 
+	"golang.org/x/image/colornames"
+
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
@@ -17,17 +19,18 @@ var (
 	gameState = 0 // 0 is in a game, 1 is in the menu. Keeps track of rendering and updating.
 	dt        float64
 
-	camZoom = 2.
+	camZoom   = 2.
+	winWidth  = 1024.
+	winHeight = 768.
 
 	player Player
 
 	testBox Object
+
+	viewMatrix pixel.Matrix
 )
 
-const (
-	winWidth  = 1024
-	winHeight = 768
-)
+const ()
 
 func run() {
 	cfg := pixelgl.WindowConfig{ // Defines window struct
@@ -39,6 +42,7 @@ func run() {
 	if err != nil {                    // Deals with error
 		panic(err)
 	}
+	viewCanvas := pixelgl.NewCanvas(pixel.R(win.Bounds().Min.X, win.Bounds().Min.Y, win.Bounds().W()/camZoom, win.Bounds().H()/camZoom))
 
 	//Load the sprite sheets for the game
 	loadSpritesheets()
@@ -53,24 +57,42 @@ func run() {
 
 	last := time.Now()  // For fps decoupled updates
 	for !win.Closed() { // Game loop
+		if winHeight != win.Bounds().H() || winWidth != win.Bounds().W() {
+			// Resize event
+			letterBox(win, player)
+		}
 		imd := imdraw.New(nil)
 		dt = time.Since(last).Seconds() // For fps decoupled updates.
 		if dt > 0.25 {
 			dt = 0.
 		}
 		last = time.Now() // ^
-		win.Clear(color.RGBA{0x0a, 0x0a, 0x0a, 0x0a})
+		win.Clear(colornames.Black)
+		viewCanvas.Clear(color.RGBA{0x0a, 0x0a, 0x0a, 0x0a})
 		imd.Clear()
 		switch gameState {
 		case 0: // In game, will probably change... Not sure
 			updateGame(win, dt)
-			renderGame(win, imd)
+			renderGame(win, viewCanvas, imd)
 		case 1: // In menu [?Likely to be separate menus?]
 			updateMenu(dt)
 			renderMenu(win)
 		}
 
+		viewMatrix = pixel.IM. // This centers the camera on the player
+					Scaled(player.pos, camZoom).
+					Moved(win.Bounds().Center()).
+					Moved(pixel.ZV.Sub(player.pos))
+
+		winMatrix := pixel.IM. // This centers the camera on the player
+					Scaled(player.pos, camZoom).
+					Moved(win.Bounds().Center()).
+					Moved(pixel.ZV.Add(player.pos))
+
+		win.SetMatrix(winMatrix)
+
 		imd.Draw(win)
+		viewCanvas.Draw(win, viewMatrix)
 		win.Update()
 
 		frames++ // FPS is dealt here

@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/faiface/pixel"
-	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
 )
 
@@ -31,8 +30,8 @@ func (o *Object) update() {
 	o.center = pixel.V(o.pos.X+(o.size.X/2), o.pos.Y+(o.size.Y/2))
 }
 
-func (o Object) render(win *pixelgl.Window, imd *imdraw.IMDraw) {
+func (o Object) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas) {
 	mat := pixel.IM.
 		Moved(o.center)
-	o.sprite.Draw(win, mat)
+	o.sprite.Draw(viewCanvas, mat)
 }

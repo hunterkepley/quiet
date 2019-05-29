@@ -51,19 +51,19 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 	if p.canMove {
 		p.input(win, dt)
 	}
-	mat := pixel.IM. // This centers the camera on the player
-				Scaled(p.pos, camZoom).
-				Moved(pixel.ZV.Sub(p.pos)).
-				Moved(win.Bounds().Center())
+	/*mat := pixel.IM. // This centers the camera on the player
+	Scaled(p.pos, camZoom).
+	Moved(pixel.ZV.Sub(p.pos)).
+	Moved(win.Bounds().Center())*/
 	p.center = pixel.V(p.pos.X+(p.size.X/2), p.pos.Y+(p.size.Y/2))
-	win.SetMatrix(mat)
+	//win.SetMatrix(mat)
 }
 
-func (p *Player) render(win *pixelgl.Window) { // Draws the player
+func (p *Player) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas) { // Draws the player
 	batches.playerBatch.Clear()
 	sprite := pixel.NewSprite(spritesheets.playerIdleDownSheet.sheet, spritesheets.playerIdleDownSheet.frames[p.currDir])
 	sprite.Draw(batches.playerBatch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center))
-	batches.playerBatch.Draw(win)
+	batches.playerBatch.Draw(viewCanvas)
 }
 
 func (p *Player) input(win *pixelgl.Window, dt float64) {

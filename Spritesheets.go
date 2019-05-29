@@ -22,7 +22,7 @@ type Spritesheets struct {
 
 func loadSpritesheets() {
 	// Player spritesheet
-	playerSheet := loadPicture("Art/Player/idle_down.png")
+	playerSheet := loadPicture("./Art/Player/idle_down.png")
 	spritesheets = Spritesheets{
 		createSpriteSheet(playerSheet, 4),
 	}
