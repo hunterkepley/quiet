@@ -19,7 +19,7 @@ var (
 	gameState = 0 // 0 is in a game, 1 is in the menu. Keeps track of rendering and updating.
 	dt        float64
 
-	camZoom          = 2.
+	imageScale       = 2.
 	winWidth         = 1024.
 	winHeight        = 768.
 	currentWinWidth  = winWidth
@@ -44,7 +44,8 @@ func run() {
 	if err != nil {                    // Deals with error
 		panic(err)
 	}
-	viewCanvas := pixelgl.NewCanvas(pixel.R(win.Bounds().Min.X, win.Bounds().Min.Y, win.Bounds().W()/camZoom, win.Bounds().H()/camZoom))
+
+	viewCanvas := pixelgl.NewCanvas(pixel.R(win.Bounds().Min.X, win.Bounds().Min.Y, win.Bounds().W(), win.Bounds().H()))
 
 	//Load the sprite sheets for the game
 	loadSpritesheets()
@@ -53,11 +54,12 @@ func run() {
 	//load images for game that aren't spritesheets
 	loadImages()
 
+	// Set up the matrices for the view of the world
 	letterBox(win)
 
 	testBox = createObject(pixel.V(100., 100.), images.box1)
 
-	player = createPlayer(pixel.V(0, 0), 0, spritesheets.playerIdleDownSheet.sheet, true)
+	player = createPlayer(pixel.V(200, 200), 0, spritesheets.playerIdleDownSheet.sheet, true)
 
 	last := time.Now()  // For fps decoupled updates
 	for !win.Closed() { // Game loop
@@ -84,12 +86,6 @@ func run() {
 			updateMenu(dt)
 			renderMenu(win)
 		}
-
-		winMatrix := pixel.IM. // Zooms in "camera"
-					Scaled(win.Bounds().Center(), camZoom).
-					Moved(win.Bounds().Center())
-
-		win.SetMatrix(winMatrix)
 
 		imd.Draw(win)
 		viewCanvas.Draw(win, viewMatrix)

@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 )
@@ -51,18 +49,13 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 	if p.canMove {
 		p.input(win, dt)
 	}
-	/*mat := pixel.IM. // This centers the camera on the player
-	Scaled(p.pos, camZoom).
-	Moved(pixel.ZV.Sub(p.pos)).
-	Moved(win.Bounds().Center())*/
 	p.center = pixel.V(p.pos.X+(p.size.X/2), p.pos.Y+(p.size.Y/2))
-	//win.SetMatrix(mat)
 }
 
 func (p *Player) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas) { // Draws the player
 	batches.playerBatch.Clear()
 	sprite := pixel.NewSprite(spritesheets.playerIdleDownSheet.sheet, spritesheets.playerIdleDownSheet.frames[p.currDir])
-	sprite.Draw(batches.playerBatch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center))
+	sprite.Draw(batches.playerBatch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center).Scaled(p.center, imageScale))
 	batches.playerBatch.Draw(viewCanvas)
 }
 
@@ -110,12 +103,6 @@ func (p *Player) input(win *pixelgl.Window, dt float64) {
 	p.pos = pixel.V(p.pos.X+p.velocity.X*dt, p.pos.Y+p.velocity.Y*dt)
 
 	p.isMoving(win)
-}
-
-func placeWire(win *pixelgl.Window) {
-	if win.JustPressed(pixelgl.MouseButtonLeft) {
-		fmt.Println("Ok")
-	}
 }
 
 func (p *Player) isMoving(win *pixelgl.Window) {

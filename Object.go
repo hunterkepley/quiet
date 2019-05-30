@@ -32,6 +32,7 @@ func (o *Object) update() {
 
 func (o Object) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas) {
 	mat := pixel.IM.
-		Moved(o.center)
+		Moved(o.center).
+		Scaled(o.center, imageScale)
 	o.sprite.Draw(viewCanvas, mat)
 }

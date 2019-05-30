@@ -18,6 +18,6 @@ func letterBox(win *pixelgl.Window) {
 	}
 
 	viewMatrix = pixel.IM.
-		Moved(pixel.V(win.Bounds().Center().X/camZoom, win.Bounds().Center().Y/camZoom)).
-		ScaledXY(pixel.V(win.Bounds().Center().X/camZoom, win.Bounds().Center().Y/camZoom), pixel.V(sizeX, sizeY))
+		Moved(pixel.V(win.Bounds().Center().X, win.Bounds().Center().Y)).
+		ScaledXY(pixel.V(win.Bounds().Center().X, win.Bounds().Center().Y), pixel.V(sizeX, sizeY))
 }
