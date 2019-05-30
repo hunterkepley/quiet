@@ -5,33 +5,19 @@ import (
 	"github.com/faiface/pixel/pixelgl"
 )
 
-func letterBox(win *pixelgl.Window, p Player) {
-	windowRatio := winWidth / winHeight
-	viewRatio := win.Bounds().W() / win.Bounds().H()
+func letterBox(win *pixelgl.Window) {
 	sizeX := 1.
 	sizeY := 1.
-	posX := 0.
-	posY := 0.
-	_ = posX
-	_ = posY
 
-	horizontalSpacing := true
-	if windowRatio < viewRatio {
-		horizontalSpacing = false
-	}
-	// If horizontalSpacing is true, the black bars will appear on the left and right side.
-	// Otherwise, the black bars will appear on the top and bottom.
-
-	if horizontalSpacing {
-		sizeX = viewRatio / windowRatio
-		posX = (1 - sizeX) / 2.
+	if win.Bounds().H()-winHeight > win.Bounds().W()-winWidth {
+		sizeX = win.Bounds().W() / winWidth
+		sizeY = win.Bounds().W() / winWidth
 	} else {
-		sizeY = windowRatio / viewRatio
-		posY = (1 - sizeY) / 2.
+		sizeX = win.Bounds().H() / winHeight
+		sizeY = win.Bounds().H() / winHeight
 	}
 
 	viewMatrix = pixel.IM.
-		Scaled(p.pos, camZoom).
-		Moved(pixel.ZV.Sub(p.pos)).
-		ScaledXY(pixel.V(posX, posY), pixel.V(sizeX, sizeY))
+		Moved(pixel.V(win.Bounds().Center().X/camZoom, win.Bounds().Center().Y/camZoom)).
+		ScaledXY(pixel.V(win.Bounds().Center().X/camZoom, win.Bounds().Center().Y/camZoom), pixel.V(sizeX, sizeY))
 }

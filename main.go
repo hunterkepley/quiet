@@ -19,9 +19,11 @@ var (
 	gameState = 0 // 0 is in a game, 1 is in the menu. Keeps track of rendering and updating.
 	dt        float64
 
-	camZoom   = 2.
-	winWidth  = 1024.
-	winHeight = 768.
+	camZoom          = 2.
+	winWidth         = 1024.
+	winHeight        = 768.
+	currentWinWidth  = winWidth
+	currentWinHeight = winHeight
 
 	player Player
 
@@ -51,15 +53,19 @@ func run() {
 	//load images for game that aren't spritesheets
 	loadImages()
 
+	letterBox(win)
+
 	testBox = createObject(pixel.V(100., 100.), images.box1)
 
 	player = createPlayer(pixel.V(0, 0), 0, spritesheets.playerIdleDownSheet.sheet, true)
 
 	last := time.Now()  // For fps decoupled updates
 	for !win.Closed() { // Game loop
-		if winHeight != win.Bounds().H() || winWidth != win.Bounds().W() {
+		if currentWinHeight != win.Bounds().H() || currentWinWidth != win.Bounds().W() {
 			// Resize event
-			letterBox(win, player)
+			currentWinWidth = win.Bounds().W()
+			currentWinHeight = win.Bounds().H()
+			letterBox(win)
 		}
 		imd := imdraw.New(nil)
 		dt = time.Since(last).Seconds() // For fps decoupled updates.
@@ -79,15 +85,9 @@ func run() {
 			renderMenu(win)
 		}
 
-		viewMatrix = pixel.IM. // This centers the camera on the player
-					Scaled(player.pos, camZoom).
-					Moved(win.Bounds().Center()).
-					Moved(pixel.ZV.Sub(player.pos))
-
-		winMatrix := pixel.IM. // This centers the camera on the player
-					Scaled(player.pos, camZoom).
-					Moved(win.Bounds().Center()).
-					Moved(pixel.ZV.Add(player.pos))
+		winMatrix := pixel.IM. // Zooms in "camera"
+					Scaled(win.Bounds().Center(), camZoom).
+					Moved(win.Bounds().Center())
 
 		win.SetMatrix(winMatrix)
 
