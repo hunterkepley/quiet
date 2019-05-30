@@ -21,6 +21,13 @@ type Player struct {
 	pic            pixel.Picture
 	health         int8
 	maxHealth      int8
+
+	// Animations
+	animations PlayerAnimations
+}
+
+type PlayerAnimations struct { // Holds all the animations for the player
+	idleDownAnimation Animation
 }
 
 func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool) Player { // Player constructor
@@ -41,6 +48,9 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool) Playe
 		pic,
 		100,
 		100,
+		PlayerAnimations{
+			createAnimation(spritesheets.playerIdleDownSheet, 0.2),
+		},
 	}
 
 }
@@ -52,9 +62,9 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 	p.center = pixel.V(p.pos.X+(p.size.X/2), p.pos.Y+(p.size.Y/2))
 }
 
-func (p *Player) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas) { // Draws the player
+func (p *Player) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) { // Draws the player
 	batches.playerBatch.Clear()
-	sprite := pixel.NewSprite(spritesheets.playerIdleDownSheet.sheet, spritesheets.playerIdleDownSheet.frames[p.currDir])
+	sprite := p.animations.idleDownAnimation.animate(dt)
 	sprite.Draw(batches.playerBatch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center).Scaled(p.center, imageScale))
 	batches.playerBatch.Draw(viewCanvas)
 }

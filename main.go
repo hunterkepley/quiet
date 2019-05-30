@@ -19,7 +19,7 @@ var (
 	gameState = 0 // 0 is in a game, 1 is in the menu. Keeps track of rendering and updating.
 	dt        float64
 
-	imageScale       = 2.
+	imageScale       = 5.
 	winWidth         = 1024.
 	winHeight        = 768.
 	currentWinWidth  = winWidth
@@ -81,7 +81,7 @@ func run() {
 		switch gameState {
 		case 0: // In game, will probably change... Not sure
 			updateGame(win, dt)
-			renderGame(win, viewCanvas, imd)
+			renderGame(win, viewCanvas, imd, dt)
 		case 1: // In menu [?Likely to be separate menus?]
 			updateMenu(dt)
 			renderMenu(win)

@@ -29,7 +29,7 @@ func loadSpritesheets() {
 }
 
 func createSpriteSheet(sheet pixel.Picture, frames float64) Spritesheet {
-	w := sheet.Bounds().W() / frames // 4 is the number of frames
+	w := float64(int(sheet.Bounds().W() / frames))
 	h := sheet.Bounds().H()
 	var sheetFrames []pixel.Rect
 	for x := sheet.Bounds().Min.X; x < sheet.Bounds().Max.X; x += w {

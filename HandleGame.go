@@ -10,8 +10,8 @@ var (
 	windowBounds = pixel.ZV
 )
 
-func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
-	player.render(win, viewCanvas)
+func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw, dt float64) {
+	player.render(win, viewCanvas, dt)
 	testBox.render(win, viewCanvas)
 }
 
