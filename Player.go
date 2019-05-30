@@ -21,17 +21,20 @@ type Player struct {
 	pic            pixel.Picture
 	health         int8
 	maxHealth      int8
+	animation      Animation
+	batch          *pixel.Batch
 
 	// Animations
 	animations PlayerAnimations
 }
 
 type PlayerAnimations struct { // Holds all the animations for the player
-	idleDownAnimation Animation
+	idleRightAnimation Animation
+	idleUpAnimation    Animation
 }
 
 func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool) Player { // Player constructor
-	size := pixel.V(pic.Bounds().Size().X/float64(len(spritesheets.playerIdleDownSheet.frames)), pic.Bounds().Size().Y)
+	size := pixel.V(pic.Bounds().Size().X/float64(len(spritesheets.playerIdleRightSheet.frames)), pic.Bounds().Size().Y)
 
 	return Player{
 		pos,
@@ -48,8 +51,11 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool) Playe
 		pic,
 		100,
 		100,
+		createAnimation(spritesheets.playerIdleRightSheet, 0.2),
+		playerBatches.playerIdleRightBatch,
 		PlayerAnimations{
-			createAnimation(spritesheets.playerIdleDownSheet, 0.2),
+			createAnimation(spritesheets.playerIdleRightSheet, 0.2),
+			createAnimation(spritesheets.playerIdleUpSheet, 0.2),
 		},
 	}
 
@@ -63,10 +69,10 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 }
 
 func (p *Player) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) { // Draws the player
-	batches.playerBatch.Clear()
-	sprite := p.animations.idleDownAnimation.animate(dt)
-	sprite.Draw(batches.playerBatch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center).Scaled(p.center, imageScale))
-	batches.playerBatch.Draw(viewCanvas)
+	p.batch.Clear()
+	sprite := p.animation.animate(dt)
+	sprite.Draw(p.batch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center).Scaled(p.center, imageScale))
+	p.batch.Draw(viewCanvas)
 }
 
 func (p *Player) input(win *pixelgl.Window, dt float64) {
@@ -86,14 +92,20 @@ func (p *Player) input(win *pixelgl.Window, dt float64) {
 	}
 
 	if win.Pressed(pixelgl.KeyW) { // Up, 0
-		p.currDir = 0
-
+		if p.currDir != 0 {
+			p.currDir = 0
+			p.batch = playerBatches.playerIdleUpBatch
+			p.animation = p.animations.idleUpAnimation
+		}
 		p.rotation = 0
 		p.velocity.Y = p.currSpeed //pixel.V(p.pos.X, p.pos.Y+(p.currSpeed*dt))
 	}
 	if win.Pressed(pixelgl.KeyD) { // Right, 1
-		p.currDir = 1
-
+		if p.currDir != 1 {
+			p.currDir = 1
+			p.batch = playerBatches.playerIdleRightBatch
+			p.animation = p.animations.idleRightAnimation
+		}
 		p.rotation = 0
 		p.velocity.X = p.currSpeed //pixel.V(p.pos.X+(p.currSpeed*dt), p.pos.Y)
 	}

@@ -6,6 +6,7 @@ import (
 
 type Animation struct {
 	sheet          Spritesheet
+	currentSprite  *pixel.Sprite
 	frameSpeed     float64
 	frameSpeedMax  float64
 	frameNumber    int
@@ -15,7 +16,8 @@ type Animation struct {
 func createAnimation(sheet Spritesheet, frameSpeedMax float64) Animation {
 	frameSpeed := 0.
 	frameNumber, frameNumberMax := 0, sheet.numberOfFrames
-	return Animation{sheet, frameSpeed, frameSpeedMax, frameNumber, frameNumberMax}
+	var sprite *pixel.Sprite = pixel.NewSprite(sheet.sheet, sheet.frames[frameNumber])
+	return Animation{sheet, sprite, frameSpeed, frameSpeedMax, frameNumber, frameNumberMax}
 }
 
 func (a *Animation) animate(dt float64) pixel.Sprite {
@@ -27,8 +29,8 @@ func (a *Animation) animate(dt float64) pixel.Sprite {
 		a.frameSpeed = 0.
 	} else {
 		a.frameSpeed += 1. * dt
+		a.currentSprite = pixel.NewSprite(a.sheet.sheet, a.sheet.frames[a.frameNumber])
 	}
 
-	sprite := pixel.NewSprite(a.sheet.sheet, a.sheet.frames[a.frameNumber])
-	return *sprite
+	return *a.currentSprite
 }

@@ -19,7 +19,7 @@ var (
 	gameState = 0 // 0 is in a game, 1 is in the menu. Keeps track of rendering and updating.
 	dt        float64
 
-	imageScale       = 5.
+	imageScale       = 10.
 	winWidth         = 1024.
 	winHeight        = 768.
 	currentWinWidth  = winWidth
@@ -49,8 +49,8 @@ func run() {
 
 	//Load the sprite sheets for the game
 	loadSpritesheets()
-	//Load batches for the game
-	loadBatches()
+	//Load the player spritebatches for the game
+	loadPlayerBatches()
 	//load images for game that aren't spritesheets
 	loadImages()
 
@@ -59,7 +59,7 @@ func run() {
 
 	testBox = createObject(pixel.V(100., 100.), images.box1)
 
-	player = createPlayer(pixel.V(200, 200), 0, spritesheets.playerIdleDownSheet.sheet, true)
+	player = createPlayer(pixel.V(200, 200), 0, spritesheets.playerIdleRightSheet.sheet, true)
 
 	last := time.Now()  // For fps decoupled updates
 	for !win.Closed() { // Game loop

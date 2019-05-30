@@ -17,14 +17,17 @@ type Spritesheet struct {
 
 /*Spritesheets ... All the spritesheets in the game*/
 type Spritesheets struct {
-	playerIdleDownSheet Spritesheet
+	playerIdleRightSheet Spritesheet
+	playerIdleUpSheet    Spritesheet
 }
 
 func loadSpritesheets() {
 	// Player spritesheet
-	playerSheet := loadPicture("./Art/Player/idle_down.png")
+	playerIdleRightSheet := loadPicture("./Art/Player/idle_right.png")
+	playerIdleUpSheet := loadPicture("./Art/Player/idle_up.png")
 	spritesheets = Spritesheets{
-		createSpriteSheet(playerSheet, 4),
+		createSpriteSheet(playerIdleRightSheet, 4),
+		createSpriteSheet(playerIdleUpSheet, 4),
 	}
 }
 

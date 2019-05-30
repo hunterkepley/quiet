@@ -5,16 +5,18 @@ import (
 )
 
 var (
-	batches Batches
+	playerBatches PlayerBatches
 )
 
 /*Batches ... All the batches in the game*/
-type Batches struct {
-	playerBatch *pixel.Batch
+type PlayerBatches struct {
+	playerIdleRightBatch *pixel.Batch
+	playerIdleUpBatch    *pixel.Batch
 }
 
-func loadBatches() {
-	batches = Batches{
-		pixel.NewBatch(&pixel.TrianglesData{}, spritesheets.playerIdleDownSheet.sheet),
+func loadPlayerBatches() {
+	playerBatches = PlayerBatches{
+		pixel.NewBatch(&pixel.TrianglesData{}, spritesheets.playerIdleRightSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, spritesheets.playerIdleUpSheet.sheet),
 	}
 }
