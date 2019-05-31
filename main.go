@@ -19,7 +19,7 @@ var (
 	gameState = 0 // 0 is in a game, 1 is in the menu. Keeps track of rendering and updating.
 	dt        float64
 
-	imageScale       = 10.
+	imageScale       = 2.
 	winWidth         = 1024.
 	winHeight        = 768.
 	currentWinWidth  = winWidth

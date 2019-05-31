@@ -54,8 +54,8 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool) Playe
 		createAnimation(spritesheets.playerIdleRightSheet, 0.2),
 		playerBatches.playerIdleRightBatch,
 		PlayerAnimations{
-			createAnimation(spritesheets.playerIdleRightSheet, 0.2),
-			createAnimation(spritesheets.playerIdleUpSheet, 0.2),
+			createAnimation(spritesheets.playerIdleRightSheet, 0.3),
+			createAnimation(spritesheets.playerIdleUpSheet, 0.3),
 		},
 	}
 
@@ -91,35 +91,52 @@ func (p *Player) input(win *pixelgl.Window, dt float64) {
 		p.velocity = pixel.V(0., 0.)
 	}
 
-	if win.Pressed(pixelgl.KeyW) { // Up, 0
+	if win.Pressed(pixelgl.KeyW) && win.Pressed(pixelgl.KeyD) {
 		if p.currDir != 0 {
 			p.currDir = 0
 			p.batch = playerBatches.playerIdleUpBatch
 			p.animation = p.animations.idleUpAnimation
 		}
 		p.rotation = 0
-		p.velocity.Y = p.currSpeed //pixel.V(p.pos.X, p.pos.Y+(p.currSpeed*dt))
-	}
-	if win.Pressed(pixelgl.KeyD) { // Right, 1
-		if p.currDir != 1 {
-			p.currDir = 1
-			p.batch = playerBatches.playerIdleRightBatch
-			p.animation = p.animations.idleRightAnimation
+		p.velocity.Y = p.currSpeed
+		p.velocity.X = p.currSpeed
+	} else if win.Pressed(pixelgl.KeyW) && win.Pressed(pixelgl.KeyA) {
+
+	} else if win.Pressed(pixelgl.KeyS) && win.Pressed(pixelgl.KeyD) {
+
+	} else if win.Pressed(pixelgl.KeyS) && win.Pressed(pixelgl.KeyA) {
+
+	} else {
+		if win.Pressed(pixelgl.KeyW) { // Up, 0
+			if p.currDir != 0 {
+				p.currDir = 0
+				p.batch = playerBatches.playerIdleUpBatch
+				p.animation = p.animations.idleUpAnimation
+			}
+			p.rotation = 0
+			p.velocity.Y = p.currSpeed
 		}
-		p.rotation = 0
-		p.velocity.X = p.currSpeed //pixel.V(p.pos.X+(p.currSpeed*dt), p.pos.Y)
-	}
-	if win.Pressed(pixelgl.KeyS) { // Down, 2
-		p.currDir = 2
+		if win.Pressed(pixelgl.KeyD) { // Right, 1
+			if p.currDir != 1 {
+				p.currDir = 1
+				p.batch = playerBatches.playerIdleRightBatch
+				p.animation = p.animations.idleRightAnimation
+			}
+			p.rotation = 0
+			p.velocity.X = p.currSpeed
+		}
+		if win.Pressed(pixelgl.KeyS) { // Down, 2
+			p.currDir = 2
 
-		p.rotation = 0
-		p.velocity.Y = -p.currSpeed //pixel.V(p.pos.X, p.pos.Y-(p.currSpeed*dt))
-	}
-	if win.Pressed(pixelgl.KeyA) { // Left, 3
-		p.currDir = 3
+			p.rotation = 0
+			p.velocity.Y = -p.currSpeed
+		}
+		if win.Pressed(pixelgl.KeyA) { // Left, 3
+			p.currDir = 3
 
-		p.rotation = 0
-		p.velocity.X = -p.currSpeed //pixel.V(p.pos.X-(p.currSpeed*dt), p.pos.Y)
+			p.rotation = 0
+			p.velocity.X = -p.currSpeed
+		}
 	}
 
 	p.pos = pixel.V(p.pos.X+p.velocity.X*dt, p.pos.Y+p.velocity.Y*dt)
