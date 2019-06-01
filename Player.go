@@ -7,22 +7,23 @@ import (
 
 /*Player ... struct for controllable players in the game.*/
 type Player struct {
-	pos            pixel.Vec
-	center         pixel.Vec
-	velocity       pixel.Vec
-	maxSpeed       float64
-	currSpeed      float64
-	rotation       float64
-	radius         float64
-	size           pixel.Vec
-	currDir        int // Current direction of moving, 0 W, 1 D, 2 S, 3 A
-	canMove        bool
-	activeMovement bool
-	pic            pixel.Picture
-	health         int8
-	maxHealth      int8
-	animation      Animation
-	batch          *pixel.Batch
+	pos                pixel.Vec
+	center             pixel.Vec
+	velocity           pixel.Vec
+	maxSpeed           float64
+	currSpeed          float64
+	rotation           float64
+	radius             float64
+	size               pixel.Vec
+	currDir            int // Current direction of moving, 0 W, 1 D, 2 S, 3 A
+	canMove            bool
+	activeMovement     bool
+	pic                pixel.Picture
+	health             int8
+	maxHealth          int8
+	animation          Animation
+	batch              *pixel.Batch
+	footSizeDiminisher float64 // Diminisher for where the feet are for collisions
 
 	// Animations
 	animations PlayerAnimations
@@ -34,7 +35,7 @@ type PlayerAnimations struct { // Holds all the animations for the player
 }
 
 func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool) Player { // Player constructor
-	size := pixel.V(pic.Bounds().Size().X/float64(len(spritesheets.playerIdleRightSheet.frames)), pic.Bounds().Size().Y)
+	size := pixel.V(pic.Bounds().Size().X/float64(len(playerSpritesheets.playerIdleRightSheet.frames)), pic.Bounds().Size().Y)
 
 	return Player{
 		pos,
@@ -51,11 +52,12 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool) Playe
 		pic,
 		100,
 		100,
-		createAnimation(spritesheets.playerIdleRightSheet, 0.2),
+		createAnimation(playerSpritesheets.playerIdleRightSheet, 0.2),
 		playerBatches.playerIdleRightBatch,
+		10.,
 		PlayerAnimations{
-			createAnimation(spritesheets.playerIdleRightSheet, 0.3),
-			createAnimation(spritesheets.playerIdleUpSheet, 0.3),
+			createAnimation(playerSpritesheets.playerIdleRightSheet, 0.3),
+			createAnimation(playerSpritesheets.playerIdleUpSheet, 0.3),
 		},
 	}
 
@@ -97,15 +99,20 @@ func (p *Player) input(win *pixelgl.Window, dt float64) {
 			p.batch = playerBatches.playerIdleUpBatch
 			p.animation = p.animations.idleUpAnimation
 		}
-		p.rotation = 0
 		p.velocity.Y = p.currSpeed
 		p.velocity.X = p.currSpeed
 	} else if win.Pressed(pixelgl.KeyW) && win.Pressed(pixelgl.KeyA) {
-
+		p.currDir = 0
+		p.velocity.Y = p.currSpeed
+		p.velocity.X = -p.currSpeed
 	} else if win.Pressed(pixelgl.KeyS) && win.Pressed(pixelgl.KeyD) {
-
+		p.currDir = 1
+		p.velocity.Y = -p.currSpeed
+		p.velocity.X = p.currSpeed
 	} else if win.Pressed(pixelgl.KeyS) && win.Pressed(pixelgl.KeyA) {
-
+		p.currDir = 1
+		p.velocity.Y = -p.currSpeed
+		p.velocity.X = -p.currSpeed
 	} else {
 		if win.Pressed(pixelgl.KeyW) { // Up, 0
 			if p.currDir != 0 {
@@ -113,7 +120,6 @@ func (p *Player) input(win *pixelgl.Window, dt float64) {
 				p.batch = playerBatches.playerIdleUpBatch
 				p.animation = p.animations.idleUpAnimation
 			}
-			p.rotation = 0
 			p.velocity.Y = p.currSpeed
 		}
 		if win.Pressed(pixelgl.KeyD) { // Right, 1
@@ -122,19 +128,16 @@ func (p *Player) input(win *pixelgl.Window, dt float64) {
 				p.batch = playerBatches.playerIdleRightBatch
 				p.animation = p.animations.idleRightAnimation
 			}
-			p.rotation = 0
 			p.velocity.X = p.currSpeed
 		}
 		if win.Pressed(pixelgl.KeyS) { // Down, 2
 			p.currDir = 2
 
-			p.rotation = 0
 			p.velocity.Y = -p.currSpeed
 		}
 		if win.Pressed(pixelgl.KeyA) { // Left, 3
 			p.currDir = 3
 
-			p.rotation = 0
 			p.velocity.X = -p.currSpeed
 		}
 	}

@@ -47,8 +47,8 @@ func run() {
 
 	viewCanvas := pixelgl.NewCanvas(pixel.R(win.Bounds().Min.X, win.Bounds().Min.Y, win.Bounds().W(), win.Bounds().H()))
 
-	//Load the sprite sheets for the game
-	loadSpritesheets()
+	//Load the player sprite sheets for the game
+	loadPlayerSpritesheets()
 	//Load the player spritebatches for the game
 	loadPlayerBatches()
 	//load images for game that aren't spritesheets
@@ -57,9 +57,12 @@ func run() {
 	// Set up the matrices for the view of the world
 	letterBox(win)
 
-	testBox = createObject(pixel.V(100., 100.), images.box1)
+	testBox = createObject(pixel.V(100., 100.), images.box1, 2.)
+	foregroundObjects = append(foregroundObjects, testBox)
+	testBox = createObject(pixel.V(200., 100.), images.box1, 2.)
+	backgroundObjects = append(backgroundObjects, testBox)
 
-	player = createPlayer(pixel.V(200, 200), 0, spritesheets.playerIdleRightSheet.sheet, true)
+	player = createPlayer(pixel.V(200, 200), 0, playerSpritesheets.playerIdleRightSheet.sheet, true)
 
 	last := time.Now()  // For fps decoupled updates
 	for !win.Closed() { // Game loop

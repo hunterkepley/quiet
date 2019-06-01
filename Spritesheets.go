@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	spritesheets Spritesheets
+	playerSpritesheets PlayerSpritesheets
 )
 
 /*Spritesheet ... Holds a picture of a spritesheet and the frames of each single picture*/
@@ -16,16 +16,16 @@ type Spritesheet struct {
 }
 
 /*Spritesheets ... All the spritesheets in the game*/
-type Spritesheets struct {
+type PlayerSpritesheets struct {
 	playerIdleRightSheet Spritesheet
 	playerIdleUpSheet    Spritesheet
 }
 
-func loadSpritesheets() {
+func loadPlayerSpritesheets() {
 	// Player spritesheet
 	playerIdleRightSheet := loadPicture("./Art/Player/idle_right.png")
 	playerIdleUpSheet := loadPicture("./Art/Player/idle_up.png")
-	spritesheets = Spritesheets{
+	playerSpritesheets = PlayerSpritesheets{
 		createSpriteSheet(playerIdleRightSheet, 4),
 		createSpriteSheet(playerIdleUpSheet, 4),
 	}

@@ -16,7 +16,7 @@ type PlayerBatches struct {
 
 func loadPlayerBatches() {
 	playerBatches = PlayerBatches{
-		pixel.NewBatch(&pixel.TrianglesData{}, spritesheets.playerIdleRightSheet.sheet),
-		pixel.NewBatch(&pixel.TrianglesData{}, spritesheets.playerIdleUpSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.playerIdleRightSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.playerIdleUpSheet.sheet),
 	}
 }
