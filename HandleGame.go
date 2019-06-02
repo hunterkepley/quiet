@@ -11,12 +11,12 @@ var (
 )
 
 func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw, dt float64) {
-	for i := 0; i < len(foregroundObjects); i++ {
-		foregroundObjects[i].render(win, viewCanvas)
-	}
-	player.render(win, viewCanvas, dt)
 	for i := 0; i < len(backgroundObjects); i++ {
 		backgroundObjects[i].render(win, viewCanvas)
+	}
+	player.render(win, viewCanvas, dt)
+	for i := 0; i < len(foregroundObjects); i++ {
+		foregroundObjects[i].render(win, viewCanvas)
 	}
 }
 
@@ -25,21 +25,21 @@ func updateGame(win *pixelgl.Window, dt float64) {
 
 	if len(backgroundObjects) >= 1 {
 		for i := 0; i < len(backgroundObjects); i++ {
-			//if backgroundObjects[i].inFrontOfPlayer {
-			//	foregroundObjects = append(foregroundObjects, backgroundObjects[i])
-
-			//}
 			backgroundObjects[i].update(&player)
+			if backgroundObjects[i].inFrontOfPlayer {
+				foregroundObjects = append(foregroundObjects, backgroundObjects[i])
+				backgroundObjects = append(backgroundObjects[:i], backgroundObjects[i+1:]...)
+			}
 		}
 	}
 
 	if len(foregroundObjects) >= 1 {
 		for i := 0; i < len(foregroundObjects); i++ {
-			//if !foregroundObjects[i].inFrontOfPlayer {
-			//	backgroundObjects = append(backgroundObjects, foregroundObjects[i])
-
-			//}
 			foregroundObjects[i].update(&player)
+			if !foregroundObjects[i].inFrontOfPlayer {
+				backgroundObjects = append(backgroundObjects, foregroundObjects[i])
+				foregroundObjects = append(foregroundObjects[:i], foregroundObjects[i+1:]...)
+			}
 		}
 	}
 	testBox.update(&player)

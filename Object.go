@@ -50,7 +50,7 @@ func (o Object) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas) {
 }
 
 func (o *Object) playerCollision(p *Player) {
-	if p.pos.Y > o.pos.Y+(o.size.Y*imageScale)/o.sizeDiminisher {
+	if p.pos.Y > o.pos.Y+(o.size.Y*imageScale)/(o.sizeDiminisher+1.) {
 		o.inFrontOfPlayer = true
 	} else {
 		o.inFrontOfPlayer = false
