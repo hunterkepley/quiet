@@ -12,11 +12,15 @@ var (
 type PlayerBatches struct {
 	playerIdleRightBatch *pixel.Batch
 	playerIdleUpBatch    *pixel.Batch
+	playerIdleDownBatch  *pixel.Batch
+	playerIdleLeftBatch  *pixel.Batch
 }
 
 func loadPlayerBatches() {
 	playerBatches = PlayerBatches{
 		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.playerIdleRightSheet.sheet),
 		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.playerIdleUpSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.playerIdleDownSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.playerIdleLeftSheet.sheet),
 	}
 }

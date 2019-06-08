@@ -32,10 +32,14 @@ type Player struct {
 type PlayerAnimations struct { // Holds all the animations for the player
 	idleRightAnimation Animation
 	idleUpAnimation    Animation
+	idleDownAnimation  Animation
+	idleLeftAnimation  Animation
 }
 
 func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool) Player { // Player constructor
 	size := pixel.V(pic.Bounds().Size().X/float64(len(playerSpritesheets.playerIdleRightSheet.frames)), pic.Bounds().Size().Y)
+
+	idleAnimationSpeed := 0.3
 
 	return Player{
 		pos,
@@ -52,12 +56,14 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool) Playe
 		pic,
 		100,
 		100,
-		createAnimation(playerSpritesheets.playerIdleRightSheet, 0.2),
+		createAnimation(playerSpritesheets.playerIdleRightSheet, idleAnimationSpeed),
 		playerBatches.playerIdleRightBatch,
 		10.,
 		PlayerAnimations{
-			createAnimation(playerSpritesheets.playerIdleRightSheet, 0.3),
-			createAnimation(playerSpritesheets.playerIdleUpSheet, 0.3),
+			createAnimation(playerSpritesheets.playerIdleRightSheet, idleAnimationSpeed),
+			createAnimation(playerSpritesheets.playerIdleUpSheet, idleAnimationSpeed),
+			createAnimation(playerSpritesheets.playerIdleDownSheet, idleAnimationSpeed),
+			createAnimation(playerSpritesheets.playerIdleLeftSheet, idleAnimationSpeed),
 		},
 	}
 
@@ -102,15 +108,27 @@ func (p *Player) input(win *pixelgl.Window, dt float64) {
 		p.velocity.Y = p.currSpeed
 		p.velocity.X = p.currSpeed
 	} else if win.Pressed(pixelgl.KeyW) && win.Pressed(pixelgl.KeyA) {
-		p.currDir = 0
+		if p.currDir != 0 {
+			p.currDir = 0
+			p.batch = playerBatches.playerIdleUpBatch
+			p.animation = p.animations.idleUpAnimation
+		}
 		p.velocity.Y = p.currSpeed
 		p.velocity.X = -p.currSpeed
 	} else if win.Pressed(pixelgl.KeyS) && win.Pressed(pixelgl.KeyD) {
-		p.currDir = 1
+		if p.currDir != 2 {
+			p.currDir = 2
+			p.batch = playerBatches.playerIdleDownBatch
+			p.animation = p.animations.idleDownAnimation
+		}
 		p.velocity.Y = -p.currSpeed
 		p.velocity.X = p.currSpeed
 	} else if win.Pressed(pixelgl.KeyS) && win.Pressed(pixelgl.KeyA) {
-		p.currDir = 1
+		if p.currDir != 2 {
+			p.currDir = 2
+			p.batch = playerBatches.playerIdleDownBatch
+			p.animation = p.animations.idleDownAnimation
+		}
 		p.velocity.Y = -p.currSpeed
 		p.velocity.X = -p.currSpeed
 	} else {
@@ -131,12 +149,21 @@ func (p *Player) input(win *pixelgl.Window, dt float64) {
 			p.velocity.X = p.currSpeed
 		}
 		if win.Pressed(pixelgl.KeyS) { // Down, 2
-			p.currDir = 2
+			if p.currDir != 2 {
+				p.currDir = 2
+				p.batch = playerBatches.playerIdleDownBatch
+				p.animation = p.animations.idleDownAnimation
+			}
+			p.velocity.Y = p.currSpeed
 
 			p.velocity.Y = -p.currSpeed
 		}
 		if win.Pressed(pixelgl.KeyA) { // Left, 3
-			p.currDir = 3
+			if p.currDir != 3 {
+				p.currDir = 3
+				p.batch = playerBatches.playerIdleLeftBatch
+				p.animation = p.animations.idleLeftAnimation
+			}
 
 			p.velocity.X = -p.currSpeed
 		}

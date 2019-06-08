@@ -19,15 +19,21 @@ type Spritesheet struct {
 type PlayerSpritesheets struct {
 	playerIdleRightSheet Spritesheet
 	playerIdleUpSheet    Spritesheet
+	playerIdleDownSheet  Spritesheet
+	playerIdleLeftSheet  Spritesheet
 }
 
 func loadPlayerSpritesheets() {
 	// Player spritesheet
 	playerIdleRightSheet := loadPicture("./Art/Player/idle_right.png")
 	playerIdleUpSheet := loadPicture("./Art/Player/idle_up.png")
+	playerIdleDownSheet := loadPicture("./Art/Player/idle_down.png")
+	playerIdleLeftSheet := loadPicture("./Art/Player/idle_left.png")
 	playerSpritesheets = PlayerSpritesheets{
 		createSpriteSheet(playerIdleRightSheet, 4),
 		createSpriteSheet(playerIdleUpSheet, 4),
+		createSpriteSheet(playerIdleDownSheet, 4),
+		createSpriteSheet(playerIdleLeftSheet, 4),
 	}
 }
 
