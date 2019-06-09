@@ -30,6 +30,8 @@ var (
 	testBox Object
 
 	viewMatrix pixel.Matrix
+
+	currentLevel Level
 )
 
 const ()

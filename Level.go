@@ -2,6 +2,7 @@ package main
 
 import "github.com/faiface/pixel/pixelgl"
 
+// Level ... Levels for the game
 type Level struct {
 	rooms            []Room // Each level has X rooms
 	currentRoomIndex int

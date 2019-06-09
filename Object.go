@@ -7,6 +7,7 @@ import (
 	"github.com/faiface/pixel/pixelgl"
 )
 
+// Object ... Objects that the player can collide with
 type Object struct {
 	pos             pixel.Vec
 	center          pixel.Vec

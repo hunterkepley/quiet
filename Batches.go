@@ -8,7 +8,7 @@ var (
 	playerBatches PlayerBatches
 )
 
-/*Batches ... All the batches in the game*/
+// PlayerBatches ... All the batches in the game
 type PlayerBatches struct {
 	playerIdleRightBatch *pixel.Batch
 	playerIdleUpBatch    *pixel.Batch
