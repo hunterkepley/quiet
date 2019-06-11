@@ -23,6 +23,12 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 func updateGame(win *pixelgl.Window, dt float64) {
 	player.update(win, dt)
 
+	if win.Pressed(pixelgl.KeyE) {
+		currentLevel.changeRoom(1, &player)
+	}
+
+	currentLevel.updateRoom(&player, dt)
+
 	if len(backgroundObjects) >= 1 {
 		for i := 0; i < len(backgroundObjects); i++ {
 			backgroundObjects[i].update(&player)
@@ -42,7 +48,6 @@ func updateGame(win *pixelgl.Window, dt float64) {
 			}
 		}
 	}
-	testBox.update(&player)
 
 	// This is pretty badly done, but it does the trick for making the stars not decrease their bounds
 	if win.Bounds().W() > windowBounds.X {

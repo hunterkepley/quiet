@@ -27,8 +27,6 @@ var (
 
 	player Player
 
-	testBox Object
-
 	viewMatrix pixel.Matrix
 
 	currentLevel Level
@@ -59,12 +57,14 @@ func run() {
 	// Set up the matrices for the view of the world
 	letterBox(win)
 
-	testBox = createObject(pixel.V(100., 100.), images.box1, 2.)
-	foregroundObjects = append(foregroundObjects, testBox)
-	testBox = createObject(pixel.V(200., 100.), images.box1, 2.)
-	backgroundObjects = append(backgroundObjects, testBox)
-
 	player = createPlayer(pixel.V(200, 200), 0, playerSpritesheets.playerIdleRightSheet.sheet, true)
+
+	// Set up all levels
+	loadLevels()
+
+	// Set up first level
+	currentLevel = levels[0]
+	currentLevel.setupRoom(&player)
 
 	last := time.Now()  // For fps decoupled updates
 	for !win.Closed() { // Game loop
