@@ -46,13 +46,9 @@ func run() {
 	}
 
 	viewCanvas := pixelgl.NewCanvas(pixel.R(win.Bounds().Min.X, win.Bounds().Min.Y, win.Bounds().W(), win.Bounds().H()))
+	viewCanvas.SetFragmentShader(testShader)
 
-	//Load the player sprite sheets for the game
-	loadPlayerSpritesheets()
-	//Load the player spritebatches for the game
-	loadPlayerBatches()
-	//load images for game that aren't spritesheets
-	loadImages()
+	loadResources()
 
 	// Set up the matrices for the view of the world
 	letterBox(win)
@@ -83,6 +79,13 @@ func run() {
 		win.Clear(colornames.Black)
 		viewCanvas.Clear(color.RGBA{0x0a, 0x0a, 0x0a, 0x0a})
 		imd.Clear()
+
+		if win.Pressed(pixelgl.KeyG) {
+			viewCanvas.SetFragmentShader(grayscaleShader)
+		} else if win.Pressed(pixelgl.KeyH) {
+			viewCanvas.SetFragmentShader(regularShader)
+		}
+
 		switch gameState {
 		case 0: // In game, will probably change... Not sure
 			updateGame(win, dt)
@@ -105,7 +108,20 @@ func run() {
 		} // FPS is done
 	}
 }
+
+func loadResources() {
+	//Load the player sprite sheets for the game
+	loadPlayerSpritesheets()
+	//Load the player spritebatches for the game
+	loadPlayerBatches()
+	//load the object spritesheets for the game
+	loadObjectSpritesheets()
+	//load the object spritebatches for the game
+	loadObjectBatches()
+	//load images for game that aren't spritesheets
+	loadImages()
+}
+
 func main() {
 	pixelgl.Run(run)
-
 }

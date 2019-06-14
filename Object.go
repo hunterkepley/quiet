@@ -26,10 +26,12 @@ var (
 
 func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64) Object {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
+	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
+	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	return Object{
 		pos,
 		pixel.ZV,
-		pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y),
+		size,
 		pic,
 		*sprite,
 		pic.Bounds().Size().Y / 2,
@@ -43,7 +45,7 @@ func (o *Object) update(p *Player) {
 	o.playerCollision(p)
 }
 
-func (o Object) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas) {
+func (o Object) render(viewCanvas *pixelgl.Canvas) {
 	mat := pixel.IM.
 		Moved(o.center).
 		Scaled(o.center, imageScale)
@@ -56,10 +58,10 @@ func (o *Object) playerCollision(p *Player) {
 	} else {
 		o.inFrontOfPlayer = false
 	}
-	if p.pos.X < o.pos.X+(o.size.X*imageScale) &&
-		p.pos.X+(p.size.X*imageScale) > o.pos.X &&
-		p.pos.Y < o.pos.Y+(o.size.Y*imageScale)/o.sizeDiminisher &&
-		p.pos.Y+(p.size.Y*imageScale)/p.footSizeDiminisher > o.pos.Y {
+	if p.pos.X < o.pos.X+o.size.X &&
+		p.pos.X+p.size.X > o.pos.X &&
+		p.pos.Y < o.pos.Y+o.size.Y/o.sizeDiminisher &&
+		p.pos.Y+p.size.Y/p.footSizeDiminisher > o.pos.Y {
 		fmt.Println("Collided")
 	}
 }

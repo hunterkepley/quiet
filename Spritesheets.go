@@ -6,6 +6,7 @@ import (
 
 var (
 	playerSpritesheets PlayerSpritesheets
+	objectSpritesheets ObjectSpritesheets
 )
 
 /*Spritesheet ... Holds a picture of a spritesheet and the frames of each single picture*/
@@ -15,7 +16,7 @@ type Spritesheet struct {
 	numberOfFrames int
 }
 
-/*Spritesheets ... All the spritesheets in the game*/
+/*PlayerSpritesheets ... All the player spritesheets in the game*/
 type PlayerSpritesheets struct {
 	playerIdleRightSheet Spritesheet
 	playerIdleUpSheet    Spritesheet
@@ -23,8 +24,13 @@ type PlayerSpritesheets struct {
 	playerIdleLeftSheet  Spritesheet
 }
 
+/*ObjectSpritesheets ... All the object spritesheets in the game*/
+type ObjectSpritesheets struct {
+	rainSheet Spritesheet
+}
+
 func loadPlayerSpritesheets() {
-	// Player spritesheet
+	// Player spritesheets
 	playerIdleRightSheet := loadPicture("./Art/Player/idle_right.png")
 	playerIdleUpSheet := loadPicture("./Art/Player/idle_up.png")
 	playerIdleDownSheet := loadPicture("./Art/Player/idle_down.png")
@@ -37,6 +43,14 @@ func loadPlayerSpritesheets() {
 	}
 }
 
+func loadObjectSpritesheets() {
+	// Object spritesheets
+	rainSheet := loadPicture("./Art/Weather/rain.png")
+	objectSpritesheets = ObjectSpritesheets{
+		createSpriteSheet(rainSheet, 10),
+	}
+}
+
 func createSpriteSheet(sheet pixel.Picture, frames float64) Spritesheet {
 	w := float64(int(sheet.Bounds().W() / frames))
 	h := sheet.Bounds().H()
@@ -46,6 +60,5 @@ func createSpriteSheet(sheet pixel.Picture, frames float64) Spritesheet {
 			sheetFrames = append(sheetFrames, pixel.R(x, y, x+w, y+h))
 		}
 	}
-	numberOfFrames := frames
-	return Spritesheet{sheet, sheetFrames, int(numberOfFrames)}
+	return Spritesheet{sheet, sheetFrames, int(frames)}
 }

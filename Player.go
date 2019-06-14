@@ -29,6 +29,7 @@ type Player struct {
 	animations PlayerAnimations
 }
 
+// PlayerAnimations ... Player animations in the game
 type PlayerAnimations struct { // Holds all the animations for the player
 	idleRightAnimation Animation
 	idleUpAnimation    Animation
@@ -38,6 +39,7 @@ type PlayerAnimations struct { // Holds all the animations for the player
 
 func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool) Player { // Player constructor
 	size := pixel.V(pic.Bounds().Size().X/float64(len(playerSpritesheets.playerIdleRightSheet.frames)), pic.Bounds().Size().Y)
+	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 
 	idleAnimationSpeed := 0.3
 

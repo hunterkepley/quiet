@@ -12,11 +12,14 @@ var (
 
 func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw, dt float64) {
 	for i := 0; i < len(backgroundObjects); i++ {
-		backgroundObjects[i].render(win, viewCanvas)
+		backgroundObjects[i].render(viewCanvas)
 	}
 	player.render(win, viewCanvas, dt)
 	for i := 0; i < len(foregroundObjects); i++ {
-		foregroundObjects[i].render(win, viewCanvas)
+		foregroundObjects[i].render(viewCanvas)
+	}
+	if currentLevel.rooms[currentLevel.currentRoomIndex].hasRain {
+		renderRain(viewCanvas)
 	}
 }
 

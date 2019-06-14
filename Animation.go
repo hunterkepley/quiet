@@ -4,6 +4,7 @@ import (
 	"github.com/faiface/pixel"
 )
 
+// Animation ... Animations........
 type Animation struct {
 	sheet          Spritesheet
 	currentSprite  *pixel.Sprite
@@ -16,7 +17,7 @@ type Animation struct {
 func createAnimation(sheet Spritesheet, frameSpeedMax float64) Animation {
 	frameSpeed := 0.
 	frameNumber, frameNumberMax := 0, sheet.numberOfFrames
-	var sprite *pixel.Sprite = pixel.NewSprite(sheet.sheet, sheet.frames[frameNumber])
+	sprite := pixel.NewSprite(sheet.sheet, sheet.frames[frameNumber])
 	return Animation{sheet, sprite, frameSpeed, frameSpeedMax, frameNumber, frameNumberMax}
 }
 
