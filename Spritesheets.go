@@ -47,7 +47,7 @@ func loadObjectSpritesheets() {
 	// Object spritesheets
 	rainSheet := loadPicture("./Art/Weather/rain.png")
 	objectSpritesheets = ObjectSpritesheets{
-		createSpriteSheet(rainSheet, 10),
+		createSpriteSheet(rainSheet, 5),
 	}
 }
 

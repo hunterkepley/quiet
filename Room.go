@@ -14,7 +14,7 @@ type Room struct {
 }
 
 func createRoom(objects []Object, playerStartPos pixel.Vec, hasRain bool) Room {
-	rainTimer := 1.
+	rainTimer := 0.000001
 	rainTimerMax := rainTimer
 	return Room{
 		objects,
