@@ -24,6 +24,7 @@ type Player struct {
 	animation          Animation
 	batch              *pixel.Batch
 	footSizeDiminisher float64 // Diminisher for where the feet are for collisions
+	imageScale         float64
 
 	// Animations
 	animations PlayerAnimations
@@ -37,9 +38,9 @@ type PlayerAnimations struct { // Holds all the animations for the player
 	idleLeftAnimation  Animation
 }
 
-func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool) Player { // Player constructor
+func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playerImageScale float64) Player { // Player constructor
 	size := pixel.V(pic.Bounds().Size().X/float64(len(playerSpritesheets.playerIdleRightSheet.frames)), pic.Bounds().Size().Y)
-	size = pixel.V(size.X*imageScale, size.Y*imageScale)
+	size = pixel.V(size.X*playerImageScale, size.Y*playerImageScale)
 
 	idleAnimationSpeed := 0.3
 
@@ -61,6 +62,7 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool) Playe
 		createAnimation(playerSpritesheets.playerIdleRightSheet, idleAnimationSpeed),
 		playerBatches.playerIdleRightBatch,
 		10.,
+		playerImageScale,
 		PlayerAnimations{
 			createAnimation(playerSpritesheets.playerIdleRightSheet, idleAnimationSpeed),
 			createAnimation(playerSpritesheets.playerIdleUpSheet, idleAnimationSpeed),
@@ -81,7 +83,7 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 func (p *Player) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) { // Draws the player
 	p.batch.Clear()
 	sprite := p.animation.animate(dt)
-	sprite.Draw(p.batch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center).Scaled(p.center, imageScale))
+	sprite.Draw(p.batch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center).Scaled(p.center, p.imageScale))
 	p.batch.Draw(viewCanvas)
 }
 

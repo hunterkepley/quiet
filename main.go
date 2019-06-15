@@ -53,7 +53,7 @@ func run() {
 	// Set up the matrices for the view of the world
 	letterBox(win)
 
-	player = createPlayer(pixel.V(200, 200), 0, playerSpritesheets.playerIdleRightSheet.sheet, true)
+	player = createPlayer(pixel.V(200, 200), 0, playerSpritesheets.playerIdleRightSheet.sheet, true, imageScale)
 
 	// Set up all levels
 	loadLevels()
@@ -119,7 +119,7 @@ func loadResources() {
 	//load the object spritebatches for the game
 	loadObjectBatches()
 	//load images for game that aren't spritesheets
-	loadImages()
+	loadObjectImages()
 }
 
 func main() {

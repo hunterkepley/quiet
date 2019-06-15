@@ -9,14 +9,16 @@ import (
 
 // Object ... Objects that the player can collide with
 type Object struct {
-	pos             pixel.Vec
-	center          pixel.Vec
-	size            pixel.Vec
-	pic             pixel.Picture
-	sprite          pixel.Sprite
-	radius          float64
-	sizeDiminisher  float64
-	inFrontOfPlayer bool // If the object is rendered in front of the player or not
+	pos              pixel.Vec
+	center           pixel.Vec
+	size             pixel.Vec
+	pic              pixel.Picture
+	sprite           pixel.Sprite
+	radius           float64
+	sizeDiminisher   float64
+	inFrontOfPlayer  bool // If the object is rendered in front of the player or not
+	backgroundObject bool // true if no collision and in background
+	foregroundObject bool // true if no collision and in foreground
 }
 
 var (
@@ -24,10 +26,14 @@ var (
 	foregroundObjects []Object
 )
 
-func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64) Object {
+func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, backgroundObject bool, foregroundObject bool) Object {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
+	inFrontOfPlayer := true
+	if backgroundObject {
+		inFrontOfPlayer = false
+	}
 	return Object{
 		pos,
 		pixel.ZV,
@@ -36,13 +42,17 @@ func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64) Obje
 		*sprite,
 		pic.Bounds().Size().Y / 2,
 		sizeDiminisher,
-		true,
+		inFrontOfPlayer,
+		backgroundObject,
+		foregroundObject,
 	}
 }
 
 func (o *Object) update(p *Player) {
 	o.center = pixel.V(o.pos.X+(o.size.X/2), o.pos.Y+(o.size.Y/2))
-	o.playerCollision(p)
+	if !o.foregroundObject && !o.backgroundObject {
+		o.playerCollision(p)
+	}
 }
 
 func (o Object) render(viewCanvas *pixelgl.Canvas) {
