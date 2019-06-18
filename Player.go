@@ -78,6 +78,14 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 		p.input(win, dt)
 	}
 	p.center = pixel.V(p.pos.X+(p.size.X/2), p.pos.Y+(p.size.Y/2))
+
+	// Screen edge collision detection/response
+	if p.center.X-p.size.X/2 < 0. || p.center.X+p.size.X/2 > winWidth { // Left / Right
+		p.pos.X += (p.velocity.X * -1) * dt
+	}
+	if p.center.Y-p.size.Y/2 < 0. || p.center.Y+p.size.Y/2 > winHeight { // Bottom / Top
+		p.pos.Y += (p.velocity.Y * -1) * dt
+	}
 }
 
 func (p *Player) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) { // Draws the player
