@@ -19,7 +19,8 @@ type PlayerBatches struct {
 
 // ObjectBatches .. All the objects in levels batches
 type ObjectBatches struct {
-	rainBatch *pixel.Batch
+	rainBatch       *pixel.Batch
+	rainSplashBatch *pixel.Batch
 }
 
 func loadPlayerBatches() {
@@ -34,5 +35,6 @@ func loadPlayerBatches() {
 func loadObjectBatches() {
 	objectBatches = ObjectBatches{
 		pixel.NewBatch(&pixel.TrianglesData{}, objectSpritesheets.rainSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, objectSpritesheets.rainSplashSheet.sheet),
 	}
 }
