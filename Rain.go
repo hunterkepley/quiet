@@ -14,13 +14,14 @@ var (
 
 // Rain ... It's rain
 type Rain struct {
-	pos       pixel.Vec
-	center    pixel.Vec
-	size      pixel.Vec
-	pic       pixel.Picture
-	sprite    pixel.Sprite
-	rainSpeed float64
-	endHeight float64
+	pos        pixel.Vec
+	center     pixel.Vec
+	size       pixel.Vec
+	pic        pixel.Picture
+	sprite     pixel.Sprite
+	rainSpeedY float64
+	rainSpeedX float64
+	endHeight  float64
 }
 
 // Splash ... It's rain splash
@@ -37,8 +38,9 @@ func createRain(pos pixel.Vec) Rain {
 	rainChoice := rand.Intn(objectSpritesheets.rainSheet.numberOfFrames)
 	pic := objectSpritesheets.rainSheet.sheet
 	sprite := pixel.NewSprite(pic, objectSpritesheets.rainSheet.frames[rainChoice])
-	rainSpeed := float64(rand.Intn(600) + 580)
-	endHeight := float64(rand.Intn(int(winHeight) / 2))
+	rainSpeedY := float64(rand.Intn(1000) + 600)
+	rainSpeedX := float64(rand.Intn(200) + 10)
+	endHeight := float64(rand.Intn(int(winHeight)))
 	size := pixel.V(pic.Bounds().Size().X/float64(len(objectSpritesheets.rainSheet.frames)), pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	return Rain{
@@ -47,7 +49,8 @@ func createRain(pos pixel.Vec) Rain {
 		size,
 		pic,
 		*sprite,
-		rainSpeed,
+		rainSpeedY,
+		rainSpeedX,
 		endHeight,
 	}
 }
@@ -79,7 +82,8 @@ func (r *Rain) render(viewCanvas *pixelgl.Canvas) {
 }
 
 func (r *Rain) update(dt float64) {
-	r.pos.Y -= r.rainSpeed * dt
+	r.pos.Y -= r.rainSpeedY * dt
+	r.pos.X += r.rainSpeedX * dt
 	r.center = pixel.V(r.pos.X+(r.size.X/2), r.pos.Y+(r.size.Y/2))
 }
 
