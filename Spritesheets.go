@@ -26,7 +26,7 @@ type PlayerSpritesheets struct {
 
 /*ObjectSpritesheets ... All the object spritesheets in the game*/
 type ObjectSpritesheets struct {
-	rainSheet Spritesheet
+	rainSheet       Spritesheet
 	rainSplashSheet Spritesheet
 }
 
@@ -50,7 +50,7 @@ func loadObjectSpritesheets() {
 	rainSplashSheet := loadPicture("./Art/Weather/rain_splash.png")
 	objectSpritesheets = ObjectSpritesheets{
 		createSpriteSheet(rainSheet, 5),
-		createSpriteSheet(rainSplashSheet, 5),
+		createSpriteSheet(rainSplashSheet, 6),
 	}
 }
 

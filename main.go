@@ -46,7 +46,7 @@ func run() {
 	}
 
 	viewCanvas := pixelgl.NewCanvas(pixel.R(win.Bounds().Min.X, win.Bounds().Min.Y, win.Bounds().W(), win.Bounds().H()))
-	viewCanvas.SetFragmentShader(testShader)
+	viewCanvas.SetFragmentShader(stormShader)
 
 	loadResources()
 

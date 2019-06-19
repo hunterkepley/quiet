@@ -58,7 +58,7 @@ func createSplash(pos pixel.Vec) Splash {
 	size := pixel.V(pic.Bounds().Size().X/float64(len(objectSpritesheets.rainSplashSheet.frames)), pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	center := pixel.V(pos.X+(size.X/2), pos.Y+(size.Y/2))
-	rainSplashSpeed := 0.3
+	rainSplashSpeed := 0.03
 
 	return Splash{
 		pos,
@@ -93,7 +93,7 @@ func updateRain(dt float64) {
 	}
 	for i := 0; i < len(splashes); i++ {
 		splashes[i].update(dt)
-		if splashes[i].animation.frameNumber == splashes[i].animation.frameNumberMax {
+		if splashes[i].animation.frameNumber == splashes[i].animation.frameNumberMax-1 {
 			splashes = append(splashes[:i], splashes[i+1:]...)
 		}
 	}
@@ -101,10 +101,13 @@ func updateRain(dt float64) {
 
 func renderRain(viewCanvas *pixelgl.Canvas) {
 	objectBatches.rainBatch.Clear()
-	objectBatches.rainSplashBatch.Clear()
 	for i := 0; i < len(rain); i++ {
 		rain[i].render(viewCanvas)
 	}
+}
+
+func renderSplashes(viewCanvas *pixelgl.Canvas) {
+	objectBatches.rainSplashBatch.Clear()
 	for i := 0; i < len(splashes); i++ {
 		splashes[i].render(viewCanvas)
 	}
@@ -119,5 +122,5 @@ func (s *Splash) render(viewCanvas *pixelgl.Canvas) {
 		Moved(s.pos).
 		Scaled(s.center, imageScale)
 	s.sprite.Draw(objectBatches.rainSplashBatch, mat)
-	objectBatches.rainBatch.Draw(viewCanvas)
+	objectBatches.rainSplashBatch.Draw(viewCanvas)
 }
