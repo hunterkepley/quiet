@@ -21,6 +21,22 @@ func loadLevels() {
 					},
 					pixel.V(50., 50.), // Player starting position
 					true,              // Has rain
+					[]pixel.Rect{ // Rain dead zones
+						pixel.R(223, 420, 285, 636),
+						pixel.R(282, 424, 461, 589),
+						pixel.R(461, 424, 717, 533),
+						pixel.R(517, 354, 547, 501),
+						pixel.R(764, 354, 792, 501),
+						pixel.R(495, 501, 819, 543),
+						pixel.R(396, 636, 669, 663),
+						pixel.R(728, 553, 768, 570),
+						pixel.R(722, 570, 743, 590),
+						pixel.R(720, 590, 730, 600),
+						pixel.R(714, 600, 718, 610),
+						pixel.R(700, 610, 705, 620),
+						pixel.R(680, 620, 685, 646),
+						pixel.R(668, 646, 682, 653),
+					},
 				),
 				createRoom( // Inside 1
 					[]Object{
@@ -28,6 +44,7 @@ func loadLevels() {
 					},
 					pixel.V(100., 100.),
 					false,
+					[]pixel.Rect{},
 				),
 			},
 		),

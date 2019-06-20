@@ -85,6 +85,9 @@ func run() {
 		} else if win.Pressed(pixelgl.KeyH) {
 			viewCanvas.SetFragmentShader(regularShader)
 		}
+		if win.JustPressed(pixelgl.MouseButtonLeft) {
+			fmt.Println(win.MousePosition())
+		}
 
 		switch gameState {
 		case 0: // In game, will probably change... Not sure

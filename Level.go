@@ -25,7 +25,7 @@ func (l *Level) updateRoom(player *Player, dt float64) {
 		l.rooms[l.currentRoomIndex].objects[i].update(player)
 	}
 	if l.rooms[l.currentRoomIndex].hasRain {
-		updateRain(dt)
+		updateRain(l.rooms[l.currentRoomIndex].rainDeadZones, *player, dt)
 		if l.rooms[l.currentRoomIndex].rainTimer < 0. {
 			l.rooms[l.currentRoomIndex].rainTimer = l.rooms[l.currentRoomIndex].rainTimerMax
 			rain = append(rain, createRain(pixel.V(float64(rand.Intn(int(winWidth))), winHeight)))

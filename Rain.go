@@ -87,11 +87,30 @@ func (r *Rain) update(dt float64) {
 	r.center = pixel.V(r.pos.X+(r.size.X/2), r.pos.Y+(r.size.Y/2))
 }
 
-func updateRain(dt float64) {
+func updateRain(rainDeadZones []pixel.Rect, player Player, dt float64) {
 	for i := 0; i < len(rain); i++ {
 		rain[i].update(dt)
 		if rain[i].pos.Y < rain[i].endHeight {
-			splashes = append(splashes, createSplash(rain[i].pos))
+			canSplash := true
+			for j := 0; j < len(rainDeadZones); j++ {
+				if rain[i].pos.X > rainDeadZones[j].Min.X &&
+					rain[i].pos.X < rainDeadZones[j].Max.X &&
+					rain[i].pos.Y > rainDeadZones[j].Min.Y &&
+					rain[i].pos.Y < rainDeadZones[j].Max.Y {
+					// This checks if a splash is possible [if the rain ends on the side of an object, etc]
+					canSplash = false
+				}
+			}
+			if rain[i].pos.X > player.pos.X &&
+				rain[i].pos.X < player.pos.X+player.size.X &&
+				rain[i].pos.Y > player.pos.Y &&
+				rain[i].pos.Y < player.pos.Y+player.size.Y {
+				// Check if a rain drop ends on the player [same reason as dead zones]
+				canSplash = false
+			}
+			if canSplash {
+				splashes = append(splashes, createSplash(rain[i].pos))
+			}
 			rain = append(rain[:i], rain[i+1:]...)
 		}
 	}
