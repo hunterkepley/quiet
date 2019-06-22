@@ -17,8 +17,9 @@ type Object struct {
 	radius           float64
 	sizeDiminisher   float64
 	inFrontOfPlayer  bool // If the object is rendered in front of the player or not
-	backgroundObject bool // true if no collision and in background
-	foregroundObject bool // true if no collision and in foreground
+	backgroundObject bool // true if in background
+	foregroundObject bool // true if in foreground
+	playerCollidable bool // true if collides with player
 }
 
 var (
@@ -26,7 +27,7 @@ var (
 	foregroundObjects []Object
 )
 
-func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, backgroundObject bool, foregroundObject bool) Object {
+func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, backgroundObject bool, foregroundObject bool, playerCollidable bool) Object {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
@@ -45,12 +46,13 @@ func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, back
 		inFrontOfPlayer,
 		backgroundObject,
 		foregroundObject,
+		playerCollidable,
 	}
 }
 
 func (o *Object) update(p *Player) {
 	o.center = pixel.V(o.pos.X+(o.size.X/2), o.pos.Y+(o.size.Y/2))
-	if !o.foregroundObject && !o.backgroundObject {
+	if !o.playerCollidable {
 		o.playerCollision(p)
 	}
 }

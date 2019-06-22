@@ -61,7 +61,7 @@ func createSplash(pos pixel.Vec) Splash {
 	size := pixel.V(pic.Bounds().Size().X/float64(len(objectSpritesheets.rainSplashSheet.frames)), pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	center := pixel.V(pos.X+(size.X/2), pos.Y+(size.Y/2))
-	rainSplashSpeed := 0.03
+	rainSplashSpeed := 0.04
 
 	return Splash{
 		pos,
