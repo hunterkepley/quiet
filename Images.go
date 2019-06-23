@@ -17,16 +17,18 @@ type ObjectImages struct {
 	gasRightPole pixel.Picture
 	gasStreet    pixel.Picture
 	gasFence     pixel.Picture
+	gasLight     pixel.Picture
 }
 
 func loadObjectImages() {
 	objectImages = ObjectImages{
 		loadPicture("./Art/Objects/Scenery/box1.png"),
-		loadPicture("./Art/Objects/Buildings/gas_body.png"),
-		loadPicture("./Art/Objects/Buildings/gas_roof.png"),
-		loadPicture("./Art/Objects/Buildings/gas_left_pole.png"),
-		loadPicture("./Art/Objects/Buildings/gas_right_pole.png"),
-		loadPicture("./Art/Objects/Backgrounds/street1.png"),
-		loadPicture("./Art/Objects/Buildings/gas_fence.png"),
+		loadPicture("./Art/Objects/Buildings/l1/gas_body.png"),
+		loadPicture("./Art/Objects/Buildings/l1/gas_roof.png"),
+		loadPicture("./Art/Objects/Buildings/l1/gas_left_pole.png"),
+		loadPicture("./Art/Objects/Buildings/l1/gas_right_pole.png"),
+		loadPicture("./Art/Objects/Backgrounds/l1/street1.png"),
+		loadPicture("./Art/Objects/Buildings/l1/gas_fence.png"),
+		loadPicture("./Art/Objects/Buildings/l1/gas_light.png"),
 	}
 }

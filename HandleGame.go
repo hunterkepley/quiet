@@ -4,6 +4,7 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
+	"golang.org/x/image/colornames"
 )
 
 var (
@@ -12,14 +13,12 @@ var (
 
 func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw, dt float64) {
 	for i := 0; i < len(backgroundObjects); i++ {
-		backgroundObjects[i].render(viewCanvas)
-		if backgroundObjects[i].hitboxes {
-			backgroundObjects[i].renderHitboxes(imd, player)
-		}
+		backgroundObjects[i].render(viewCanvas, imd, player)
+
 	}
 	player.render(win, viewCanvas, dt)
 	for i := 0; i < len(foregroundObjects); i++ {
-		foregroundObjects[i].render(viewCanvas)
+		foregroundObjects[i].render(viewCanvas, imd, player)
 		if foregroundObjects[i].hitboxes {
 			foregroundObjects[i].renderHitboxes(imd, player)
 		}
@@ -29,6 +28,14 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 	}
 	if currentLevel.rooms[currentLevel.currentRoomIndex].hasRain {
 		renderRain(viewCanvas)
+		if drawRainDeadzones {
+			imd.Color = colornames.Cyan
+			width := 1.
+			for i := 0; i < len(currentLevel.rooms[currentLevel.currentRoomIndex].rainDeadZones); i++ {
+				imd.Push(currentLevel.rooms[currentLevel.currentRoomIndex].rainDeadZones[i].Min, currentLevel.rooms[currentLevel.currentRoomIndex].rainDeadZones[i].Max)
+				imd.Rectangle(width)
+			}
+		}
 	}
 }
 

@@ -30,6 +30,9 @@ var (
 	viewMatrix pixel.Matrix
 
 	currentLevel Level
+
+	// Draws bounding boxes of the rain deadzones for debugging
+	drawRainDeadzones = false
 )
 
 const ()
@@ -98,8 +101,8 @@ func run() {
 			renderMenu(win)
 		}
 
-		imd.Draw(viewCanvas)
 		viewCanvas.Draw(win, viewMatrix)
+		imd.Draw(win)
 		win.Update()
 
 		frames++ // FPS is dealt here

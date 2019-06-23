@@ -46,7 +46,7 @@ func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, back
 	left := pixel.R(0, 0, 0, 0)
 	right := pixel.R(0, 0, 0, 0)
 	bottom := pixel.R(0, 0, 0, 0)
-	hitboxes := true
+	hitboxes := false
 
 	if backgroundObject {
 		inFrontOfPlayer = false
@@ -83,11 +83,14 @@ func (o *Object) update(p *Player) {
 	}
 }
 
-func (o Object) render(viewCanvas *pixelgl.Canvas) {
+func (o Object) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw, p Player) {
 	mat := pixel.IM.
 		Moved(o.center).
 		Scaled(o.center, imageScale)
 	o.sprite.Draw(viewCanvas, mat)
+	if o.hitboxes {
+		o.renderHitboxes(imd, player)
+	}
 }
 
 func (o *Object) playerCollision(p *Player) {
