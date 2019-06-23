@@ -98,7 +98,7 @@ func run() {
 			renderMenu(win)
 		}
 
-		imd.Draw(win)
+		imd.Draw(viewCanvas)
 		viewCanvas.Draw(win, viewMatrix)
 		win.Update()
 

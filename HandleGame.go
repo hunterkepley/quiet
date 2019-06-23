@@ -13,10 +13,16 @@ var (
 func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw, dt float64) {
 	for i := 0; i < len(backgroundObjects); i++ {
 		backgroundObjects[i].render(viewCanvas)
+		if backgroundObjects[i].hitboxes {
+			backgroundObjects[i].renderHitboxes(imd, player)
+		}
 	}
 	player.render(win, viewCanvas, dt)
 	for i := 0; i < len(foregroundObjects); i++ {
 		foregroundObjects[i].render(viewCanvas)
+		if foregroundObjects[i].hitboxes {
+			foregroundObjects[i].renderHitboxes(imd, player)
+		}
 	}
 	if currentLevel.rooms[currentLevel.currentRoomIndex].hasRain {
 		renderSplashes(viewCanvas)

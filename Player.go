@@ -25,6 +25,8 @@ type Player struct {
 	batch              *pixel.Batch
 	footSizeDiminisher float64 // Diminisher for where the feet are for collisions
 	imageScale         float64
+	hitBox             pixel.Rect
+	footHitBox         pixel.Rect
 
 	// Animations
 	animations PlayerAnimations
@@ -63,6 +65,8 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 		playerBatches.playerIdleRightBatch,
 		10.,
 		playerImageScale,
+		pixel.R(0, 0, 0, 0),
+		pixel.R(0, 0, 0, 0),
 		PlayerAnimations{
 			createAnimation(playerSpritesheets.playerIdleRightSheet, idleAnimationSpeed),
 			createAnimation(playerSpritesheets.playerIdleUpSheet, idleAnimationSpeed),
@@ -79,6 +83,8 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 	}
 	p.center = pixel.V(p.pos.X+(p.size.X/2), p.pos.Y+(p.size.Y/2))
 
+	p.updateHitboxes()
+
 	// Screen edge collision detection/response
 	if p.center.X-p.size.X/2 < 0. || p.center.X+p.size.X/2 > winWidth { // Left / Right
 		p.pos.X += (p.velocity.X * -1) * dt
@@ -86,6 +92,17 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 	if p.center.Y-p.size.Y/2 < 0. || p.center.Y+p.size.Y/2 > winHeight { // Bottom / Top
 		p.pos.Y += (p.velocity.Y * -1) * dt
 	}
+}
+
+func (p *Player) updateHitboxes() { // Also updates size
+	if p.currDir == 1 || p.currDir == 3 {
+		p.size = pixel.V(playerSpritesheets.playerIdleRightSheet.sheet.Bounds().Size().X/float64(len(playerSpritesheets.playerIdleRightSheet.frames)), p.pic.Bounds().Size().Y)
+	} else {
+		p.size = pixel.V(playerSpritesheets.playerIdleUpSheet.sheet.Bounds().Size().X/float64(len(playerSpritesheets.playerIdleUpSheet.frames)), p.pic.Bounds().Size().Y)
+	}
+	p.size = pixel.V(p.size.X*p.imageScale, p.size.Y*p.imageScale)
+	p.footHitBox = pixel.R(p.pos.X, p.pos.Y, p.pos.X+p.size.X, p.pos.Y+p.size.Y/p.footSizeDiminisher)
+	p.hitBox = pixel.R(p.pos.X, p.pos.Y, p.pos.X+p.size.X, p.pos.Y+p.size.Y)
 }
 
 func (p *Player) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) { // Draws the player
