@@ -65,6 +65,7 @@ func loadLevels() {
 
 // Functions for rooms
 
+// Level 1
 func l1r1(player *Player) {
 	// Collision against gas station
 	if player.pos.Y > 422 && player.pos.X > 243 && player.pos.X < 716 {
@@ -77,3 +78,5 @@ func l1r1(player *Player) {
 func l1r2(player *Player) {
 
 }
+
+// Level 2

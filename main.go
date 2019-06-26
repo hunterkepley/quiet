@@ -16,7 +16,7 @@ var (
 	// Basic variables
 	frames    = 0 // Fps
 	second    = time.Tick(time.Second)
-	gameState = 0 // 0 is in a game, 1 is in the menu. Keeps track of rendering and updating.
+	gameState = 1 // 0 is in a game, 1 is in the menu. Keeps track of rendering and updating.
 	dt        float64
 
 	imageScale       = 2.
@@ -32,6 +32,8 @@ var (
 	currentLevel Level
 
 	currentShader string
+
+	clearColor color.Color
 
 	// Draws bounding boxes of the rain deadzones for debugging
 	drawRainDeadzones = false
@@ -62,9 +64,9 @@ func run() {
 	// Set up all levels
 	loadLevels()
 
-	// Set up first level
-	currentLevel = levels[0]
-	currentLevel.setupRoom(&player, viewCanvas)
+	viewCanvas.SetFragmentShader(regularShader)
+
+	clearColor = color.RGBA{0x0a, 0x0a, 0x0a, 0x0a}
 
 	last := time.Now()  // For fps decoupled updates
 	for !win.Closed() { // Game loop
@@ -81,7 +83,7 @@ func run() {
 		}
 		last = time.Now() // ^
 		win.Clear(colornames.Black)
-		viewCanvas.Clear(color.RGBA{0x0a, 0x0a, 0x0a, 0x0a})
+		viewCanvas.Clear(clearColor)
 		imd.Clear()
 
 		// TODO: temporary
@@ -93,9 +95,11 @@ func run() {
 		case 0: // In game, will probably change... Not sure
 			updateGame(win, viewCanvas, dt)
 			renderGame(win, viewCanvas, imd, dt)
+			clearColor = color.RGBA{0x0a, 0x0a, 0x0a, 0x0a}
 		case 1: // In menu [?Likely to be separate menus?]
-			updateMenu(dt)
-			renderMenu(win)
+			updateMenu(win, viewCanvas, dt)
+			renderMenu(win, viewCanvas)
+			clearColor = color.Black
 		}
 
 		viewCanvas.Draw(win, viewMatrix)
@@ -117,12 +121,16 @@ func loadResources() {
 	loadPlayerSpritesheets()
 	//Load the player spritebatches for the game
 	loadPlayerBatches()
-	//load the object spritesheets for the game
+	//Load the object spritesheets for the game
 	loadObjectSpritesheets()
-	//load the object spritebatches for the game
+	//Load the object spritebatches for the game
 	loadObjectBatches()
-	//load images for game that aren't spritesheets
+	//Load images for game that aren't spritesheets
 	loadObjectImages()
+	//Load images for the main menu
+	loadMenuImages()
+	//Create main menu
+	mainMenu = createMainMenu()
 }
 
 func main() {

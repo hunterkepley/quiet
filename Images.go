@@ -6,6 +6,7 @@ import (
 
 var (
 	objectImages ObjectImages
+	menuImages   MenuImages
 )
 
 //ObjectImages ... All the non-spritesheet images in the game
@@ -20,15 +21,26 @@ type ObjectImages struct {
 	gasLight     pixel.Picture
 }
 
+//MenuImages ... All the menu images that aren't animated
+type MenuImages struct {
+	title pixel.Picture
+}
+
 func loadObjectImages() {
 	objectImages = ObjectImages{
-		loadPicture("./Art/Objects/Scenery/box1.png"),
-		loadPicture("./Art/Objects/Buildings/l1/gas_body.png"),
-		loadPicture("./Art/Objects/Buildings/l1/gas_roof.png"),
-		loadPicture("./Art/Objects/Buildings/l1/gas_left_pole.png"),
-		loadPicture("./Art/Objects/Buildings/l1/gas_right_pole.png"),
-		loadPicture("./Art/Objects/Backgrounds/l1/street1.png"),
-		loadPicture("./Art/Objects/Buildings/l1/gas_fence.png"),
-		loadPicture("./Art/Objects/Buildings/l1/gas_light.png"),
+		loadPicture("./Resources/Art/Objects/Scenery/box1.png"),
+		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_body.png"),
+		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_roof.png"),
+		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_left_pole.png"),
+		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_right_pole.png"),
+		loadPicture("./Resources/Art/Objects/Backgrounds/l1/street1.png"),
+		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_fence.png"),
+		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_light.png"),
+	}
+}
+
+func loadMenuImages() {
+	menuImages = MenuImages{
+		loadPicture("./Resources/Art/UI/MM/title.png"),
 	}
 }

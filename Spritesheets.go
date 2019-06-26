@@ -32,10 +32,10 @@ type ObjectSpritesheets struct {
 
 func loadPlayerSpritesheets() {
 	// Player spritesheets
-	playerIdleRightSheet := loadPicture("./Art/Player/idle_right.png")
-	playerIdleUpSheet := loadPicture("./Art/Player/idle_up.png")
-	playerIdleDownSheet := loadPicture("./Art/Player/idle_down.png")
-	playerIdleLeftSheet := loadPicture("./Art/Player/idle_left.png")
+	playerIdleRightSheet := loadPicture("./Resources/Art/Player/idle_right.png")
+	playerIdleUpSheet := loadPicture("./Resources/Art/Player/idle_up.png")
+	playerIdleDownSheet := loadPicture("./Resources/Art/Player/idle_down.png")
+	playerIdleLeftSheet := loadPicture("./Resources/Art/Player/idle_left.png")
 	playerSpritesheets = PlayerSpritesheets{
 		createSpriteSheet(playerIdleRightSheet, 4),
 		createSpriteSheet(playerIdleUpSheet, 4),
@@ -46,8 +46,8 @@ func loadPlayerSpritesheets() {
 
 func loadObjectSpritesheets() {
 	// Object spritesheets
-	rainSheet := loadPicture("./Art/Weather/rain.png")
-	rainSplashSheet := loadPicture("./Art/Weather/rain_splash.png")
+	rainSheet := loadPicture("./Resources/Art/Weather/rain.png")
+	rainSplashSheet := loadPicture("./Resources/Art/Weather/rain_splash.png")
 	objectSpritesheets = ObjectSpritesheets{
 		createSpriteSheet(rainSheet, 5),
 		createSpriteSheet(rainSplashSheet, 6),
