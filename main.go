@@ -31,6 +31,8 @@ var (
 
 	currentLevel Level
 
+	currentShader string
+
 	// Draws bounding boxes of the rain deadzones for debugging
 	drawRainDeadzones = false
 )
@@ -49,7 +51,6 @@ func run() {
 	}
 
 	viewCanvas := pixelgl.NewCanvas(pixel.R(win.Bounds().Min.X, win.Bounds().Min.Y, win.Bounds().W(), win.Bounds().H()))
-	viewCanvas.SetFragmentShader(stormShader)
 
 	loadResources()
 
@@ -63,7 +64,7 @@ func run() {
 
 	// Set up first level
 	currentLevel = levels[0]
-	currentLevel.setupRoom(&player)
+	currentLevel.setupRoom(&player, viewCanvas)
 
 	last := time.Now()  // For fps decoupled updates
 	for !win.Closed() { // Game loop
@@ -83,18 +84,14 @@ func run() {
 		viewCanvas.Clear(color.RGBA{0x0a, 0x0a, 0x0a, 0x0a})
 		imd.Clear()
 
-		if win.Pressed(pixelgl.KeyG) {
-			viewCanvas.SetFragmentShader(grayscaleShader)
-		} else if win.Pressed(pixelgl.KeyH) {
-			viewCanvas.SetFragmentShader(regularShader)
-		}
+		// TODO: temporary
 		if win.JustPressed(pixelgl.MouseButtonLeft) {
 			fmt.Println(win.MousePosition())
 		}
 
 		switch gameState {
 		case 0: // In game, will probably change... Not sure
-			updateGame(win, dt)
+			updateGame(win, viewCanvas, dt)
 			renderGame(win, viewCanvas, imd, dt)
 		case 1: // In menu [?Likely to be separate menus?]
 			updateMenu(dt)

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math/rand"
 
+	"github.com/faiface/pixel/pixelgl"
+
 	"github.com/faiface/pixel"
 )
 
@@ -35,19 +37,21 @@ func (l *Level) updateRoom(player *Player, dt float64) {
 	}
 }
 
-func (l *Level) changeRoom(roomIndex int, player *Player) {
+func (l *Level) changeRoom(roomIndex int, player *Player, viewCanvas *pixelgl.Canvas) {
 	if roomIndex < len(l.rooms) {
 		l.currentRoomIndex = roomIndex
-		l.setupRoom(player)
+		l.setupRoom(player, viewCanvas)
 	} else {
 		fmt.Println("Room ", roomIndex, " does not exist!")
 	}
 }
 
-func (l *Level) setupRoom(player *Player) {
+func (l *Level) setupRoom(player *Player, viewCanvas *pixelgl.Canvas) {
 	player.pos = l.rooms[l.currentRoomIndex].playerStartPos
 	foregroundObjects = []Object{}
 	backgroundObjects = []Object{}
+	currentShader = l.rooms[l.currentRoomIndex].shader
+	viewCanvas.SetFragmentShader(currentShader)
 	for i := 0; i < len(l.rooms[l.currentRoomIndex].objects); i++ {
 		foregroundObjects = append(foregroundObjects, l.rooms[l.currentRoomIndex].objects[i])
 	}

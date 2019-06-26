@@ -12,9 +12,10 @@ type Room struct {
 	rainDeadZones  []pixel.Rect
 	rainTimer      float64
 	rainTimerMax   float64
+	shader         string
 }
 
-func createRoom(objects []Object, playerStartPos pixel.Vec, hasRain bool, rainDeadZones []pixel.Rect) Room {
+func createRoom(objects []Object, playerStartPos pixel.Vec, hasRain bool, rainDeadZones []pixel.Rect, shader string) Room {
 	rainTimer := 0.000001
 	rainTimerMax := rainTimer
 	return Room{
@@ -24,5 +25,6 @@ func createRoom(objects []Object, playerStartPos pixel.Vec, hasRain bool, rainDe
 		rainDeadZones,
 		rainTimer,
 		rainTimerMax,
+		shader,
 	}
 }

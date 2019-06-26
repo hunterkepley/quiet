@@ -45,6 +45,7 @@ func loadLevels() {
 						pixel.R(356, 674, 691, 686),
 						pixel.R(502, 354, 759, 434),
 					},
+					stormShader,
 				),
 				createRoom( // Inside 1
 					[]Object{
@@ -53,6 +54,7 @@ func loadLevels() {
 					pixel.V(100., 100.),
 					false,
 					[]pixel.Rect{},
+					grayscaleShader,
 				),
 			},
 		),

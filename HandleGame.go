@@ -39,11 +39,11 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 	}
 }
 
-func updateGame(win *pixelgl.Window, dt float64) {
+func updateGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 	player.update(win, dt)
 
 	if win.Pressed(pixelgl.KeyE) {
-		currentLevel.changeRoom(1, &player)
+		currentLevel.changeRoom(1, &player, viewCanvas)
 	}
 
 	currentLevel.updateRoom(&player, dt)

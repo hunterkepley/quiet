@@ -36,9 +36,7 @@ var (
 		fragColor = color;
 		// For light v
 		if((texture(uTexture, t).r == 0.99607843137 && texture(uTexture, t).g == 1.0 && texture(uTexture, t).b == 0.61568627451) 
-		|| (texture(uTexture, t).r == 1.0 && texture(uTexture, t).g == 1.0 && texture(uTexture, t).b ==  0.78039215686)
-		|| (texture(uTexture, t).r == 1.0 && texture(uTexture, t).g == 1.0 && texture(uTexture, t).b ==  0.65490196078)
-		|| (texture(uTexture, t).r == 1.0 && texture(uTexture, t).g == 1.0 && texture(uTexture, t).b ==  0.63137254902)) {
+		|| (texture(uTexture, t).r == 1.0 && texture(uTexture, t).g == 1.0 && texture(uTexture, t).b ==  0.78039215686)) {
 			fragColor = vec4(texture(uTexture, t).r, texture(uTexture, t).g, texture(uTexture, t).b, texture(uTexture, t).a);
 		}
 	}
