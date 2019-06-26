@@ -26,6 +26,7 @@ func (l *Level) updateRoom(player *Player, dt float64) {
 	for i := 0; i < len(l.rooms[l.currentRoomIndex].objects); i++ {
 		l.rooms[l.currentRoomIndex].objects[i].update(player)
 	}
+	l.rooms[l.currentRoomIndex].exec(player)
 	if l.rooms[l.currentRoomIndex].hasRain {
 		updateRain(l.rooms[l.currentRoomIndex].rainDeadZones, *player, dt)
 		if l.rooms[l.currentRoomIndex].rainTimer < 0. {

@@ -13,9 +13,10 @@ type Room struct {
 	rainTimer      float64
 	rainTimerMax   float64
 	shader         string
+	exec           func(player *Player)
 }
 
-func createRoom(objects []Object, playerStartPos pixel.Vec, hasRain bool, rainDeadZones []pixel.Rect, shader string) Room {
+func createRoom(objects []Object, playerStartPos pixel.Vec, hasRain bool, rainDeadZones []pixel.Rect, shader string, exec func(player *Player)) Room {
 	rainTimer := 0.000001
 	rainTimerMax := rainTimer
 	return Room{
@@ -26,5 +27,6 @@ func createRoom(objects []Object, playerStartPos pixel.Vec, hasRain bool, rainDe
 		rainTimer,
 		rainTimerMax,
 		shader,
+		exec,
 	}
 }

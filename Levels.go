@@ -46,6 +46,7 @@ func loadLevels() {
 						pixel.R(502, 354, 759, 434),
 					},
 					stormShader,
+					l1r1,
 				),
 				createRoom( // Inside 1
 					[]Object{
@@ -55,8 +56,24 @@ func loadLevels() {
 					false,
 					[]pixel.Rect{},
 					grayscaleShader,
+					l1r2,
 				),
 			},
 		),
 	}
+}
+
+// Functions for rooms
+
+func l1r1(player *Player) {
+	// Collision against gas station
+	if player.pos.Y > 422 && player.pos.X > 243 && player.pos.X < 716 {
+		player.pos.Y = 422
+	} else if player.pos.Y > 428 {
+		player.pos.Y = 428
+	}
+}
+
+func l1r2(player *Player) {
+
 }
