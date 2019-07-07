@@ -24,7 +24,10 @@ type ObjectImages struct {
 
 //SoundImages ... All the visible sound images
 type SoundImages struct {
-	playerSoundBubble pixel.Picture
+	playerSoundWaveTL pixel.Picture
+	playerSoundWaveTR pixel.Picture
+	playerSoundWaveBL pixel.Picture
+	playerSoundWaveBR pixel.Picture
 }
 
 //MenuImages ... All the menu images that aren't animated
@@ -47,7 +50,10 @@ func loadObjectImages() {
 
 func loadSoundImages() {
 	soundImages = SoundImages{
-		loadPicture("./Resources/Art/Player/sound_bubble.png"),
+		loadPicture("./Resources/Art/Player/sound_wave_tl.png"),
+		loadPicture("./Resources/Art/Player/sound_wave_tr.png"),
+		loadPicture("./Resources/Art/Player/sound_wave_bl.png"),
+		loadPicture("./Resources/Art/Player/sound_wave_br.png"),
 	}
 }
 
