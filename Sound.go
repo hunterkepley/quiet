@@ -7,16 +7,17 @@ import (
 
 //SoundWave ... Sound waves emitted from sounds
 type SoundWave struct {
-	pos      pixel.Vec
-	center   pixel.Vec
-	velocity pixel.Vec // 0 for no change, 1 for  change via dB level [-1 for reverse]
-	size     pixel.Vec
-	pic      pixel.Picture
-	sprite   *pixel.Sprite
-	dB       float64 // Speed/strength of the sound
+	pos           pixel.Vec
+	center        pixel.Vec
+	velocity      pixel.Vec // 0 for no change, 1 for  change via dB level [-1 for reverse]
+	size          pixel.Vec
+	pic           pixel.Picture
+	sprite        *pixel.Sprite
+	dB            float64 // Speed/strength of the sound
+	depletionRate float64 // How quickly the sound wave loses dB
 }
 
-func createSoundWave(pos pixel.Vec, pic pixel.Picture, velocity pixel.Vec, dB float64) SoundWave {
+func createSoundWave(pos pixel.Vec, pic pixel.Picture, velocity pixel.Vec, dB float64, depletionRate float64) SoundWave {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
@@ -27,7 +28,9 @@ func createSoundWave(pos pixel.Vec, pic pixel.Picture, velocity pixel.Vec, dB fl
 		size,
 		pic,
 		sprite,
-		dB}
+		dB,
+		depletionRate,
+	}
 }
 
 func (w *SoundWave) update(dt float64) {
@@ -48,9 +51,33 @@ type SoundEmitter struct {
 	waves []SoundWave
 }
 
-func (s *SoundEmitter) emit(dB float64) {
-	s.waves = append(s.waves, createSoundWave(s.pos, soundImages.playerSoundWaveTL, pixel.V(-1, 1), dB))  // Top left
-	s.waves = append(s.waves, createSoundWave(s.pos, soundImages.playerSoundWaveTR, pixel.V(1, 1), dB))   // Top right
-	s.waves = append(s.waves, createSoundWave(s.pos, soundImages.playerSoundWaveBL, pixel.V(-1, -1), dB)) // Bottom left
-	s.waves = append(s.waves, createSoundWave(s.pos, soundImages.playerSoundWaveBR, pixel.V(1, -1), dB))  // Bottom right
+func createSoundEmitter(pos pixel.Vec) SoundEmitter {
+	return SoundEmitter{
+		pos,
+		[]SoundWave{},
+	}
+}
+
+func (s *SoundEmitter) emit(dB float64, depletionRate float64) {
+	s.waves = append(s.waves, createSoundWave(s.pos, soundImages.playerSoundWaveTL, pixel.V(-1, 1), dB, depletionRate))  // Top left
+	s.waves = append(s.waves, createSoundWave(s.pos, soundImages.playerSoundWaveTR, pixel.V(1, 1), dB, depletionRate))   // Top right
+	s.waves = append(s.waves, createSoundWave(s.pos, soundImages.playerSoundWaveBL, pixel.V(-1, -1), dB, depletionRate)) // Bottom left
+	s.waves = append(s.waves, createSoundWave(s.pos, soundImages.playerSoundWaveBR, pixel.V(1, -1), dB, depletionRate))  // Bottom right
+}
+
+func (s *SoundEmitter) update(pos pixel.Vec, dt float64) {
+	s.pos = pos
+	for i := 0; i < len(s.waves); i++ {
+		s.waves[i].update(dt)
+		s.waves[i].dB -= s.waves[i].depletionRate * dt
+		if s.waves[i].dB <= 0. {
+			s.waves = append(s.waves[:i], s.waves[i+1:]...)
+		}
+	}
+}
+
+func (s *SoundEmitter) render(viewCanvas *pixelgl.Canvas) {
+	for i := 0; i < len(s.waves); i++ {
+		s.waves[i].render(viewCanvas)
+	}
 }

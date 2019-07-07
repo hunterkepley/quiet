@@ -27,6 +27,12 @@ type Player struct {
 	imageScale         float64
 	hitBox             pixel.Rect
 	footHitBox         pixel.Rect
+	// Sound emitter
+	activateSoundEmitter bool
+	allowSoundEmitter    bool
+	soundEmitter         SoundEmitter
+	soundTimer           float64
+	soundTimerMax        float64
 
 	// Animations
 	animations PlayerAnimations
@@ -67,6 +73,11 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 		playerImageScale,
 		pixel.R(0, 0, 0, 0),
 		pixel.R(0, 0, 0, 0),
+		true,
+		true,
+		createSoundEmitter(pos),
+		1.,
+		1.,
 		PlayerAnimations{
 			createAnimation(playerSpritesheets.playerIdleRightSheet, idleAnimationSpeed),
 			createAnimation(playerSpritesheets.playerIdleUpSheet, idleAnimationSpeed),
@@ -84,6 +95,25 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 	p.center = pixel.V(p.pos.X+(p.size.X/2), p.pos.Y+(p.size.Y/2))
 
 	p.updateHitboxes()
+
+	if p.activeMovement {
+		p.activateSoundEmitter = true
+	} else {
+		p.activateSoundEmitter = false
+	}
+
+	// Update sound emitter
+	if p.allowSoundEmitter { // If the sound emitter is allowed in a room
+		p.soundEmitter.update(p.center, dt)
+		if p.activateSoundEmitter { // If the player is currently walking
+			if p.soundTimer < 0 {
+				p.soundEmitter.emit(100, 10)
+				p.soundTimer = p.soundTimerMax
+			} else {
+				p.soundTimer -= 1 * dt
+			}
+		}
+	}
 
 	// Screen edge collision detection/response
 	if p.center.X-p.size.X/2 < 0. || p.center.X+p.size.X/2 > winWidth { // Left / Right
@@ -107,6 +137,10 @@ func (p *Player) updateHitboxes() { // Also updates size
 
 func (p *Player) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) { // Draws the player
 	p.batch.Clear()
+	// Render sound emitter
+	if p.allowSoundEmitter {
+		p.soundEmitter.render(viewCanvas)
+	}
 	sprite := p.animation.animate(dt)
 	sprite.Draw(p.batch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center).Scaled(p.center, p.imageScale))
 	p.batch.Draw(viewCanvas)
