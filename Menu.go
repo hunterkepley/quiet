@@ -1,12 +1,6 @@
 package main
 
 import (
-	"log"
-	"os"
-	"time"
-
-	"github.com/faiface/beep/mp3"
-	"github.com/faiface/beep/speaker"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 )
@@ -17,11 +11,13 @@ type Menu struct {
 }
 
 func createMainMenu() Menu {
-	return Menu{
+	menu := Menu{
 		[]UIImage{
 			createUIImage(pixel.V(0, 0), menuImages.title),
 		},
 	}
+	//go menu.runMusic() // Plays music
+	return menu
 }
 
 func (m *Menu) update(win *pixelgl.Window, viewCanvas *pixelgl.Canvas) {
@@ -42,20 +38,6 @@ func (m *Menu) render(viewCanvas *pixelgl.Canvas) {
 	}
 }
 
-func (m *Menu) music() {
-	// TODO: make the music a system like Images or Spritesheets or Animations
-	music, err := os.Open("./Resources/Sound/Music/menuMusic.mp3")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	streamer, format, err := mp3.Decode(music)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer streamer.Close()
-
-	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
-
-	speaker.Play(streamer)
+func (m *Menu) runMusic() {
+	songs.menuSong.play()
 }

@@ -127,8 +127,12 @@ func loadResources() {
 	loadObjectBatches()
 	//Load images for game that aren't spritesheets
 	loadObjectImages()
+	//Load images for the visible sound bubbles/other sound images
+	loadSoundImages()
 	//Load images for the main menu
 	loadMenuImages()
+	//Load music for the game
+	loadMusic()
 	//Create main menu
 	mainMenu = createMainMenu()
 }

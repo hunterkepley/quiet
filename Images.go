@@ -7,6 +7,7 @@ import (
 var (
 	objectImages ObjectImages
 	menuImages   MenuImages
+	soundImages  SoundImages
 )
 
 //ObjectImages ... All the non-spritesheet images in the game
@@ -19,6 +20,11 @@ type ObjectImages struct {
 	gasStreet    pixel.Picture
 	gasFence     pixel.Picture
 	gasLight     pixel.Picture
+}
+
+//SoundImages ... All the visible sound images
+type SoundImages struct {
+	playerSoundBubble pixel.Picture
 }
 
 //MenuImages ... All the menu images that aren't animated
@@ -36,6 +42,12 @@ func loadObjectImages() {
 		loadPicture("./Resources/Art/Objects/Backgrounds/l1/street1.png"),
 		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_fence.png"),
 		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_light.png"),
+	}
+}
+
+func loadSoundImages() {
+	soundImages = SoundImages{
+		loadPicture("./Resources/Art/Player/sound_bubble.png"),
 	}
 }
 
