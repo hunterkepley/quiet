@@ -105,12 +105,13 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 	// Update sound emitter
 	if p.allowSoundEmitter { // If the sound emitter is allowed in a room
 		p.soundEmitter.update(p.center, dt)
+		if p.soundTimer > 0 { // Constantly tick down the timer to prevent tapping a key to avoid sound emitting, won't emit until moving
+			p.soundTimer -= 1 * dt
+		}
 		if p.activateSoundEmitter { // If the player is currently walking
 			if p.soundTimer < 0 {
 				p.soundEmitter.emit(100, 10)
 				p.soundTimer = p.soundTimerMax
-			} else {
-				p.soundTimer -= 1 * dt
 			}
 		}
 	}

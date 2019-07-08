@@ -28,6 +28,10 @@ type SoundImages struct {
 	playerSoundWaveTR pixel.Picture
 	playerSoundWaveBL pixel.Picture
 	playerSoundWaveBR pixel.Picture
+	playerSoundWaveB  pixel.Picture
+	playerSoundWaveT  pixel.Picture
+	playerSoundWaveL  pixel.Picture
+	playerSoundWaveR  pixel.Picture
 }
 
 //MenuImages ... All the menu images that aren't animated
@@ -54,6 +58,10 @@ func loadSoundImages() {
 		loadPicture("./Resources/Art/Player/sound_wave_tr.png"),
 		loadPicture("./Resources/Art/Player/sound_wave_bl.png"),
 		loadPicture("./Resources/Art/Player/sound_wave_br.png"),
+		loadPicture("./Resources/Art/Player/sound_wave_b.png"),
+		loadPicture("./Resources/Art/Player/sound_wave_t.png"),
+		loadPicture("./Resources/Art/Player/sound_wave_l.png"),
+		loadPicture("./Resources/Art/Player/sound_wave_r.png"),
 	}
 }
 
