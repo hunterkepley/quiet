@@ -16,10 +16,11 @@ type Object struct {
 	sprite           pixel.Sprite
 	radius           float64
 	sizeDiminisher   float64
-	inFrontOfPlayer  bool // If the object is rendered in front of the player or not
-	backgroundObject bool // true if in background
-	foregroundObject bool // true if in foreground
-	playerCollidable bool // true if collides with player
+	inFrontOfPlayer  bool    // If the object is rendered in front of the player or not
+	backgroundObject bool    // true if in background
+	foregroundObject bool    // true if in foreground
+	playerCollidable bool    // true if collides with player
+	dBDiminisher     float64 // Amount of dB it takes to go through the object.
 
 	// Collision rects
 	top             pixel.Rect
@@ -35,7 +36,7 @@ var (
 	foregroundObjects []Object
 )
 
-func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, backgroundObject bool, foregroundObject bool, playerCollidable bool) Object {
+func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, backgroundObject bool, foregroundObject bool, playerCollidable bool, dBDiminisher float64) Object {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
@@ -63,6 +64,7 @@ func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, back
 		backgroundObject,
 		foregroundObject,
 		playerCollidable,
+		dBDiminisher,
 		top,
 		left,
 		right,

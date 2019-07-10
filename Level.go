@@ -42,9 +42,14 @@ func (l *Level) changeRoom(roomIndex int, player *Player, viewCanvas *pixelgl.Ca
 	if roomIndex < len(l.rooms) {
 		l.currentRoomIndex = roomIndex
 		l.setupRoom(player, viewCanvas)
+		clearProjectiles(player)
 	} else {
 		fmt.Println("Room ", roomIndex, " does not exist!")
 	}
+}
+
+func clearProjectiles(player *Player) {
+	player.soundEmitter.waves = []SoundWave{} // Clear sound waves from player
 }
 
 func (l *Level) setupRoom(player *Player, viewCanvas *pixelgl.Canvas) {
@@ -53,6 +58,11 @@ func (l *Level) setupRoom(player *Player, viewCanvas *pixelgl.Canvas) {
 	backgroundObjects = []Object{}
 	currentShader = l.rooms[l.currentRoomIndex].shader
 	viewCanvas.SetFragmentShader(currentShader)
+	if l.rooms[l.currentRoomIndex].hasSoundWaves {
+		player.allowSoundEmitter = true
+	} else {
+		player.allowSoundEmitter = false
+	}
 	for i := 0; i < len(l.rooms[l.currentRoomIndex].objects); i++ {
 		foregroundObjects = append(foregroundObjects, l.rooms[l.currentRoomIndex].objects[i])
 	}

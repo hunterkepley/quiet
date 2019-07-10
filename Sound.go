@@ -36,6 +36,7 @@ func createSoundWave(pos pixel.Vec, pic pixel.Picture, velocity pixel.Vec, dB fl
 func (w *SoundWave) update(dt float64) {
 	w.pos = pixel.V(w.pos.X+((w.velocity.X*w.dB)*dt), w.pos.Y+((w.velocity.Y*w.dB)*dt))
 	w.center = pixel.V(w.pos.X+(w.size.X/2), w.pos.Y+(w.size.Y/2))
+	w.objectCollision()
 }
 
 func (w *SoundWave) render(viewCanvas *pixelgl.Canvas) {
@@ -43,6 +44,31 @@ func (w *SoundWave) render(viewCanvas *pixelgl.Canvas) {
 		Moved(w.center).
 		Scaled(w.center, imageScale)
 	w.sprite.Draw(viewCanvas, mat)
+}
+
+func (w *SoundWave) objectCollision() {
+	for i := range foregroundObjects {
+		o := foregroundObjects[i]
+		if w.pos.X < o.pos.X+o.size.X &&
+			w.pos.X+w.size.X > o.pos.X &&
+			w.pos.Y < o.pos.Y+o.size.Y/o.sizeDiminisher &&
+			w.pos.Y+w.size.Y > o.pos.Y {
+
+			w.dB -= o.dBDiminisher
+			w.pos = pixel.V(w.pos.X+w.velocity.X*o.size.X, w.pos.Y+w.velocity.Y*o.size.Y)
+		}
+	}
+	for i := range backgroundObjects {
+		o := backgroundObjects[i]
+		if w.pos.X < o.pos.X+o.size.X &&
+			w.pos.X+w.size.X > o.pos.X &&
+			w.pos.Y < o.pos.Y+o.size.Y/o.sizeDiminisher &&
+			w.pos.Y+w.size.Y > o.pos.Y {
+
+			w.dB -= o.dBDiminisher
+			w.pos = pixel.V(w.pos.X+w.velocity.X*o.size.X, w.pos.Y+w.velocity.Y*o.size.Y)
+		}
+	}
 }
 
 //SoundEmitter ... Emitter for sound in the game
@@ -78,6 +104,7 @@ func (s *SoundEmitter) update(pos pixel.Vec, dt float64) {
 		s.waves[i].update(dt)
 		s.waves[i].dB -= s.waves[i].depletionRate * dt
 		// Screen edge collision detection/response
+		// These have to be separate to avoid crashing
 		if s.waves[i].center.X-s.waves[i].size.X/2 < 0. || s.waves[i].center.X+s.waves[i].size.X/2 > winWidth { // Left / Right
 			s.waves = append(s.waves[:i], s.waves[i+1:]...)
 		} else if s.waves[i].center.Y-s.waves[i].size.Y/2 < 0. || s.waves[i].center.Y+s.waves[i].size.Y/2 > winHeight { // Bottom / Top

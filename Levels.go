@@ -12,13 +12,13 @@ func loadLevels() {
 			[]Room{
 				createRoom( // Outside 1
 					[]Object{ // Objects in room
-						createObject(pixel.V(0., 0.), objectImages.gasStreet, 1., true, false, false),
-						createObject(pixel.V(0., 0.), objectImages.gasFence, 1., true, false, false),
-						createObject(pixel.V(0., 0.), objectImages.gasBody, 1., true, false, false),
-						createObject(pixel.V(0., 0.), objectImages.gasRoof, 1., false, true, false),
-						createObject(pixel.V(0., 0.), objectImages.gasLight, 1., false, true, false),
-						createObject(pixel.V(518., 352.), objectImages.gasLeftPole, 15., false, false, true),
-						createObject(pixel.V(764., 352.), objectImages.gasRightPole, 15., false, false, true),
+						createObject(pixel.V(0., 0.), objectImages.gasStreet, 1., true, false, false, 0.),
+						createObject(pixel.V(0., 0.), objectImages.gasFence, 1., true, false, false, 0.),
+						createObject(pixel.V(0., 0.), objectImages.gasBody, 1., true, false, false, 0.),
+						createObject(pixel.V(0., 0.), objectImages.gasRoof, 1., false, true, false, 0.),
+						createObject(pixel.V(0., 0.), objectImages.gasLight, 1., false, true, false, 0.),
+						createObject(pixel.V(518., 352.), objectImages.gasLeftPole, 15., false, false, true, 0.),
+						createObject(pixel.V(764., 352.), objectImages.gasRightPole, 15., false, false, true, 0.),
 					},
 					pixel.V(50., 50.), // Player starting position
 					true,              // Has rain
@@ -45,18 +45,20 @@ func loadLevels() {
 						pixel.R(356, 674, 691, 686),
 						pixel.R(502, 354, 759, 434),
 					},
-					stormShader,
-					l1r1,
+					stormShader, // Shader
+					l1r1,        // Function for the room
+					false,       // Has sound waves
 				),
 				createRoom( // Inside 1
 					[]Object{
-						createObject(pixel.V(200., 200.), objectImages.box1, 2., false, false, true),
+						createObject(pixel.V(200., 200.), objectImages.box1, 2., false, false, true, 50.),
 					},
 					pixel.V(100., 100.),
 					false,
 					[]pixel.Rect{},
 					grayscaleShader,
 					l1r2,
+					true,
 				),
 			},
 		),
