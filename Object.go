@@ -7,6 +7,11 @@ import (
 	"golang.org/x/image/colornames"
 )
 
+var (
+	backgroundObjects []Object
+	foregroundObjects []Object
+)
+
 // Object ... Objects that the player can collide with
 type Object struct {
 	pos              pixel.Vec
@@ -31,10 +36,6 @@ type Object struct {
 	hitboxes        bool
 }
 
-var (
-	backgroundObjects []Object
-	foregroundObjects []Object
-)
 
 func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, backgroundObject bool, foregroundObject bool, playerCollidable bool, dBDiminisher float64) Object {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
