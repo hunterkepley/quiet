@@ -8,6 +8,7 @@ var (
 	objectImages ObjectImages
 	menuImages   MenuImages
 	soundImages  SoundImages
+	enemyImages  EnemyImages
 )
 
 //ObjectImages ... All the non-spritesheet images in the game
@@ -39,6 +40,16 @@ type MenuImages struct {
 	title pixel.Picture
 }
 
+//LarvaImages ... All the larva enemy images in the game
+type LarvaImages struct {
+	stillLeft pixel.Picture
+}
+
+//EnemyImages ... All the enemy images in the game that aren't animated
+type EnemyImages struct {
+	larvaImages LarvaImages
+}
+
 func loadObjectImages() {
 	objectImages = ObjectImages{
 		loadPicture("./Resources/Art/Objects/Scenery/box1.png"),
@@ -68,5 +79,13 @@ func loadSoundImages() {
 func loadMenuImages() {
 	menuImages = MenuImages{
 		loadPicture("./Resources/Art/UI/MM/title.png"),
+	}
+}
+
+func loadEnemyImages() {
+	enemyImages = EnemyImages{
+		LarvaImages{
+			loadPicture("./Resources/Art/Enemies/Larva/still_left.png"),
+		},
 	}
 }

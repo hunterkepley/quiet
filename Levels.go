@@ -20,6 +20,9 @@ func loadLevels() {
 						createObject(pixel.V(518., 352.), objectImages.gasLeftPole, 15., false, false, true, 0.),
 						createObject(pixel.V(764., 352.), objectImages.gasRightPole, 15., false, false, true, 0.),
 					},
+					[]Enemy{ // Enemies in the room
+
+					},
 					pixel.V(50., 50.), // Player starting position
 					true,              // Has rain
 					[]pixel.Rect{ // Rain dead zones
@@ -52,6 +55,9 @@ func loadLevels() {
 				createRoom( // Inside 1
 					[]Object{
 						createObject(pixel.V(200., 200.), objectImages.box1, 2., false, false, true, 50.),
+					},
+					[]Enemy{
+						createEnemy(pixel.V(300., 300.), enemyImages.larvaImages.stillLeft, 0., 20.),
 					},
 					pixel.V(100., 100.),
 					false,

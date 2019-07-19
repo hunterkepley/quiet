@@ -8,14 +8,14 @@ import (
 
 // Enemy ... All basic enemies in the game
 type Enemy struct {
-	pos pixel.Vec
-	center	pixel.Vec
-	size	pixel.Vec
-	pic pixel.Picture
-	sprite *pixel.Sprite
+	pos            pixel.Vec
+	center         pixel.Vec
+	size           pixel.Vec
+	pic            pixel.Picture
+	sprite         *pixel.Sprite
 	sizeDiminisher float64
-	moveSpeed float64
-	moveVector pixel.Vec // 1, 1 for moving top right, 0, 1 for moving up, etc.
+	moveSpeed      float64
+	moveVector     pixel.Vec // 1, 1 for moving top right, 0, 1 for moving up, etc.
 }
 
 func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveSpeed float64) Enemy {
@@ -23,11 +23,11 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	return Enemy{
-		pos, 
-		pixel.ZV, 
-		size, 
-		pic, 
-		sprite, 
+		pos,
+		pixel.ZV,
+		size,
+		pic,
+		sprite,
 		sizeDiminisher,
 		moveSpeed,
 		pixel.ZV,
@@ -41,7 +41,8 @@ func (e Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	e.sprite.Draw(viewCanvas, mat)
 }
 
-func (e Enemy) update() {
+func (e Enemy) update(dt float64) {
+	e.moveVector = pixel.V(-1, -1)
+	e.pos = pixel.V((e.moveSpeed*dt)*e.moveVector.X, (e.moveSpeed*dt)*e.moveVector.Y)
 	e.center = pixel.V(e.pos.X+(e.size.X/2), e.pos.Y+(e.size.Y/2))
-
 }

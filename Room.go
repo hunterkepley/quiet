@@ -7,6 +7,7 @@ import (
 // Room ... It's a damn room for a level
 type Room struct {
 	objects        []Object
+	enemies        []Enemy
 	playerStartPos pixel.Vec
 	hasRain        bool
 	rainDeadZones  []pixel.Rect
@@ -14,14 +15,15 @@ type Room struct {
 	rainTimerMax   float64
 	shader         string
 	exec           func(player *Player)
-	hasSoundWaves bool
+	hasSoundWaves  bool
 }
 
-func createRoom(objects []Object, playerStartPos pixel.Vec, hasRain bool, rainDeadZones []pixel.Rect, shader string, exec func(player *Player), hasSoundWaves bool) Room {
+func createRoom(objects []Object, enemies []Enemy, playerStartPos pixel.Vec, hasRain bool, rainDeadZones []pixel.Rect, shader string, exec func(player *Player), hasSoundWaves bool) Room {
 	rainTimer := 0.000001
 	rainTimerMax := rainTimer
 	return Room{
 		objects,
+		enemies,
 		playerStartPos,
 		hasRain,
 		rainDeadZones,

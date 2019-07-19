@@ -133,6 +133,8 @@ func loadResources() {
 	loadMenuImages()
 	//Load music for the game
 	loadMusic()
+	//Load enemy images for the game
+	loadEnemyImages()
 	//Create main menu
 	mainMenu = createMainMenu()
 }

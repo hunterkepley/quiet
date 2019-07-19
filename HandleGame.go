@@ -16,6 +16,9 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 		backgroundObjects[i].render(viewCanvas, imd, player)
 
 	}
+	for i := 0; i < len(currentLevel.rooms[currentLevel.currentRoomIndex].enemies); i++ {
+		currentLevel.rooms[currentLevel.currentRoomIndex].enemies[i].render(viewCanvas, imd)
+	}
 	player.render(win, viewCanvas, dt)
 	for i := 0; i < len(foregroundObjects); i++ {
 		foregroundObjects[i].render(viewCanvas, imd, player)
