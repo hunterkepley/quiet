@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
@@ -41,8 +43,9 @@ func (e Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	e.sprite.Draw(viewCanvas, mat)
 }
 
-func (e Enemy) update(dt float64) {
-	e.moveVector = pixel.V(-1, -1)
-	e.pos = pixel.V((e.moveSpeed*dt)*e.moveVector.X, (e.moveSpeed*dt)*e.moveVector.Y)
+func (e *Enemy) update(dt float64) {
+	e.moveVector = pixel.V(1, 1)
+	fmt.Println(e.pos)
+	e.pos = pixel.V(e.pos.X+(e.moveSpeed*dt)*e.moveVector.X, e.pos.X+(e.moveSpeed*dt)*e.moveVector.Y)
 	e.center = pixel.V(e.pos.X+(e.size.X/2), e.pos.Y+(e.size.Y/2))
 }
