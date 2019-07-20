@@ -16,12 +16,23 @@ type Enemy struct {
 	sizeDiminisher float64
 	moveSpeed      float64
 	moveVector     pixel.Vec // 1, 1 for moving top right, 0, 1 for moving up, etc.
+
+	// Animations
+	animation  Animation
+	animations EnemyAnimations
+}
+
+//EnemyAnimations .. Enemy animations in the game
+type EnemyAnimations struct {
+	leftAnimation Animation
 }
 
 func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveSpeed float64) Enemy {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
+
+	animationSpeed := 0.2
 	return Enemy{
 		pos,
 		pixel.ZV,
@@ -31,14 +42,19 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 		sizeDiminisher,
 		moveSpeed,
 		pixel.ZV,
+		createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, animationSpeed),
+		EnemyAnimations{
+			createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, animationSpeed),
+		},
 	}
 }
 
-func (e Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
+func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	mat := pixel.IM.
 		Moved(e.center).
 		Scaled(e.center, imageScale)
-	e.sprite.Draw(viewCanvas, mat)
+	sprite := e.animation.animate(dt)
+	sprite.Draw(viewCanvas, mat)
 }
 
 func (e *Enemy) update(dt float64, p Player) {

@@ -135,6 +135,8 @@ func loadResources() {
 	loadMusic()
 	//Load enemy images for the game
 	loadEnemyImages()
+	//Load enemy spritesheets for the game
+	loadEnemySpriteSheets()
 	//Create main menu
 	mainMenu = createMainMenu()
 }

@@ -38,7 +38,7 @@ type Player struct {
 	animations PlayerAnimations
 }
 
-// PlayerAnimations ... Player animations in the game
+//PlayerAnimations ... Player animations in the game
 type PlayerAnimations struct { // Holds all the animations for the player
 	idleRightAnimation Animation
 	idleUpAnimation    Animation

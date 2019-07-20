@@ -7,6 +7,7 @@ import (
 var (
 	playerSpritesheets PlayerSpritesheets
 	objectSpritesheets ObjectSpritesheets
+	enemySpriteSheets  EnemySpriteSheets
 )
 
 /*Spritesheet ... Holds a picture of a spritesheet and the frames of each single picture*/
@@ -22,6 +23,16 @@ type PlayerSpritesheets struct {
 	playerIdleUpSheet    Spritesheet
 	playerIdleDownSheet  Spritesheet
 	playerIdleLeftSheet  Spritesheet
+}
+
+//LarvaSpriteSheets ... All the larva spritesheets in the game
+type LarvaSpriteSheets struct {
+	leftSpriteSheet Spritesheet
+}
+
+//EnemySpriteSheets ... All the enemy spritesheets in the game
+type EnemySpriteSheets struct {
+	larvaSpriteSheets LarvaSpriteSheets
 }
 
 /*ObjectSpritesheets ... All the object spritesheets in the game*/
@@ -41,6 +52,16 @@ func loadPlayerSpritesheets() {
 		createSpriteSheet(playerIdleUpSheet, 4),
 		createSpriteSheet(playerIdleDownSheet, 4),
 		createSpriteSheet(playerIdleLeftSheet, 4),
+	}
+}
+
+func loadEnemySpriteSheets() {
+	// Enemy spritesheets
+	larvaLeftSheet := loadPicture("./Resources/Art/Enemies/Larva/left_spritesheet.png")
+	enemySpriteSheets = EnemySpriteSheets{
+		LarvaSpriteSheets{
+			createSpriteSheet(larvaLeftSheet, 4),
+		},
 	}
 }
 
