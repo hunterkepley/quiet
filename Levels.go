@@ -57,7 +57,7 @@ func loadLevels() {
 						createObject(pixel.V(200., 200.), objectImages.box1, 2., false, false, true, 50.),
 					},
 					[]Enemy{
-						createEnemy(pixel.V(300., 300.), enemyImages.larvaImages.stillLeft, 0., 20.),
+						createEnemy(pixel.V(300., 300.), enemyImages.larvaImages.stillLeft, 1., 20., 5.),
 					},
 					pixel.V(100., 100.),
 					false,
