@@ -8,6 +8,7 @@ import (
 //SoundWave ... Sound waves emitted from sounds
 type SoundWave struct {
 	pos           pixel.Vec
+	startPos      pixel.Vec // Starting position for enemies to go to
 	center        pixel.Vec
 	velocity      pixel.Vec // 0 for no change, 1 for  change via dB level [-1 for reverse]
 	size          pixel.Vec
@@ -22,6 +23,7 @@ func createSoundWave(pos pixel.Vec, pic pixel.Picture, velocity pixel.Vec, dB fl
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	return SoundWave{
+		pixel.V(pos.X-size.X/2, pos.Y-size.Y/2),
 		pixel.V(pos.X-size.X/2, pos.Y-size.Y/2),
 		pixel.ZV,
 		velocity,

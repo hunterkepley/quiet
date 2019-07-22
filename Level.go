@@ -27,7 +27,7 @@ func (l *Level) updateRoom(player *Player, dt float64) {
 		l.rooms[l.currentRoomIndex].objects[i].update(player)
 	}
 	for i := 0; i < len(l.rooms[l.currentRoomIndex].enemies); i++ {
-		l.rooms[l.currentRoomIndex].enemies[i].update(dt, *player, player.soundEmitter.waves)
+		l.rooms[l.currentRoomIndex].enemies[i].update(dt, player.soundEmitter.waves)
 	}
 	l.rooms[l.currentRoomIndex].exec(player)
 	if l.rooms[l.currentRoomIndex].hasRain {

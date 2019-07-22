@@ -18,6 +18,7 @@ type Enemy struct {
 	moveVector      pixel.Vec // 1, 1 for moving top right, 0, 1 for moving up, etc.
 	noSoundTimer    float64   // Timer for how long until they stop chasing after not hearing a sound
 	noSoundTimerMax float64
+	targetPosition  pixel.Vec // The position the enemy will go to
 
 	// Animations
 	animation  Animation
@@ -46,6 +47,7 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 		pixel.ZV,
 		0.,
 		noSoundTimer,
+		pixel.ZV,
 		createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, animationSpeed),
 		EnemyAnimations{
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, animationSpeed),
@@ -61,7 +63,7 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	sprite.Draw(viewCanvas, mat)
 }
 
-func (e *Enemy) update(dt float64, p Player, soundWaves []SoundWave) {
+func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 	e.moveVector = pixel.V(0, 0)
 	for i := 0; i < len(soundWaves); i++ {
 		if soundWaves[i].pos.X < e.pos.X+e.size.X &&
@@ -69,17 +71,18 @@ func (e *Enemy) update(dt float64, p Player, soundWaves []SoundWave) {
 			soundWaves[i].pos.Y < e.pos.Y+e.size.Y/e.sizeDiminisher &&
 			soundWaves[i].pos.Y+soundWaves[i].size.Y > e.pos.Y {
 			e.noSoundTimer = e.noSoundTimerMax
+			e.targetPosition = soundWaves[i].startPos
 		}
 	}
 	if e.noSoundTimer > 0. {
-		if p.center.X > e.center.X {
+		if e.targetPosition.X > e.center.X {
 			e.moveVector.X = 1
-		} else if p.center.X < e.center.X {
+		} else if e.targetPosition.X < e.center.X {
 			e.moveVector.X = -1
 		}
-		if p.center.Y > e.center.Y {
+		if e.targetPosition.Y > e.center.Y {
 			e.moveVector.Y = 1
-		} else if p.center.Y < e.center.Y {
+		} else if e.targetPosition.Y < e.center.Y {
 			e.moveVector.Y = -1
 		}
 		e.noSoundTimer -= 1 * dt
