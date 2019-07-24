@@ -8,17 +8,20 @@ import (
 
 // Enemy ... All basic enemies in the game
 type Enemy struct {
-	pos             pixel.Vec
-	center          pixel.Vec
-	size            pixel.Vec
-	pic             pixel.Picture
-	sprite          *pixel.Sprite
-	sizeDiminisher  float64
-	moveSpeed       float64
-	moveVector      pixel.Vec // 1, 1 for moving top right, 0, 1 for moving up, etc.
-	noSoundTimer    float64   // Timer for how long until they stop chasing after not hearing a sound
-	noSoundTimerMax float64
-	targetPosition  pixel.Vec // The position the enemy will go to
+	pos                pixel.Vec
+	center             pixel.Vec
+	size               pixel.Vec
+	pic                pixel.Picture
+	sprite             *pixel.Sprite
+	sizeDiminisher     float64
+	moveSpeed          float64
+	moveVector         pixel.Vec // 1, 1 for moving top right, 0, 1 for moving up, etc.
+	noSoundTimer       float64   // Timer for how long until they stop chasing after not hearing a sound
+	noSoundTimerMax    float64
+	targetPosition     pixel.Vec // The position the enemy will go to
+	currentAnimation   int       // Int of the current animation. 0 = top, 3 = left
+	moveAnimationSpeed float64
+	idleAnimationSpeed float64
 
 	// Animations
 	animation  Animation
@@ -27,15 +30,14 @@ type Enemy struct {
 
 //EnemyAnimations .. Enemy animations in the game
 type EnemyAnimations struct {
-	leftAnimation Animation
+	leftAnimation  Animation
+	rightAnimation Animation
 }
 
-func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveSpeed float64, noSoundTimer float64) Enemy {
+func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveSpeed float64, noSoundTimer float64, moveAnimationSpeed float64, idleAnimationSpeed float64) Enemy {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
-
-	animationSpeed := 0.2
 	return Enemy{
 		pos,
 		pixel.ZV,
@@ -48,9 +50,13 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 		0.,
 		noSoundTimer,
 		pixel.ZV,
-		createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, animationSpeed),
+		3,
+		moveAnimationSpeed,
+		idleAnimationSpeed,
+		createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, idleAnimationSpeed),
 		EnemyAnimations{
-			createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, animationSpeed),
+			createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, idleAnimationSpeed),
+			createAnimation(enemySpriteSheets.larvaSpriteSheets.rightSpriteSheet, idleAnimationSpeed),
 		},
 	}
 }
@@ -72,13 +78,24 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 			soundWaves[i].pos.Y+soundWaves[i].size.Y > e.pos.Y {
 			e.noSoundTimer = e.noSoundTimerMax
 			e.targetPosition = soundWaves[i].startPos
+			soundWaves[i].dB = 0. // Destroy the wave to show it hit the enemy
 		}
 	}
+	e.animation.frameSpeedMax = e.idleAnimationSpeed
 	if e.noSoundTimer > 0. {
-		if e.targetPosition.X > e.center.X {
+		e.animation.frameSpeedMax = e.moveAnimationSpeed
+		if e.targetPosition.X-(e.moveSpeed*dt) > e.center.X {
 			e.moveVector.X = 1
-		} else if e.targetPosition.X < e.center.X {
+			if e.currentAnimation != 2 {
+				e.animation = e.animations.rightAnimation
+				e.currentAnimation = 2
+			}
+		} else if e.targetPosition.X+(e.moveSpeed*dt) < e.center.X {
 			e.moveVector.X = -1
+			if e.currentAnimation != 1 {
+				e.animation = e.animations.leftAnimation
+				e.currentAnimation = 1
+			}
 		}
 		if e.targetPosition.Y > e.center.Y {
 			e.moveVector.Y = 1

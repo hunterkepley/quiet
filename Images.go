@@ -5,14 +5,14 @@ import (
 )
 
 var (
-	objectImages ObjectImages
+	objectImages L1ObjectImages
 	menuImages   MenuImages
 	soundImages  SoundImages
 	enemyImages  EnemyImages
 )
 
-//ObjectImages ... All the non-spritesheet images in the game
-type ObjectImages struct {
+//L1ObjectImages ... All the non-spritesheet images in the game in level 1
+type L1ObjectImages struct {
 	box1         pixel.Picture
 	gasBody      pixel.Picture
 	gasRoof      pixel.Picture
@@ -21,6 +21,7 @@ type ObjectImages struct {
 	gasStreet    pixel.Picture
 	gasFence     pixel.Picture
 	gasLight     pixel.Picture
+	concreteWall pixel.Picture
 }
 
 //SoundImages ... All the visible sound images
@@ -51,8 +52,8 @@ type EnemyImages struct {
 }
 
 func loadObjectImages() {
-	objectImages = ObjectImages{
-		loadPicture("./Resources/Art/Objects/Scenery/box1.png"),
+	objectImages = L1ObjectImages{
+		loadPicture("./Resources/Art/Objects/Scenery/l1/box1.png"),
 		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_body.png"),
 		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_roof.png"),
 		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_left_pole.png"),
@@ -60,6 +61,7 @@ func loadObjectImages() {
 		loadPicture("./Resources/Art/Objects/Backgrounds/l1/street1.png"),
 		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_fence.png"),
 		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_light.png"),
+		loadPicture("./Resources/Art/Objects/Walls/l1/concrete_wall.png"),
 	}
 }
 

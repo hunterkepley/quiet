@@ -35,7 +35,9 @@ type Player struct {
 	soundTimerMax        float64
 
 	// Animations
-	animations PlayerAnimations
+	idleAnimationSpeed float64
+	moveAnimationSpeed float64
+	animations         PlayerAnimations
 }
 
 //PlayerAnimations ... Player animations in the game
@@ -50,7 +52,8 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 	size := pixel.V(pic.Bounds().Size().X/float64(len(playerSpritesheets.playerIdleRightSheet.frames)), pic.Bounds().Size().Y)
 	size = pixel.V(size.X*playerImageScale, size.Y*playerImageScale)
 
-	idleAnimationSpeed := 0.3
+	idleAnimationSpeed := 0.6
+	moveAnimationSpeed := 0.3
 
 	return Player{
 		pos,
@@ -78,6 +81,8 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 		createSoundEmitter(pos),
 		1.,
 		1.,
+		idleAnimationSpeed,
+		moveAnimationSpeed,
 		PlayerAnimations{
 			createAnimation(playerSpritesheets.playerIdleRightSheet, idleAnimationSpeed),
 			createAnimation(playerSpritesheets.playerIdleUpSheet, idleAnimationSpeed),
@@ -98,8 +103,10 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 
 	if p.activeMovement {
 		p.activateSoundEmitter = true
+		p.animation.frameSpeedMax = p.moveAnimationSpeed
 	} else {
 		p.activateSoundEmitter = false
+		p.animation.frameSpeedMax = p.idleAnimationSpeed
 	}
 
 	// Update sound emitter

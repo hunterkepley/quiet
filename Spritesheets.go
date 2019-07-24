@@ -27,7 +27,8 @@ type PlayerSpritesheets struct {
 
 //LarvaSpriteSheets ... All the larva spritesheets in the game
 type LarvaSpriteSheets struct {
-	leftSpriteSheet Spritesheet
+	leftSpriteSheet  Spritesheet
+	rightSpriteSheet Spritesheet
 }
 
 //EnemySpriteSheets ... All the enemy spritesheets in the game
@@ -58,9 +59,11 @@ func loadPlayerSpritesheets() {
 func loadEnemySpriteSheets() {
 	// Enemy spritesheets
 	larvaLeftSheet := loadPicture("./Resources/Art/Enemies/Larva/left_spritesheet.png")
+	larvaRightSheet := loadPicture("./Resources/Art/Enemies/Larva/right_spritesheet.png")
 	enemySpriteSheets = EnemySpriteSheets{
 		LarvaSpriteSheets{
 			createSpriteSheet(larvaLeftSheet, 4),
+			createSpriteSheet(larvaRightSheet, 4),
 		},
 	}
 }
