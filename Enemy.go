@@ -6,7 +6,27 @@ import (
 	"github.com/faiface/pixel/pixelgl"
 )
 
-// Enemy ... All basic enemies in the game
+//Eye ... The eye above enemies heads
+type Eye struct {
+	pos    pixel.Vec
+	center pixel.Vec
+	size   pixel.Vec
+	sprite *pixel.Sprite
+	state  int // 0 is looking, 1 is opening, 2 is closed [still image], 3 is closing
+
+	// Animations
+	animation  Animation
+	animations EyeAnimations
+}
+
+//EyeAnimations ... Eye animations in the game
+type EyeAnimations struct {
+	lookingAnimation Animation
+	openingAnimation Animation
+	closingAnimation Animation
+}
+
+//Enemy ... All basic enemies in the game
 type Enemy struct {
 	pos                pixel.Vec
 	center             pixel.Vec
@@ -22,6 +42,7 @@ type Enemy struct {
 	currentAnimation   int       // Int of the current animation. 0 = top, 3 = left
 	moveAnimationSpeed float64
 	idleAnimationSpeed float64
+	eye                Eye
 
 	// Animations
 	animation  Animation
@@ -38,6 +59,8 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
+	eyeLookingAnimationSpeed := 0.1
+	eyeOpeningAnimationSpeed := 0.1
 	return Enemy{
 		pos,
 		pixel.ZV,
@@ -53,6 +76,19 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 		3,
 		moveAnimationSpeed,
 		idleAnimationSpeed,
+		Eye{
+			pixel.ZV,
+			pixel.ZV,
+			pixel.V(enemyImages.eye.Bounds().Size().X*imageScale, enemyImages.eye.Bounds().Size().Y*imageScale),
+			pixel.NewSprite(enemyImages.eye, enemyImages.eye.Bounds()),
+			2,
+			createAnimation(enemySpriteSheets.eyeLookingSheet, eyeLookingAnimationSpeed),
+			EyeAnimations{
+				createAnimation(enemySpriteSheets.eyeLookingSheet, eyeLookingAnimationSpeed),
+				createAnimation(enemySpriteSheets.eyeOpeningSheet, eyeOpeningAnimationSpeed),
+				createAnimation(enemySpriteSheets.eyeClosingSheet, eyeOpeningAnimationSpeed),
+			},
+		},
 		createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, idleAnimationSpeed),
 		EnemyAnimations{
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, idleAnimationSpeed),
@@ -65,24 +101,49 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	mat := pixel.IM.
 		Moved(e.center).
 		Scaled(e.center, imageScale)
+	eyeMat := pixel.IM.
+		Moved(e.eye.center).
+		Scaled(e.eye.center, imageScale)
+	if e.eye.state != 2 {
+		*e.eye.sprite = e.eye.animation.animate(dt)
+	} else {
+		e.eye.sprite = pixel.NewSprite(enemyImages.eye, enemyImages.eye.Bounds())
+	}
+	e.eye.sprite.Draw(viewCanvas, eyeMat)
 	sprite := e.animation.animate(dt)
 	sprite.Draw(viewCanvas, mat)
 }
 
 func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 	e.moveVector = pixel.V(0, 0)
-	for i := 0; i < len(soundWaves); i++ {
-		if soundWaves[i].pos.X < e.pos.X+e.size.X &&
-			soundWaves[i].pos.X+soundWaves[i].size.X > e.pos.X &&
-			soundWaves[i].pos.Y < e.pos.Y+e.size.Y/e.sizeDiminisher &&
-			soundWaves[i].pos.Y+soundWaves[i].size.Y > e.pos.Y {
-			e.noSoundTimer = e.noSoundTimerMax
-			e.targetPosition = soundWaves[i].startPos
-			soundWaves[i].dB = 0. // Destroy the wave to show it hit the enemy
+	if e.noSoundTimer <= 0. {
+		if e.eye.state != 2 { // Looking
+			e.eye.state = 3
+			e.eye.animation = e.eye.animations.closingAnimation
+			if e.eye.animation.frameNumber >= e.eye.animation.frameNumberMax-1 {
+				e.eye.state = 2
+			}
+		}
+		for i := 0; i < len(soundWaves); i++ {
+			if soundWaves[i].pos.X < e.pos.X+e.size.X &&
+				soundWaves[i].pos.X+soundWaves[i].size.X > e.pos.X &&
+				soundWaves[i].pos.Y < e.pos.Y+e.size.Y/e.sizeDiminisher &&
+				soundWaves[i].pos.Y+soundWaves[i].size.Y > e.pos.Y {
+				e.noSoundTimer = e.noSoundTimerMax
+				e.eye.state = 1
+				e.eye.animation = e.eye.animations.openingAnimation
+				e.targetPosition = soundWaves[i].startPos
+				soundWaves[i].dB = 0. // Destroy the wave to show it hit the enemy
+			}
 		}
 	}
 	e.animation.frameSpeedMax = e.idleAnimationSpeed
 	if e.noSoundTimer > 0. {
+		if e.eye.state != 0 { // Looking
+			if e.eye.animation.frameNumber >= e.eye.animation.frameNumberMax-1 {
+				e.eye.animation = e.eye.animations.lookingAnimation
+			}
+		}
 		e.animation.frameSpeedMax = e.moveAnimationSpeed
 		if e.targetPosition.X-(e.moveSpeed*dt) > e.center.X {
 			e.moveVector.X = 1
@@ -106,4 +167,5 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 	}
 	e.pos = pixel.V(e.pos.X+(e.moveSpeed*dt)*e.moveVector.X, e.pos.Y+(e.moveSpeed*dt)*e.moveVector.Y)
 	e.center = pixel.V(e.pos.X+(e.size.X/2), e.pos.Y+(e.size.Y/2))
+	e.eye.center = pixel.V(e.center.X, e.center.Y+(e.size.Y/2)+e.eye.size.Y)
 }

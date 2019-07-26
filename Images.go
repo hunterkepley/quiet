@@ -49,6 +49,7 @@ type LarvaImages struct {
 //EnemyImages ... All the enemy images in the game that aren't animated
 type EnemyImages struct {
 	larvaImages LarvaImages
+	eye         pixel.Picture
 }
 
 func loadObjectImages() {
@@ -89,5 +90,6 @@ func loadEnemyImages() {
 		LarvaImages{
 			loadPicture("./Resources/Art/Enemies/Larva/still_left.png"),
 		},
+		loadPicture("./Resources/Art/Enemies/eye.png"),
 	}
 }

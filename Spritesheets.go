@@ -34,6 +34,9 @@ type LarvaSpriteSheets struct {
 //EnemySpriteSheets ... All the enemy spritesheets in the game
 type EnemySpriteSheets struct {
 	larvaSpriteSheets LarvaSpriteSheets
+	eyeLookingSheet   Spritesheet
+	eyeOpeningSheet   Spritesheet
+	eyeClosingSheet   Spritesheet
 }
 
 /*ObjectSpritesheets ... All the object spritesheets in the game*/
@@ -60,11 +63,17 @@ func loadEnemySpriteSheets() {
 	// Enemy spritesheets
 	larvaLeftSheet := loadPicture("./Resources/Art/Enemies/Larva/left_spritesheet.png")
 	larvaRightSheet := loadPicture("./Resources/Art/Enemies/Larva/right_spritesheet.png")
+	eyeLookingSheet := loadPicture("./Resources/Art/Enemies/eye_looking.png")
+	eyeOpeningSheet := loadPicture("./Resources/Art/Enemies/eye_opening.png")
+	eyeClosingSheet := loadPicture("./Resources/Art/Enemies/eye_closing.png")
 	enemySpriteSheets = EnemySpriteSheets{
 		LarvaSpriteSheets{
 			createSpriteSheet(larvaLeftSheet, 4),
 			createSpriteSheet(larvaRightSheet, 4),
 		},
+		createSpriteSheet(eyeLookingSheet, 12),
+		createSpriteSheet(eyeOpeningSheet, 4),
+		createSpriteSheet(eyeClosingSheet, 4),
 	}
 }
 
