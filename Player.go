@@ -54,7 +54,7 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 	size = pixel.V(size.X*playerImageScale, size.Y*playerImageScale)
 
 	idleAnimationSpeed := 0.6
-	moveAnimationSpeed := 0.3
+	moveAnimationSpeed := 0.15
 
 	soundDB := 70.
 

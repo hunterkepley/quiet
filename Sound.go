@@ -54,11 +54,10 @@ func (w *SoundWave) objectCollision() {
 		if o.soundCollidable {
 			if w.pos.X < o.pos.X+o.size.X &&
 				w.pos.X+w.size.X > o.pos.X &&
-				w.pos.Y < o.pos.Y+o.size.Y/o.sizeDiminisher &&
+				w.pos.Y < o.pos.Y+o.size.Y &&
 				w.pos.Y+w.size.Y > o.pos.Y {
 
-				w.dB -= o.dBDiminisher
-				w.pos = pixel.V(w.pos.X+w.velocity.X*o.size.X, w.pos.Y+w.velocity.Y*o.size.Y)
+				w.reflect(o)
 			}
 		}
 	}
@@ -67,14 +66,30 @@ func (w *SoundWave) objectCollision() {
 		if o.soundCollidable {
 			if w.pos.X < o.pos.X+o.size.X &&
 				w.pos.X+w.size.X > o.pos.X &&
-				w.pos.Y < o.pos.Y+o.size.Y/o.sizeDiminisher &&
+				w.pos.Y < o.pos.Y+o.size.Y &&
 				w.pos.Y+w.size.Y > o.pos.Y {
 
-				w.dB -= o.dBDiminisher
-				w.pos = pixel.V(w.pos.X+w.velocity.X*o.size.X, w.pos.Y+w.velocity.Y*o.size.Y)
+				w.reflect(o)
 			}
 		}
 	}
+}
+
+func (w *SoundWave) reflect(o Object) {
+	maxVec := pixel.V(w.pos.X+w.size.X, w.pos.Y+w.size.Y)
+	soundRect := pixel.R(w.pos.X, w.pos.Y, maxVec.X, maxVec.Y)
+	if collisionCheck(soundRect, o.top) {
+		w.pos = pixel.V(w.pos.X, o.pos.Y-w.size.Y-1)
+	} else if collisionCheck(soundRect, o.bottom) {
+		w.pos = pixel.V(w.pos.X, o.pos.Y+o.size.Y+1)
+	}
+	if collisionCheck(soundRect, o.right) {
+		w.pos = pixel.V(o.pos.X-w.size.X-1, w.pos.Y)
+	} else if collisionCheck(soundRect, o.left) {
+		w.pos = pixel.V(o.pos.X+o.size.X+1, w.pos.Y)
+	}
+	w.dB -= o.dBDiminisher
+	w.pos = pixel.V(w.pos.X+w.velocity.X*o.size.X, w.pos.Y+w.velocity.Y*o.size.Y)
 }
 
 //SoundEmitter ... Emitter for sound in the game
