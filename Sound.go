@@ -51,24 +51,28 @@ func (w *SoundWave) render(viewCanvas *pixelgl.Canvas) {
 func (w *SoundWave) objectCollision() {
 	for i := range foregroundObjects {
 		o := foregroundObjects[i]
-		if w.pos.X < o.pos.X+o.size.X &&
-			w.pos.X+w.size.X > o.pos.X &&
-			w.pos.Y < o.pos.Y+o.size.Y/o.sizeDiminisher &&
-			w.pos.Y+w.size.Y > o.pos.Y {
+		if o.soundCollidable {
+			if w.pos.X < o.pos.X+o.size.X &&
+				w.pos.X+w.size.X > o.pos.X &&
+				w.pos.Y < o.pos.Y+o.size.Y/o.sizeDiminisher &&
+				w.pos.Y+w.size.Y > o.pos.Y {
 
-			w.dB -= o.dBDiminisher
-			w.pos = pixel.V(w.pos.X+w.velocity.X*o.size.X, w.pos.Y+w.velocity.Y*o.size.Y)
+				w.dB -= o.dBDiminisher
+				w.pos = pixel.V(w.pos.X+w.velocity.X*o.size.X, w.pos.Y+w.velocity.Y*o.size.Y)
+			}
 		}
 	}
 	for i := range backgroundObjects {
 		o := backgroundObjects[i]
-		if w.pos.X < o.pos.X+o.size.X &&
-			w.pos.X+w.size.X > o.pos.X &&
-			w.pos.Y < o.pos.Y+o.size.Y/o.sizeDiminisher &&
-			w.pos.Y+w.size.Y > o.pos.Y {
+		if o.soundCollidable {
+			if w.pos.X < o.pos.X+o.size.X &&
+				w.pos.X+w.size.X > o.pos.X &&
+				w.pos.Y < o.pos.Y+o.size.Y/o.sizeDiminisher &&
+				w.pos.Y+w.size.Y > o.pos.Y {
 
-			w.dB -= o.dBDiminisher
-			w.pos = pixel.V(w.pos.X+w.velocity.X*o.size.X, w.pos.Y+w.velocity.Y*o.size.Y)
+				w.dB -= o.dBDiminisher
+				w.pos = pixel.V(w.pos.X+w.velocity.X*o.size.X, w.pos.Y+w.velocity.Y*o.size.Y)
+			}
 		}
 	}
 }

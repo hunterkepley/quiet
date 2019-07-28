@@ -117,9 +117,11 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 	e.moveVector = pixel.V(0, 0)
 	if e.noSoundTimer <= 0. {
-		if e.eye.state != 2 { // Looking
-			e.eye.state = 3
-			e.eye.animation = e.eye.animations.closingAnimation
+		if e.eye.state != 2 { // Close eye
+			if e.eye.state != 3 {
+				e.eye.state = 3
+				e.eye.animation = e.eye.animations.closingAnimation
+			}
 			if e.eye.animation.frameNumber >= e.eye.animation.frameNumberMax-1 {
 				e.eye.state = 2
 			}
@@ -139,7 +141,17 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 	}
 	e.animation.frameSpeedMax = e.idleAnimationSpeed
 	if e.noSoundTimer > 0. {
-		if e.eye.state != 0 { // Looking
+		for i := 0; i < len(soundWaves); i++ {
+			if soundWaves[i].pos.X < e.pos.X+e.size.X &&
+				soundWaves[i].pos.X+soundWaves[i].size.X > e.pos.X &&
+				soundWaves[i].pos.Y < e.pos.Y+e.size.Y/e.sizeDiminisher &&
+				soundWaves[i].pos.Y+soundWaves[i].size.Y > e.pos.Y {
+				soundWaves[i].dB = 0. // Destroy the wave to show it hit the enemy
+				e.targetPosition = soundWaves[i].startPos
+				e.noSoundTimer = e.noSoundTimerMax
+			}
+		}
+		if e.eye.state != 0 { // Open eye
 			if e.eye.animation.frameNumber >= e.eye.animation.frameNumberMax-1 {
 				e.eye.animation = e.eye.animations.lookingAnimation
 			}

@@ -12,13 +12,13 @@ func loadLevels() {
 			[]Room{
 				createRoom( // Outside 1
 					[]Object{ // Objects in room
-						createObject(pixel.V(0., 0.), objectImages.gasStreet, 1., true, false, false, 0.),
-						createObject(pixel.V(0., 0.), objectImages.gasFence, 1., true, false, false, 0.),
-						createObject(pixel.V(0., 0.), objectImages.gasBody, 1., true, false, false, 0.),
-						createObject(pixel.V(0., 0.), objectImages.gasRoof, 1., false, true, false, 0.),
-						createObject(pixel.V(0., 0.), objectImages.gasLight, 1., false, true, false, 0.),
-						createObject(pixel.V(518., 352.), objectImages.gasLeftPole, 15., false, false, true, 0.),
-						createObject(pixel.V(764., 352.), objectImages.gasRightPole, 15., false, false, true, 0.),
+						createObject(pixel.V(0., 0.), objectImages.gasStreet, 1., true, false, false, false, 0.),
+						createObject(pixel.V(0., 0.), objectImages.gasFence, 1., true, false, false, true, 100.),
+						createObject(pixel.V(0., 0.), objectImages.gasBody, 1., true, false, false, true, 100.),
+						createObject(pixel.V(0., 0.), objectImages.gasRoof, 1., false, true, false, false, 0.),
+						createObject(pixel.V(0., 0.), objectImages.gasLight, 1., false, true, false, false, 0.),
+						createObject(pixel.V(518., 352.), objectImages.gasLeftPole, 15., false, false, true, true, 100.),
+						createObject(pixel.V(764., 352.), objectImages.gasRightPole, 15., false, false, true, true, 100.),
 					},
 					[]Enemy{ // Enemies in the room
 
@@ -54,8 +54,9 @@ func loadLevels() {
 				),
 				createRoom( // Inside 1
 					[]Object{
-						createObject(pixel.V(200., 200.), objectImages.box1, 2., false, false, true, 50.),
-						createObject(pixel.V(0., 300.), objectImages.concreteWall, 2., false, false, true, 100.),
+						createObject(pixel.V(0., 0.), objectImages.woodFloor, 1., true, false, false, false, 0.),
+						createObject(pixel.V(0., 300.), objectImages.concreteWall, 2., false, false, true, true, 100.),
+						createObject(pixel.V(200., 200.), objectImages.box1, 2., false, false, true, true, 50.),
 					},
 					[]Enemy{
 						createEnemy(pixel.V(300., 250.), enemyImages.larvaImages.stillLeft, 1., 20., 5., 0.15, 0.5),

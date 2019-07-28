@@ -25,6 +25,7 @@ type Object struct {
 	backgroundObject bool    // true if in background
 	foregroundObject bool    // true if in foreground
 	playerCollidable bool    // true if collides with player
+	soundCollidable  bool    // true if sound collides with the object
 	dBDiminisher     float64 // Amount of dB it takes to go through the object.
 
 	// Collision rects
@@ -36,7 +37,7 @@ type Object struct {
 	hitboxes        bool
 }
 
-func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, backgroundObject bool, foregroundObject bool, playerCollidable bool, dBDiminisher float64) Object {
+func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, backgroundObject bool, foregroundObject bool, playerCollidable bool, soundCollidable bool, dBDiminisher float64) Object {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
@@ -64,6 +65,7 @@ func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, back
 		backgroundObject,
 		foregroundObject,
 		playerCollidable,
+		soundCollidable,
 		dBDiminisher,
 		top,
 		left,

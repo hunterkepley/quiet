@@ -33,6 +33,7 @@ type Player struct {
 	soundEmitter         SoundEmitter
 	soundTimer           float64
 	soundTimerMax        float64
+	soundDB              float64 // The starting dB of sound currently
 
 	// Animations
 	idleAnimationSpeed float64
@@ -54,6 +55,8 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 
 	idleAnimationSpeed := 0.6
 	moveAnimationSpeed := 0.3
+
+	soundDB := 70.
 
 	return Player{
 		pos,
@@ -81,6 +84,7 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 		createSoundEmitter(pos),
 		1.,
 		1.,
+		soundDB,
 		idleAnimationSpeed,
 		moveAnimationSpeed,
 		PlayerAnimations{
@@ -117,7 +121,7 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 		}
 		if p.activateSoundEmitter { // If the player is currently walking
 			if p.soundTimer < 0 {
-				p.soundEmitter.emit(80, 10)
+				p.soundEmitter.emit(p.soundDB, 10)
 				p.soundTimer = p.soundTimerMax
 			}
 		}
