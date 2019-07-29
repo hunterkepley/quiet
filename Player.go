@@ -56,7 +56,7 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 	idleAnimationSpeed := 0.6
 	moveAnimationSpeed := 0.15
 
-	soundDB := 70.
+	soundDB := 50.
 
 	return Player{
 		pos,
@@ -115,7 +115,7 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 
 	// Update sound emitter
 	if p.allowSoundEmitter { // If the sound emitter is allowed in a room
-		p.soundEmitter.update(p.center, dt)
+		p.soundEmitter.update(pixel.V(p.footHitBox.Min.X+p.size.X/2, p.pos.Y), dt)
 		if p.soundTimer > 0 { // Constantly tick down the timer to prevent tapping a key to avoid sound emitting, won't emit until moving
 			p.soundTimer -= 1 * dt
 		}
