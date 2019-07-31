@@ -92,16 +92,16 @@ func (w *SoundWave) reflect(o Object, i int) {
 		soundRect := pixel.R(w.pos.X, w.pos.Y, maxVec.X, maxVec.Y)
 		w.passedThrough = append(w.passedThrough, i)
 		if collisionCheck(soundRect, o.top) {
-			w.center = pixel.V(w.pos.X, o.pos.Y-w.size.Y)
+			w.pos = pixel.V(w.pos.X+w.velocity.X*((o.size.X+o.pos.X)-w.pos.X), o.pos.Y-w.size.Y)
 		} else if collisionCheck(soundRect, o.bottom) {
-			w.center = pixel.V(w.pos.X, o.pos.Y+o.size.Y)
+			w.pos = pixel.V(w.pos.X+w.velocity.X*((o.size.X+o.pos.X)-w.pos.X), o.pos.Y+o.size.Y)
 		} else if collisionCheck(soundRect, o.right) {
-			w.center = pixel.V(o.pos.X-w.size.X, w.pos.Y)
+			w.pos = pixel.V(o.pos.X-w.size.X, w.pos.Y+w.velocity.Y*((o.size.Y+o.pos.Y)-w.pos.Y))
 		} else if collisionCheck(soundRect, o.left) {
-			w.center = pixel.V(o.pos.X+o.size.X, w.pos.Y)
+			w.pos = pixel.V(o.pos.X+o.size.X, w.pos.Y+w.velocity.Y*((o.size.Y+o.pos.Y)-w.pos.Y))
 		}
 		w.dB -= o.dBDiminisher
-		w.pos = pixel.V(w.pos.X+w.velocity.X*o.size.X, w.pos.Y+w.velocity.Y*o.size.Y)
+		//w.pos = pixel.V(w.pos.X+w.velocity.X*((o.size.X+o.pos.X)-w.pos.X), w.pos.Y+w.velocity.Y*((o.size.Y+o.pos.Y)-w.pos.Y))
 	}
 }
 
