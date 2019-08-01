@@ -56,7 +56,7 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 	idleAnimationSpeed := 0.6
 	moveAnimationSpeed := 0.15
 
-	soundDB := 50.
+	soundDB := 55.
 
 	return Player{
 		pos,
@@ -149,10 +149,6 @@ func (p *Player) updateHitboxes() { // Also updates size
 
 func (p *Player) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) { // Draws the player
 	p.batch.Clear()
-	// Render sound emitter
-	if p.allowSoundEmitter {
-		p.soundEmitter.render(viewCanvas)
-	}
 	sprite := p.animation.animate(dt)
 	sprite.Draw(p.batch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center).Scaled(p.center, p.imageScale))
 	p.batch.Draw(viewCanvas)

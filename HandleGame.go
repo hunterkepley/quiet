@@ -13,7 +13,18 @@ var (
 
 func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw, dt float64) {
 	for i := 0; i < len(backgroundObjects); i++ {
-		backgroundObjects[i].render(viewCanvas, imd, player)
+		if backgroundObjects[i].backgroundObject {
+			backgroundObjects[i].render(viewCanvas, imd, player)
+		}
+	}
+	// Render sound emitter
+	if player.allowSoundEmitter {
+		player.soundEmitter.render(viewCanvas)
+	}
+	for i := 0; i < len(backgroundObjects); i++ {
+		if !backgroundObjects[i].backgroundObject {
+			backgroundObjects[i].render(viewCanvas, imd, player)
+		}
 
 	}
 	for i := 0; i < len(currentLevel.rooms[currentLevel.currentRoomIndex].enemies); i++ {
