@@ -4,6 +4,7 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
+	"golang.org/x/image/colornames"
 )
 
 //Eye ... The eye above enemies heads
@@ -44,6 +45,10 @@ type Enemy struct {
 	idleAnimationSpeed float64
 	eye                Eye
 
+	// Nodes
+	openNodes   []Node
+	closedNodes []Node
+
 	// Animations
 	animation  Animation
 	animations EnemyAnimations
@@ -61,6 +66,9 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	eyeLookingAnimationSpeed := 0.1
 	eyeOpeningAnimationSpeed := 0.1
+	openNodes := []Node{}
+	closedNodes := []Node{}
+	//createNodes(pixel.V(12., 12.), &openNodes, &closedNodes)
 	return Enemy{
 		pos,
 		pixel.ZV,
@@ -89,6 +97,8 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 				createAnimation(enemySpriteSheets.eyeClosingSheet, eyeOpeningAnimationSpeed),
 			},
 		},
+		openNodes,
+		closedNodes,
 		createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, idleAnimationSpeed),
 		EnemyAnimations{
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, idleAnimationSpeed),
@@ -112,6 +122,13 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	e.eye.sprite.Draw(viewCanvas, eyeMat)
 	sprite := e.animation.animate(dt)
 	sprite.Draw(viewCanvas, mat)
+	// Render nodes, temporary
+	for _, j := range e.openNodes {
+		j.render(imd, colornames.White)
+	}
+	for _, j := range e.closedNodes {
+		j.render(imd, colornames.Red)
+	}
 }
 
 func (e *Enemy) update(dt float64, soundWaves []SoundWave) {

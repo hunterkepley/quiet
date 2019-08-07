@@ -56,7 +56,7 @@ func loadLevels() {
 					[]Object{
 						createObject(pixel.V(0., 0.), objectImages.woodFloor, 1., true, false, false, false, 0.),
 						createObject(pixel.V(0., 300.), objectImages.concreteWall, 2., false, false, true, true, 100.),
-						createObject(pixel.V(200., 200.), objectImages.box1, 2., false, false, true, true, 10.),
+						createObject(pixel.V(200., 200.), objectImages.box1, 2., false, false, true, true, 15.),
 					},
 					[]Enemy{
 						createEnemy(pixel.V(500., 250.), enemyImages.larvaImages.stillLeft, 1., 20., 5., 0.15, 0.5),

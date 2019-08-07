@@ -61,6 +61,7 @@ func (l *Level) setupRoom(player *Player, viewCanvas *pixelgl.Canvas) {
 	backgroundObjects = []Object{}
 	currentShader = l.rooms[l.currentRoomIndex].shader
 	viewCanvas.SetFragmentShader(currentShader)
+
 	if l.rooms[l.currentRoomIndex].hasSoundWaves {
 		player.allowSoundEmitter = true
 	} else {
@@ -68,5 +69,8 @@ func (l *Level) setupRoom(player *Player, viewCanvas *pixelgl.Canvas) {
 	}
 	for i := 0; i < len(l.rooms[l.currentRoomIndex].objects); i++ {
 		foregroundObjects = append(foregroundObjects, l.rooms[l.currentRoomIndex].objects[i])
+	}
+	for i := 0; i < len(l.rooms[l.currentRoomIndex].enemies); i++ {
+		createNodes(pixel.V(17., 17.), &l.rooms[l.currentRoomIndex].enemies[i].openNodes, &l.rooms[l.currentRoomIndex].enemies[i].closedNodes)
 	}
 }
