@@ -4,7 +4,6 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
-	"golang.org/x/image/colornames"
 )
 
 //Eye ... The eye above enemies heads
@@ -124,10 +123,10 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	sprite.Draw(viewCanvas, mat)
 	// Render nodes, temporary
 	for _, j := range e.openNodes {
-		j.render(imd, colornames.White)
+		j.render(imd)
 	}
 	for _, j := range e.closedNodes {
-		j.render(imd, colornames.Red)
+		j.render(imd)
 	}
 }
 

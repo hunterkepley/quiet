@@ -1,29 +1,34 @@
 package main
 
 import (
-	"image/color"
-
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
+	"golang.org/x/image/colornames"
 )
 
 //Node ... A* nodes
 type Node struct {
-	f    int
-	g    int
-	h    int
-	pos  pixel.Vec
-	size pixel.Vec
+	f        int
+	g        int
+	h        int
+	pos      pixel.Vec
+	size     pixel.Vec
+	passable bool
 }
 
-func createNode(pos pixel.Vec, size pixel.Vec) Node {
-	return Node{0, 0, 0, pos, size}
+func createNode(pos pixel.Vec, size pixel.Vec, passable bool) Node {
+	return Node{0, 0, 0, pos, size, passable}
 }
 
-func (n *Node) render(imd *imdraw.IMDraw, col color.RGBA) {
-	imd.Color = col
+func (n *Node) render(imd *imdraw.IMDraw) {
 	imd.Push(n.pos, pixel.V(n.pos.X+n.size.X, n.pos.Y+n.size.Y))
-	imd.Rectangle(1.)
+	if !n.passable {
+		imd.Color = colornames.Red
+		imd.Rectangle(1.)
+	} else {
+		imd.Color = colornames.Green
+		imd.Rectangle(1.)
+	}
 }
 
 func createNodes(size pixel.Vec, openNodes *[]Node, closedNodes *[]Node) {
@@ -37,12 +42,12 @@ func createNodes(size pixel.Vec, openNodes *[]Node, closedNodes *[]Node) {
 					pos.Y < o.pos.Y+o.size.Y &&
 					pos.Y+size.Y > o.pos.Y {
 					if !o.backgroundObject {
-						*closedNodes = append(*closedNodes, createNode(pos, size))
+						*openNodes = append(*openNodes, createNode(pos, size, false))
 						break
 					}
 				}
 			}
-			*openNodes = append(*openNodes, createNode(pos, size))
+			*openNodes = append(*openNodes, createNode(pos, size, true))
 		}
 	}
 }
