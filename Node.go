@@ -51,3 +51,8 @@ func createNodes(size pixel.Vec, openNodes *[]Node, closedNodes *[]Node) {
 		}
 	}
 }
+
+
+func astar(start int, end int) { // start and end being the position
+	
+}
