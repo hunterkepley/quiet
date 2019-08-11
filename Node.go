@@ -14,10 +14,11 @@ type Node struct {
 	pos      pixel.Vec
 	size     pixel.Vec
 	passable bool
+	parent   *Node
 }
 
 func createNode(pos pixel.Vec, size pixel.Vec, passable bool) Node {
-	return Node{0, 0, 0, pos, size, passable}
+	return Node{0, 0, 0, pos, size, passable, nil}
 }
 
 func (n *Node) render(imd *imdraw.IMDraw) {
@@ -52,7 +53,41 @@ func createNodes(size pixel.Vec, openNodes *[]Node, closedNodes *[]Node) {
 	}
 }
 
+func astar(start int, end int, open []Node, closed []Node) []Node { // start and end being the position
 
-func astar(start int, end int) { // start and end being the position
-	
+	// Using
+	// https://medium.com/@nicholas.w.swift/easy-a-star-pathfinding-7e6689c7f7b2
+	// To make this
+
+	startNode := createNode(open[start].pos, open[start].size, open[start].passable)
+	endNode := createNode(open[end].pos, open[end].size, open[end].passable)
+
+	for len(open) > 0 {
+		currentNode := open[0]
+		currentIndex := 0
+		for i, j := range open {
+			if j.f < currentNode.f {
+				currentNode = j
+				currentIndex = i
+			}
+		}
+
+		// Pop current off open list, add to closed list
+		open = append(open[:currentIndex], open[currentIndex+1:]...)
+		closed = append(closed, currentNode)
+
+		// Found the goal
+		if currentIndex == end {
+			path := []Node{}
+			current := currentNode
+			for current != nil {
+				path = append(path, current)
+				current = *current.parent
+
+			}
+		}
+
+		// Generate children
+		children
+	}
 }
