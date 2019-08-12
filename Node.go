@@ -80,14 +80,27 @@ func astar(start int, end int, open []Node, closed []Node) []Node { // start and
 		if currentIndex == end {
 			path := []Node{}
 			current := currentNode
-			for current != nil {
+			emptyNode := Node{}
+			for current != emptyNode {
 				path = append(path, current)
 				current = *current.parent
-
 			}
+			// Reverse slice
+			for i, j := 0, len(path)-1; i < j; i, j = i+1, j-1 {
+				path[i], path[j] = path[j], path[i]
+			}
+			return path
 		}
 
 		// Generate children
-		children
+		children := []Node{}
+		for _, newPosition := range []pixel.Vec{pixel.V(0, -1), pixel.V(0, 1), pixel.V(-1, 0), pixel.V(1, 0), pixel.V(-1, -1), pixel.V(-1, 1), pixel.V(1, -1), pixel.V(1, 1)} {
+			// Get node position
+			//nodePosition := pixel.V(current)
+			// Make the nodes listed like so:
+			// [....]
+			// [....]
+			// [....]
+		}
 	}
 }
