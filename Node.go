@@ -62,7 +62,7 @@ func createNodes(size pixel.Vec, nodes *[]Node) {
 
 func astar(start int, end int, nodes []Node) []Node { // start and end being the position
 
-	// Using
+	// Using the pseudocode from
 	// https://medium.com/@nicholas.w.swift/easy-a-star-pathfinding-7e6689c7f7b2
 	// To make this
 
@@ -80,7 +80,18 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 	for len(open) > 0 {
 		currentNode := open[0]
 		currentIndex := 0
+		// BS I had to do to fix this
 		for i, j := range open {
+			for _, o := range currentLevel.rooms[currentLevel.currentRoomIndex].objects {
+				if j.pos.X < o.pos.X+o.size.X &&
+					j.pos.X+j.size.X > o.pos.X &&
+					j.pos.Y < o.pos.Y+o.size.Y &&
+					j.pos.Y+j.size.Y > o.pos.Y {
+					if !o.backgroundObject {
+						j.f += 100
+					}
+				}
+			}
 			if j.f < currentNode.f {
 				currentNode = j
 				currentIndex = i
@@ -118,6 +129,8 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 				continue
 			}
 
+			costAddition := 0
+
 			// Make sure walkable terrain
 			if !nodes[int(nodePosition.X+(nodePosition.Y*maxNodePosition.X))].passable {
 				continue
@@ -141,7 +154,8 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 				// Create the f, g, and h values
 				child.g = currentNode.g + 1
 				child.h = int(math.Pow(child.index.X-endNode.index.X, 2) + math.Pow(child.index.Y-endNode.index.Y, 2))
-				child.f = child.g + child.h
+				child.f = child.g + child.h + costAddition
+
 				// Child is already in the open list
 				for _, openNode := range open {
 					if child.index == openNode.index && child.g > openNode.g {
