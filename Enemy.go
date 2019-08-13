@@ -45,7 +45,8 @@ type Enemy struct {
 	eye                Eye
 
 	// Nodes
-	nodes []Node
+	nodes       []Node
+	currentPath []Node
 
 	// Animations
 	animation  Animation
@@ -93,6 +94,7 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 			},
 		},
 		[]Node{},
+		[]Node{},
 		createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, idleAnimationSpeed),
 		EnemyAnimations{
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, idleAnimationSpeed),
@@ -117,7 +119,7 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	sprite := e.animation.animate(dt)
 	sprite.Draw(viewCanvas, mat)
 	// Render nodes, temporary
-	for _, j := range e.nodes {
+	for _, j := range e.currentPath {
 		j.render(imd)
 	}
 }

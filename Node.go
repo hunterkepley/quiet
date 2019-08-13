@@ -92,7 +92,7 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 		closed = append(closed, currentNode)
 
 		// Found the goal
-		if currentNode == nodes[end] {
+		if currentNode.index == nodes[end].index {
 			path := []Node{}
 			current := currentNode
 			emptyNode := Node{}
@@ -131,7 +131,6 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 
 			// Loop through children
 			for _, child := range children {
-				//fmt.Println(len(children))
 				// Child is on the closed list
 				for _, closedChild := range closed {
 					if child.index == closedChild.index {
@@ -143,7 +142,6 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 				child.g = currentNode.g + 1
 				child.h = int(math.Pow(child.index.X-endNode.index.X, 2) + math.Pow(child.index.Y-endNode.index.Y, 2))
 				child.f = child.g + child.h
-				//fmt.Println("g - ", child.g, "\nh - ", child.h, "\nf - ", child.f)
 				// Child is already in the open list
 				for _, openNode := range open {
 					if child.index == openNode.index && child.g > openNode.g {
