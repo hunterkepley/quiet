@@ -60,7 +60,7 @@ func updateGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 		currentLevel.changeRoom(1, &player, viewCanvas)
 	}
 
-	currentLevel.updateRoom(&player, dt)
+	currentLevel.updateRoom(&player, dt, win)
 
 	if len(backgroundObjects) >= 1 {
 		for i := 0; i < len(backgroundObjects); i++ {

@@ -22,7 +22,7 @@ func createLevel(rooms []Room) Level {
 	}
 }
 
-func (l *Level) updateRoom(player *Player, dt float64) {
+func (l *Level) updateRoom(player *Player, dt float64, win *pixelgl.Window) {
 	for i := 0; i < len(l.rooms[l.currentRoomIndex].objects); i++ {
 		l.rooms[l.currentRoomIndex].objects[i].update(player)
 	}
@@ -37,6 +37,13 @@ func (l *Level) updateRoom(player *Player, dt float64) {
 			rain = append(rain, createRain(pixel.V(float64(rand.Intn(int(winWidth))), winHeight)))
 		} else {
 			l.rooms[l.currentRoomIndex].rainTimer -= 1 * dt
+		}
+	}
+
+	if win.Pressed(pixelgl.KeyR) {
+		z := astar(100, 3, l.rooms[l.currentRoomIndex].enemies[0].nodes)
+		for _, i := range z {
+			fmt.Println(i.pos)
 		}
 	}
 }
@@ -71,6 +78,6 @@ func (l *Level) setupRoom(player *Player, viewCanvas *pixelgl.Canvas) {
 		foregroundObjects = append(foregroundObjects, l.rooms[l.currentRoomIndex].objects[i])
 	}
 	for i := 0; i < len(l.rooms[l.currentRoomIndex].enemies); i++ {
-		createNodes(pixel.V(17., 17.), &l.rooms[l.currentRoomIndex].enemies[i].openNodes, &l.rooms[l.currentRoomIndex].enemies[i].closedNodes)
+		createNodes(pixel.V(17., 17.), &l.rooms[l.currentRoomIndex].enemies[i].nodes)
 	}
 }

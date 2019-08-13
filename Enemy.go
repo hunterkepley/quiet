@@ -45,8 +45,7 @@ type Enemy struct {
 	eye                Eye
 
 	// Nodes
-	openNodes   []Node
-	closedNodes []Node
+	nodes []Node
 
 	// Animations
 	animation  Animation
@@ -65,9 +64,6 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	eyeLookingAnimationSpeed := 0.1
 	eyeOpeningAnimationSpeed := 0.1
-	openNodes := []Node{}
-	closedNodes := []Node{}
-	//createNodes(pixel.V(12., 12.), &openNodes, &closedNodes)
 	return Enemy{
 		pos,
 		pixel.ZV,
@@ -96,8 +92,7 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 				createAnimation(enemySpriteSheets.eyeClosingSheet, eyeOpeningAnimationSpeed),
 			},
 		},
-		openNodes,
-		closedNodes,
+		[]Node{},
 		createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, idleAnimationSpeed),
 		EnemyAnimations{
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, idleAnimationSpeed),
@@ -122,10 +117,7 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	sprite := e.animation.animate(dt)
 	sprite.Draw(viewCanvas, mat)
 	// Render nodes, temporary
-	for _, j := range e.openNodes {
-		j.render(imd)
-	}
-	for _, j := range e.closedNodes {
+	for _, j := range e.nodes {
 		j.render(imd)
 	}
 }
