@@ -119,12 +119,12 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 			}
 
 			// Make sure walkable terrain
-			if !nodes[int(nodePosition.X+(nodePosition.Y*maxNodePosition.Y))].passable {
+			if !nodes[int(nodePosition.X+(nodePosition.Y*maxNodePosition.X))].passable {
 				continue
 			}
 
 			// Create new node
-			newNode := createNode(pixel.V(nodePosition.X*17, nodePosition.Y*17), pixel.V(17., 17.), true, nodePosition, currentNode)
+			newNode := createNode(pixel.V(nodePosition.X*17, nodePosition.Y*17), pixel.V(17., 17.), nodes[int(nodePosition.X+(nodePosition.Y*maxNodePosition.X))].passable, nodePosition, currentNode)
 
 			// Append
 			children = append(children, newNode)
