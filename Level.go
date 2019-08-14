@@ -39,11 +39,6 @@ func (l *Level) updateRoom(player *Player, dt float64, win *pixelgl.Window) {
 			l.rooms[l.currentRoomIndex].rainTimer -= 1 * dt
 		}
 	}
-
-	if win.Pressed(pixelgl.KeyR) {
-		z := astar(985, 130, l.rooms[l.currentRoomIndex].enemies[0].nodes)
-		l.rooms[l.currentRoomIndex].enemies[0].currentPath = z
-	}
 }
 
 func (l *Level) changeRoom(roomIndex int, player *Player, viewCanvas *pixelgl.Canvas) {

@@ -141,10 +141,26 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 				soundWaves[i].pos.X+soundWaves[i].size.X > e.pos.X &&
 				soundWaves[i].pos.Y < e.pos.Y+e.size.Y/e.sizeDiminisher &&
 				soundWaves[i].pos.Y+soundWaves[i].size.Y > e.pos.Y {
+				nodeIndexStart := 0
+				nodeIndexEnd := 0
+				for nI, n := range e.nodes {
+					if n.pos.X < e.pos.X+1 &&
+						n.pos.X+n.size.X > e.pos.X &&
+						n.pos.Y < e.pos.Y+1 &&
+						n.pos.Y+n.size.Y > e.pos.Y {
+						nodeIndexStart = nI
+					} else if n.pos.X < soundWaves[i].startPos.X+1 &&
+						n.pos.X+n.size.X > soundWaves[i].startPos.X &&
+						n.pos.Y < soundWaves[i].startPos.Y+1 &&
+						n.pos.Y+n.size.Y > soundWaves[i].startPos.Y {
+						nodeIndexEnd = nI
+					}
+				}
+				e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes)
+
 				e.noSoundTimer = e.noSoundTimerMax
 				e.eye.state = 1
 				e.eye.animation = e.eye.animations.openingAnimation
-				e.targetPosition = soundWaves[i].startPos
 				soundWaves[i].dB = 0. // Destroy the wave to show it hit the enemy
 			}
 		}
@@ -157,8 +173,25 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 				soundWaves[i].pos.Y < e.pos.Y+e.size.Y/e.sizeDiminisher &&
 				soundWaves[i].pos.Y+soundWaves[i].size.Y > e.pos.Y {
 				soundWaves[i].dB = 0. // Destroy the wave to show it hit the enemy
-				e.targetPosition = soundWaves[i].startPos
 				e.noSoundTimer = e.noSoundTimerMax
+				nodeIndexStart := 0
+				nodeIndexEnd := 0
+				if len(e.currentPath) <= 0 {
+					for nI, n := range e.nodes {
+						if n.pos.X < e.pos.X+1 &&
+							n.pos.X+n.size.X > e.pos.X &&
+							n.pos.Y < e.pos.Y+1 &&
+							n.pos.Y+n.size.Y > e.pos.Y {
+							nodeIndexStart = nI
+						} else if n.pos.X < player.pos.X+1 &&
+							n.pos.X+n.size.X > player.pos.X &&
+							n.pos.Y < player.pos.Y+1 &&
+							n.pos.Y+n.size.Y > player.pos.Y {
+							nodeIndexEnd = nI
+						}
+					}
+					e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes)
+				}
 			}
 		}
 		if e.eye.state != 0 { // Open eye
@@ -167,6 +200,17 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 			}
 		}
 		e.animation.frameSpeedMax = e.moveAnimationSpeed
+		//if e.center != e.currentPath[0].pos {
+		if len(e.currentPath) > 0 {
+			if e.center.X < e.currentPath[0].pos.X+e.currentPath[0].size.X &&
+				e.center.X+1 > e.currentPath[0].pos.X &&
+				e.center.Y < e.currentPath[0].pos.Y+e.currentPath[0].size.Y &&
+				e.center.Y+1 > e.currentPath[0].pos.Y {
+				e.currentPath = append(e.currentPath[:0], e.currentPath[1:]...)
+			} else {
+				e.targetPosition = e.currentPath[0].pos
+			}
+		}
 		if e.targetPosition.X-(e.moveSpeed*dt) > e.center.X {
 			e.moveVector.X = 1
 			if e.currentAnimation != 2 {

@@ -20,14 +20,14 @@ type SoundWave struct {
 	passedThrough []int   // Object indexes the soundwave passed through so it doesn't glitch and delete
 }
 
-func createSoundWave(pos pixel.Vec, pic pixel.Picture, velocity pixel.Vec, dB float64, depletionRate float64) SoundWave {
+func createSoundWave(pos pixel.Vec, pic pixel.Picture, velocity pixel.Vec, dB float64, depletionRate float64, startPos pixel.Vec) SoundWave {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 
 	return SoundWave{
 		pixel.V(pos.X-size.X/2, pos.Y-size.Y/2),
-		pixel.V(pos.X-size.X/2, pos.Y-size.Y/2),
+		startPos,
 		pixel.ZV,
 		velocity,
 		size,
@@ -122,14 +122,14 @@ func (s *SoundEmitter) emit(dB float64, depletionRate float64) {
 	offset := 12.  // Offset for the corner waves
 	offsetS := 16. // Offset for the top, bottom, left, right waves
 
-	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X-offset, s.pos.Y+offset), soundImages.playerSoundWaveTL, pixel.V(-1, 1), dB, depletionRate))  // Top left
-	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X+offset, s.pos.Y+offset), soundImages.playerSoundWaveTR, pixel.V(1, 1), dB, depletionRate))   // Top right
-	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X-offset, s.pos.Y-offset), soundImages.playerSoundWaveBL, pixel.V(-1, -1), dB, depletionRate)) // Bottom left
-	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X+offset, s.pos.Y-offset), soundImages.playerSoundWaveBR, pixel.V(1, -1), dB, depletionRate))  // Bottom right
-	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X, s.pos.Y+offsetS), soundImages.playerSoundWaveT, pixel.V(0, 1), dB, depletionRate))          // Top
-	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X, s.pos.Y-offsetS), soundImages.playerSoundWaveB, pixel.V(0, -1), dB, depletionRate))         // Bottom
-	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X+offsetS, s.pos.Y), soundImages.playerSoundWaveR, pixel.V(1, 0), dB, depletionRate))          // Right
-	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X-offsetS, s.pos.Y), soundImages.playerSoundWaveL, pixel.V(-1, 0), dB, depletionRate))         // Left
+	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X-offset, s.pos.Y+offset), soundImages.playerSoundWaveTL, pixel.V(-1, 1), dB, depletionRate, s.pos))  // Top left
+	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X+offset, s.pos.Y+offset), soundImages.playerSoundWaveTR, pixel.V(1, 1), dB, depletionRate, s.pos))   // Top right
+	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X-offset, s.pos.Y-offset), soundImages.playerSoundWaveBL, pixel.V(-1, -1), dB, depletionRate, s.pos)) // Bottom left
+	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X+offset, s.pos.Y-offset), soundImages.playerSoundWaveBR, pixel.V(1, -1), dB, depletionRate, s.pos))  // Bottom right
+	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X, s.pos.Y+offsetS), soundImages.playerSoundWaveT, pixel.V(0, 1), dB, depletionRate, s.pos))          // Top
+	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X, s.pos.Y-offsetS), soundImages.playerSoundWaveB, pixel.V(0, -1), dB, depletionRate, s.pos))         // Bottom
+	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X+offsetS, s.pos.Y), soundImages.playerSoundWaveR, pixel.V(1, 0), dB, depletionRate, s.pos))          // Right
+	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X-offsetS, s.pos.Y), soundImages.playerSoundWaveL, pixel.V(-1, 0), dB, depletionRate, s.pos))         // Left
 }
 
 func (s *SoundEmitter) update(pos pixel.Vec, dt float64) {
