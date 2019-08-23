@@ -41,7 +41,7 @@ func createSoundWave(pos pixel.Vec, pic pixel.Picture, velocity pixel.Vec, dB fl
 }
 
 func (w *SoundWave) update(dt float64) {
-	w.pos = pixel.V(w.pos.X+((w.velocity.X*w.dB)*dt), w.pos.Y+((w.velocity.Y*w.dB)*dt))
+	w.pos = pixel.V(w.pos.X+((w.velocity.X*w.startingDB)*dt), w.pos.Y+((w.velocity.Y*w.startingDB)*dt))
 	w.center = pixel.V(w.pos.X+(w.size.X/2), w.pos.Y+(w.size.Y/2))
 	w.objectCollision()
 }
@@ -88,20 +88,9 @@ func (w *SoundWave) reflect(o Object, i int) {
 		}
 	}
 	if con {
-		//maxVec := pixel.V(w.pos.X+w.size.X, w.pos.Y+w.size.Y)
-		//soundRect := pixel.R(w.pos.X, w.pos.Y, maxVec.X, maxVec.Y)
 		w.passedThrough = append(w.passedThrough, i)
-		/*if collisionCheck(soundRect, o.top) {
-			w.pos = pixel.V(w.pos.X+w.velocity.X*((o.size.X+o.pos.X)-w.pos.X), o.pos.Y-w.size.Y)
-		} else if collisionCheck(soundRect, o.bottom) {
-			w.pos = pixel.V(w.pos.X+w.velocity.X*((o.size.X+o.pos.X)-w.pos.X), o.pos.Y+o.size.Y)
-		} else if collisionCheck(soundRect, o.right) {
-			w.pos = pixel.V(o.pos.X-w.size.X, w.pos.Y+w.velocity.Y*((o.size.Y+o.pos.Y)-w.pos.Y))
-		} else if collisionCheck(soundRect, o.left) {
-			w.pos = pixel.V(o.pos.X+o.size.X, w.pos.Y+w.velocity.Y*((o.size.Y+o.pos.Y)-w.pos.Y))
-		}*/
 		w.dB -= o.dBDiminisher
-		//w.pos = pixel.V(w.pos.X+w.velocity.X*((o.size.X+o.pos.X)-w.pos.X), w.pos.Y+w.velocity.Y*((o.size.Y+o.pos.Y)-w.pos.Y))
+		w.startingDB = w.dB
 	}
 }
 

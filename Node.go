@@ -62,10 +62,6 @@ func createNodes(size pixel.Vec, nodes *[]Node) {
 
 func astar(start int, end int, nodes []Node) []Node { // start and end being the position
 
-	// Using the pseudocode from
-	// https://medium.com/@nicholas.w.swift/easy-a-star-pathfinding-7e6689c7f7b2
-	// To make this
-
 	startNode := createNode(nodes[start].pos, nodes[start].size, nodes[start].passable, nodes[start].index, Node{})
 	endNode := createNode(nodes[end].pos, nodes[end].size, nodes[end].passable, nodes[end].index, Node{})
 
