@@ -208,7 +208,7 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 				e.center.Y+1 > e.currentPath[0].pos.Y {
 				e.currentPath = append(e.currentPath[:0], e.currentPath[1:]...)
 			} else {
-				e.targetPosition = e.currentPath[0].pos
+				e.targetPosition = pixel.V(e.currentPath[0].pos.X+e.currentPath[0].size.X/2.0, e.currentPath[0].pos.Y+e.currentPath[0].size.Y/2.0)
 			}
 		}
 		if e.targetPosition.X-(e.moveSpeed*dt) > e.center.X {
