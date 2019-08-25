@@ -66,6 +66,8 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 	startNode := createNode(nodes[start].pos, nodes[start].size, nodes[start].passable, nodes[start].index, Node{})
 	endNode := createNode(nodes[end].pos, nodes[end].size, nodes[end].passable, nodes[end].index, Node{})
 
+	totalIterations := 0
+
 	// Initialize open and closed lists
 	open := []Node{}
 	closed := []Node{}
@@ -73,12 +75,13 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 	// Add start node
 	open = append(open, startNode)
 
+	// BS I had to do to fix this
+	objectGrowth := 10.0 // To make the nodes surrounding objects impassable
+
 	// Loop until end is found
 	for len(open) > 0 {
 		currentNode := open[0]
 		currentIndex := 0
-		// BS I had to do to fix this
-		objectGrowth := 10.0 // To make the nodes surrounding objects impassable
 		for i, j := range open {
 			for _, o := range currentLevel.rooms[currentLevel.currentRoomIndex].objects {
 				if j.pos.X < o.pos.X+o.size.X+objectGrowth &&
@@ -93,6 +96,10 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 			if j.f < currentNode.f {
 				currentNode = j
 				currentIndex = i
+			}
+			totalIterations++
+			if totalIterations > 10000 {
+				nodes[end].index = currentNode.index
 			}
 		}
 
