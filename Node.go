@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	maxNodePosition = pixel.V(60, 45)
+	maxNodePosition = pixel.V(78, 59)
 )
 
 //Node ... A* nodes
@@ -44,7 +44,7 @@ func createNodes(size pixel.Vec, nodes *[]Node) {
 		for j := 0; j < int(winWidth/size.X); j++ {
 			pos := pixel.V(float64(j)*size.X, float64(i)*size.Y)
 			// Check if an object occupies the node
-			objectGrowth := 10.0 // To make the nodes surrounding objects impassable
+			objectGrowth := 15.0 // To make the nodes surrounding objects impassable
 			for _, o := range currentLevel.rooms[currentLevel.currentRoomIndex].objects {
 				if pos.X < o.pos.X+o.size.X+objectGrowth &&
 					pos.X+size.X > o.pos.X-objectGrowth &&
@@ -76,7 +76,7 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 	open = append(open, startNode)
 
 	// BS I had to do to fix this
-	objectGrowth := 10.0 // To make the nodes surrounding objects impassable
+	objectGrowth := 15.0 // To make the nodes surrounding objects impassable
 
 	// Loop until end is found
 	for len(open) > 0 {
@@ -89,7 +89,7 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 					j.pos.Y < o.pos.Y+o.size.Y+objectGrowth &&
 					j.pos.Y+j.size.Y > o.pos.Y-objectGrowth {
 					if !o.backgroundObject {
-						j.f += 100
+						j.f += 10000
 					}
 				}
 			}
@@ -98,7 +98,7 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 				currentIndex = i
 			}
 			totalIterations++
-			if totalIterations > 10000 {
+			if totalIterations > 100000 {
 				nodes[end].index = currentNode.index
 			}
 		}
@@ -142,7 +142,7 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 			}
 
 			// Create new node
-			newNode := createNode(pixel.V(nodePosition.X*17, nodePosition.Y*17), pixel.V(17., 17.), nodes[int(nodePosition.X+(nodePosition.Y*maxNodePosition.X))].passable, nodePosition, currentNode)
+			newNode := createNode(pixel.V(nodePosition.X*10, nodePosition.Y*10), pixel.V(10., 10.), nodes[int(nodePosition.X+(nodePosition.Y*maxNodePosition.X))].passable, nodePosition, currentNode)
 
 			// Append
 			children = append(children, newNode)
@@ -155,6 +155,10 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 						continue
 					}
 				}
+
+				//if newPosition.X != 0 && nodePosition.Y != 0 {
+				//	costAddition++
+				//}
 
 				// Create the f, g, and h values
 				child.g = currentNode.g + 1

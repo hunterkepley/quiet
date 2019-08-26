@@ -71,6 +71,6 @@ func (l *Level) setupRoom(player *Player, viewCanvas *pixelgl.Canvas) {
 		foregroundObjects = append(foregroundObjects, l.rooms[l.currentRoomIndex].objects[i])
 	}
 	for i := 0; i < len(l.rooms[l.currentRoomIndex].enemies); i++ {
-		createNodes(pixel.V(17., 17.), &l.rooms[l.currentRoomIndex].enemies[i].nodes)
+		createNodes(pixel.V(10., 10.), &l.rooms[l.currentRoomIndex].enemies[i].nodes)
 	}
 }

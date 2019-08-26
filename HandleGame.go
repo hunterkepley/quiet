@@ -27,6 +27,7 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 		}
 
 	}
+	// Render enemies
 	for i := 0; i < len(currentLevel.rooms[currentLevel.currentRoomIndex].enemies); i++ {
 		currentLevel.rooms[currentLevel.currentRoomIndex].enemies[i].render(viewCanvas, imd)
 	}
