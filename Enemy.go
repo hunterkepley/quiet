@@ -42,6 +42,10 @@ type Enemy struct {
 	currentAnimation   int       // Int of the current animation. 0 = top, 3 = left
 	moveAnimationSpeed float64
 	idleAnimationSpeed float64
+	canAttack          bool
+	attackCooldown     float64
+	attackCooldownMax  float64
+	attackCheckRadius  float64
 	eye                Eye
 
 	// Nodes
@@ -55,11 +59,12 @@ type Enemy struct {
 
 //EnemyAnimations .. Enemy animations in the game
 type EnemyAnimations struct {
-	leftAnimation  Animation
-	rightAnimation Animation
+	leftAnimation        Animation
+	rightAnimation       Animation
+	attackRaiseAnimation Animation
 }
 
-func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveSpeed float64, noSoundTimer float64, moveAnimationSpeed float64, idleAnimationSpeed float64) Enemy {
+func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveSpeed float64, noSoundTimer float64, moveAnimationSpeed float64, idleAnimationSpeed float64, attackCooldown float64, attackCheckRadius float64) Enemy {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
@@ -80,6 +85,10 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 		3,
 		moveAnimationSpeed,
 		idleAnimationSpeed,
+		false,
+		attackCooldown,
+		attackCooldown,
+		attackCheckRadius,
 		Eye{
 			pixel.ZV,
 			pixel.ZV,
@@ -99,6 +108,7 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 		EnemyAnimations{
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, idleAnimationSpeed),
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.rightSpriteSheet, idleAnimationSpeed),
+			createAnimation(enemySpriteSheets.larvaSpriteSheets.attackRaiseSpriteSheet, idleAnimationSpeed),
 		},
 	}
 }
@@ -148,15 +158,19 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 						n.pos.X+n.size.X > e.pos.X &&
 						n.pos.Y < e.pos.Y+1 &&
 						n.pos.Y+n.size.Y > e.pos.Y {
-						nodeIndexStart = nI
+						if n.passable {
+							nodeIndexStart = nI
+						}
 					} else if n.pos.X < soundWaves[i].startPos.X+1 &&
 						n.pos.X+n.size.X > soundWaves[i].startPos.X &&
 						n.pos.Y < soundWaves[i].startPos.Y+1 &&
 						n.pos.Y+n.size.Y > soundWaves[i].startPos.Y {
-						nodeIndexEnd = nI
+						if n.passable {
+							nodeIndexEnd = nI
+						}
 					}
 				}
-				e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes)
+				e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes, e.size)
 
 				e.noSoundTimer = e.noSoundTimerMax
 				e.eye.state = 1
@@ -182,15 +196,19 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 							n.pos.X+n.size.X > e.pos.X &&
 							n.pos.Y < e.pos.Y+1 &&
 							n.pos.Y+n.size.Y > e.pos.Y {
-							nodeIndexStart = nI
+							if n.passable {
+								nodeIndexStart = nI
+							}
 						} else if n.pos.X < player.pos.X+1 &&
 							n.pos.X+n.size.X > player.pos.X &&
 							n.pos.Y < player.pos.Y+1 &&
 							n.pos.Y+n.size.Y > player.pos.Y {
-							nodeIndexEnd = nI
+							if n.passable {
+								nodeIndexEnd = nI
+							}
 						}
 					}
-					e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes)
+					e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes, e.size)
 				}
 			}
 		}
