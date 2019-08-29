@@ -17,6 +17,7 @@ var (
 //Songs ... Songs in the game
 type Songs struct {
 	menuSong Music
+	gameSong Music
 }
 
 //Music ... Music for the game in a simple-to-use system, must be mp3 for now
@@ -44,8 +45,10 @@ func (m *Music) play() {
 
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 
+	loop := beep.Loop(-1, streamer) //will indefinitley loop the song selected
+
 	done := make(chan bool)
-	speaker.Play(beep.Seq(streamer, beep.Callback(func() {
+	speaker.Play(beep.Seq(loop, beep.Callback(func() {
 		done <- true
 	})))
 
@@ -55,5 +58,22 @@ func (m *Music) play() {
 func loadMusic() {
 	songs = Songs{
 		createMusic("./Resources/Sound/Music/menuMusic.mp3"),
+		createMusic("./Resources/Sound/Music/gameMusic.mp3"),
+	}
+}
+
+//for closing currently running songs
+func closeSong() {
+	speaker.Close()
+}
+
+//WIP attempting to simplify the process of closing a song and playing a new one
+func switchSong(s string) {
+	speaker.Close()
+	//kind of ugly but def functional and would allow for switching from menu music to game music and vice versa
+	if s == "g" {
+		songs.gameSong.play()
+	} else if s == "m" {
+		songs.menuSong.play()
 	}
 }
