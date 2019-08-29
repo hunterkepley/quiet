@@ -59,9 +59,8 @@ func updateGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 
 	if win.Pressed(pixelgl.KeyE) {
 		currentLevel.changeRoom(1, &player, viewCanvas)
-		//closeSong()  //should clear the speaker from the menu song which should already be runnig
-		//go runMusic() //should start playing the game song
-		go switchSong("g")
+		//go runMusic() //should start playing the game song//DISABLED
+		go switchSong(1)
 	}
 
 	currentLevel.updateRoom(&player, dt, win)
@@ -95,7 +94,7 @@ func updateGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 	}
 }
 
-//should in theory run the game song
-func runMusic() {
+//should in theory run the game song//OLD CODE, NOT NECESSARY RN
+/*func runMusic() {
 	songs.gameSong.play()
-}
+}*/

@@ -11,7 +11,8 @@ import (
 )
 
 var (
-	songs Songs
+	songs       Songs
+	currentSong = 0
 )
 
 //Songs ... Songs in the game
@@ -68,12 +69,26 @@ func closeSong() {
 }
 
 //WIP attempting to simplify the process of closing a song and playing a new one
-func switchSong(s string) {
-	speaker.Close()
+func switchSong(i int) {
+
+	//fmt.Println("song id: ", i)
+
 	//kind of ugly but def functional and would allow for switching from menu music to game music and vice versa
-	if s == "g" {
-		songs.gameSong.play()
-	} else if s == "m" {
-		songs.menuSong.play()
+	if i == currentSong { //this if/else block added as a bugfix to speaker overload bug as a way to check before closing and restarting the speaker
+		//literally just don't do anything
+	} else {
+
+		if i == 1 { //id 1 is normal game song
+			currentSong = i
+			closeSong()
+			songs.gameSong.play()
+		} else if i == 0 { //id 0 is menu song
+			currentSong = i
+			closeSong()
+			songs.menuSong.play()
+		} else { //id doesn't exist, some error has occurred
+			//fmt.Println("err")
+			return
+		}
 	}
 }
