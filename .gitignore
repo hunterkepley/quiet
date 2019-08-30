@@ -1,3 +1,7 @@
-pkg/
-src/
+pkg/*
+src/*
+pkg
+src
 quiet.exe
+.DS_Store
+
