@@ -133,6 +133,8 @@ func loadResources() {
 	loadMenuImages()
 	//Load music for the game
 	loadMusic()
+	//Load sound effects for the game
+	//loadAudio()//ENABLE THIS WHEN READY TO TEST
 	//Load enemy images for the game
 	loadEnemyImages()
 	//Load enemy spritesheets for the game

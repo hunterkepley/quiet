@@ -65,6 +65,8 @@ func loadMusic() {
 
 //for closing currently running songs
 func closeSong() {
+	//NEEDS TO BE CHANGED, FOR AUDIO TO WORK SPEAKER CAN'T BE CLOSED
+	//NEED TO END CURRENT STREAMER
 	speaker.Close()
 }
 
