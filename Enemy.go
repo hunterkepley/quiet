@@ -269,6 +269,9 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 	if e.canAttack {
 		e.attackHandler(p, dt)
 	}
+	if e.attackCooldown > 0. {
+		e.attackCooldown -= 1 * dt
+	}
 }
 
 func (e *Enemy) attackHandler(p *Player, dt float64) {
@@ -278,7 +281,6 @@ func (e *Enemy) attackHandler(p *Player, dt float64) {
 			e.attackCooldown = e.attackCooldownMax
 		} else {
 			fmt.Println(e.attackCooldown)
-			e.attackCooldown -= 1 * dt
 			/**
 			 * TODO:
 			 *
