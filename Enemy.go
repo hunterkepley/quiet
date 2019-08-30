@@ -293,10 +293,3 @@ func (e *Enemy) attackHandler(p *Player, dt float64) {
 		}
 	}
 }
-
-/*
-	canAttack          bool
-	attackCooldown     float64
-	attackCooldownMax  float64
-	attackCheckRadius  float64
-*/
