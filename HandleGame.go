@@ -38,6 +38,12 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 			foregroundObjects[i].renderHitboxes(imd, player)
 		}
 	}
+
+	// Render enemy eyes
+	for i := 0; i < len(currentLevel.rooms[currentLevel.currentRoomIndex].enemies); i++ {
+		currentLevel.rooms[currentLevel.currentRoomIndex].enemies[i].eyeRender(viewCanvas)
+	}
+
 	if currentLevel.rooms[currentLevel.currentRoomIndex].hasRain {
 		renderSplashes(viewCanvas)
 	}
@@ -60,7 +66,7 @@ func updateGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 	if win.Pressed(pixelgl.KeyE) {
 		currentLevel.changeRoom(1, &player, viewCanvas)
 		//go runMusic() //should start playing the game song//DISABLED
-		go switchSong(1)
+		//go switchSong(1)
 	}
 
 	currentLevel.updateRoom(&player, dt, win)
@@ -93,8 +99,3 @@ func updateGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 		windowBounds.Y = win.Bounds().H()
 	}
 }
-
-//should in theory run the game song//OLD CODE, NOT NECESSARY RN
-/*func runMusic() {
-	songs.gameSong.play()
-}*/

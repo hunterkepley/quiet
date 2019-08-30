@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
@@ -43,6 +45,7 @@ type Enemy struct {
 	moveAnimationSpeed float64
 	idleAnimationSpeed float64
 	canAttack          bool
+	attacking          bool
 	attackCooldown     float64
 	attackCooldownMax  float64
 	attackCheckRadius  float64
@@ -86,6 +89,7 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 		moveAnimationSpeed,
 		idleAnimationSpeed,
 		false,
+		false,
 		attackCooldown,
 		attackCooldown,
 		attackCheckRadius,
@@ -117,15 +121,12 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	mat := pixel.IM.
 		Moved(e.center).
 		Scaled(e.center, imageScale)
-	eyeMat := pixel.IM.
-		Moved(e.eye.center).
-		Scaled(e.eye.center, imageScale)
 	if e.eye.state != 2 {
 		*e.eye.sprite = e.eye.animation.animate(dt)
 	} else {
 		e.eye.sprite = pixel.NewSprite(enemyImages.eye, enemyImages.eye.Bounds())
 	}
-	e.eye.sprite.Draw(viewCanvas, eyeMat)
+
 	sprite := e.animation.animate(dt)
 	sprite.Draw(viewCanvas, mat)
 	// Render nodes, temporary
@@ -134,7 +135,14 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	}
 }
 
-func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
+func (e *Enemy) eyeRender(viewCanvas *pixelgl.Canvas) {
+	eyeMat := pixel.IM.
+		Moved(e.eye.center).
+		Scaled(e.eye.center, imageScale)
+	e.eye.sprite.Draw(viewCanvas, eyeMat)
+}
+
+func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 	e.moveVector = pixel.V(0, 0)
 	if e.noSoundTimer <= 0. {
 		if e.eye.state != 2 { // Close eye
@@ -145,6 +153,7 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 			if e.eye.animation.frameNumber >= e.eye.animation.frameNumberMax-1 {
 				e.eye.state = 2
 			}
+			e.canAttack = false
 		}
 		for i := 0; i < len(soundWaves); i++ {
 			if soundWaves[i].pos.X < e.pos.X+e.size.X &&
@@ -215,10 +224,12 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 		if e.eye.state != 0 { // Open eye
 			if e.eye.animation.frameNumber >= e.eye.animation.frameNumberMax-1 {
 				e.eye.animation = e.eye.animations.lookingAnimation
+				e.canAttack = true
 			}
 		}
+
 		e.animation.frameSpeedMax = e.moveAnimationSpeed
-		//if e.center != e.currentPath[0].pos {
+
 		if len(e.currentPath) > 0 {
 			if e.center.X < e.currentPath[0].pos.X+e.currentPath[0].size.X &&
 				e.center.X+1 > e.currentPath[0].pos.X &&
@@ -229,27 +240,61 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave) {
 				e.targetPosition = pixel.V(e.currentPath[0].pos.X+e.currentPath[0].size.X/2.0, e.currentPath[0].pos.Y+e.currentPath[0].size.Y/2.0)
 			}
 		}
-		if e.targetPosition.X-(e.moveSpeed*dt) > e.center.X {
-			e.moveVector.X = 1
-			if e.currentAnimation != 2 {
-				e.animation = e.animations.rightAnimation
-				e.currentAnimation = 2
+		if !e.attacking {
+			if e.targetPosition.X-(e.moveSpeed*dt) > e.center.X {
+				e.moveVector.X = 1
+				if e.currentAnimation != 2 {
+					e.animation = e.animations.rightAnimation
+					e.currentAnimation = 2
+				}
+			} else if e.targetPosition.X+(e.moveSpeed*dt) < e.center.X {
+				e.moveVector.X = -1
+				if e.currentAnimation != 1 {
+					e.animation = e.animations.leftAnimation
+					e.currentAnimation = 1
+				}
 			}
-		} else if e.targetPosition.X+(e.moveSpeed*dt) < e.center.X {
-			e.moveVector.X = -1
-			if e.currentAnimation != 1 {
-				e.animation = e.animations.leftAnimation
-				e.currentAnimation = 1
+			if e.targetPosition.Y > e.center.Y {
+				e.moveVector.Y = 1
+			} else if e.targetPosition.Y < e.center.Y {
+				e.moveVector.Y = -1
 			}
+			e.noSoundTimer -= 1 * dt
 		}
-		if e.targetPosition.Y > e.center.Y {
-			e.moveVector.Y = 1
-		} else if e.targetPosition.Y < e.center.Y {
-			e.moveVector.Y = -1
-		}
-		e.noSoundTimer -= 1 * dt
 	}
 	e.pos = pixel.V(e.pos.X+(e.moveSpeed*dt)*e.moveVector.X, e.pos.Y+(e.moveSpeed*dt)*e.moveVector.Y)
 	e.center = pixel.V(e.pos.X+(e.size.X/2), e.pos.Y+(e.size.Y/2))
 	e.eye.center = pixel.V(e.center.X, e.center.Y+(e.size.Y/2)+e.eye.size.Y)
+
+	if e.canAttack {
+		e.attackHandler(p, dt)
+	}
 }
+
+func (e *Enemy) attackHandler(p *Player, dt float64) {
+	if circlularCollisionCheck(e.attackCheckRadius, p.radius, calculateDistance(p.center, e.center)) {
+		if e.attackCooldown <= 0. && !e.attacking {
+			e.attacking = true
+			e.attackCooldown = e.attackCooldownMax
+		} else {
+			fmt.Println(e.attackCooldown)
+			e.attackCooldown -= 1 * dt
+			/**
+			 * TODO:
+			 *
+			 * Add animation
+			 * Set attacking to false after animation finished
+			 * Add shockwave when the enemy hits ground
+			 * Response from player when attacked (maybe work on death)
+			 * Maybe add a outline of where the enemy can attack?
+			 **/
+		}
+	}
+}
+
+/*
+	canAttack          bool
+	attackCooldown     float64
+	attackCooldownMax  float64
+	attackCheckRadius  float64
+*/
