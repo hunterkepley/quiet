@@ -16,7 +16,7 @@ func createMainMenu() Menu {
 			createUIImage(pixel.V(0, 0), menuImages.title),
 		},
 	}
-	//go menu.runMusic() // Plays music
+	go menu.runMusic() // Plays music
 	return menu
 }
 
