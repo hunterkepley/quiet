@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -31,6 +32,7 @@ type AudioName struct {
 
 func (a *Addr) play(i int) {
 
+	fmt.Sprintln("Grabbing audio file w/ name: " + audioName[i].name) //FOR TESTING PURPOSES
 	buffer := gameAudio[i]
 
 	sound := buffer.Streamer(0, buffer.Len())
