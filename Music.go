@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/faiface/beep"
+	"github.com/faiface/beep/effects"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
 )
@@ -48,8 +49,15 @@ func (m *Music) play() {
 
 	loop := beep.Loop(-1, streamer) //will indefinitley loop the song selected
 
+	volume := &effects.Volume{
+		Streamer: loop,
+		Base:     2,
+		Volume:   -4.5,
+		Silent:   false,
+	}
+
 	done := make(chan bool)
-	speaker.Play(beep.Seq(loop, beep.Callback(func() {
+	speaker.Play(beep.Seq(volume, beep.Callback(func() {
 		done <- true
 	})))
 
@@ -65,6 +73,8 @@ func loadMusic() {
 
 //for closing currently running songs
 func closeSong() {
+	//NEEDS TO BE CHANGED, FOR AUDIO TO WORK SPEAKER CAN'T BE CLOSED
+	//NEED TO END CURRENT STREAMER
 	speaker.Close()
 }
 
