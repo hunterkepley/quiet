@@ -60,7 +60,7 @@ func updateGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 	if win.Pressed(pixelgl.KeyE) {
 		currentLevel.changeRoom(1, &player, viewCanvas)
 		//go runMusic() //should start playing the game song//DISABLED
-		go switchSong(1)
+		//go switchSong(1)
 	}
 
 	currentLevel.updateRoom(&player, dt, win)

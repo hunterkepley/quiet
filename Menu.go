@@ -26,6 +26,7 @@ func (m *Menu) update(win *pixelgl.Window, viewCanvas *pixelgl.Canvas) {
 		currentLevel = levels[0]
 		currentLevel.setupRoom(&player, viewCanvas)
 		gameState = 0
+		go switchSong(1)
 	}
 	for i := 0; i < len(m.images); i++ {
 		m.images[i].update()
