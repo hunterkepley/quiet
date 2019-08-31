@@ -141,11 +141,20 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	}*/
 }
 
-func (e *Enemy) eyeRender(viewCanvas *pixelgl.Canvas) {
+func (e *Enemy) eyeRender(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	eyeMat := pixel.IM.
 		Moved(e.eye.center).
 		Scaled(e.eye.center, imageScale)
+
 	e.eye.sprite.Draw(viewCanvas, eyeMat)
+	/**
+	 * Renders the attack radius, can be used for any radius
+	 *
+	 *  imd.Push(e.center)
+	 *	imd.Circle(e.attackCheckRadius, 1.)
+	 *	imd.Color = colornames.Red
+	 *	imd.Rectangle(1.)
+	 **/
 }
 
 func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
@@ -197,38 +206,38 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 	if !e.attacking {
 		e.animation.frameSpeedMax = e.idleAnimationSpeed
 	}
-	//	if e.noSoundTimer > 0. {
-	for i := 0; i < len(soundWaves); i++ {
-		if soundWaves[i].pos.X < e.pos.X+e.size.X &&
-			soundWaves[i].pos.X+soundWaves[i].size.X > e.pos.X &&
-			soundWaves[i].pos.Y < e.pos.Y+e.size.Y/e.sizeDiminisher &&
-			soundWaves[i].pos.Y+soundWaves[i].size.Y > e.pos.Y {
-			soundWaves[i].dB = 0. // Destroy the wave to show it hit the enemy
-			e.noSoundTimer = e.noSoundTimerMax
-			nodeIndexStart := 0
-			nodeIndexEnd := 0
-			if len(e.currentPath) <= 0 {
-				for nI, n := range e.nodes {
-					if n.pos.X < e.pos.X+1 &&
-						n.pos.X+n.size.X > e.pos.X &&
-						n.pos.Y < e.pos.Y+1 &&
-						n.pos.Y+n.size.Y > e.pos.Y {
-						if n.passable {
-							nodeIndexStart = nI
-						}
-					} else if n.pos.X < player.pos.X+1 &&
-						n.pos.X+n.size.X > player.pos.X &&
-						n.pos.Y < player.pos.Y+1 &&
-						n.pos.Y+n.size.Y > player.pos.Y {
-						if n.passable {
-							nodeIndexEnd = nI
+	if e.noSoundTimer > 0. {
+		for i := 0; i < len(soundWaves); i++ {
+			if soundWaves[i].pos.X < e.pos.X+e.size.X &&
+				soundWaves[i].pos.X+soundWaves[i].size.X > e.pos.X &&
+				soundWaves[i].pos.Y < e.pos.Y+e.size.Y/e.sizeDiminisher &&
+				soundWaves[i].pos.Y+soundWaves[i].size.Y > e.pos.Y {
+				soundWaves[i].dB = 0. // Destroy the wave to show it hit the enemy
+				e.noSoundTimer = e.noSoundTimerMax
+				nodeIndexStart := 0
+				nodeIndexEnd := 0
+				if len(e.currentPath) <= 0 {
+					for nI, n := range e.nodes {
+						if n.pos.X < e.pos.X+1 &&
+							n.pos.X+n.size.X > e.pos.X &&
+							n.pos.Y < e.pos.Y+1 &&
+							n.pos.Y+n.size.Y > e.pos.Y {
+							if n.passable {
+								nodeIndexStart = nI
+							}
+						} else if n.pos.X < player.pos.X+1 &&
+							n.pos.X+n.size.X > player.pos.X &&
+							n.pos.Y < player.pos.Y+1 &&
+							n.pos.Y+n.size.Y > player.pos.Y {
+							if n.passable {
+								nodeIndexEnd = nI
+							}
 						}
 					}
+					e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes, e.size)
 				}
-				e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes, e.size)
 			}
 		}
-		//	}
 		if e.eye.state != 0 { // Open eye
 			if e.eye.animation.frameNumber >= e.eye.animation.frameNumberMax-1 {
 				e.eye.animation = e.eye.animations.lookingAnimation

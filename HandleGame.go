@@ -41,7 +41,7 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 
 	// Render enemy eyes
 	for i := 0; i < len(currentLevel.rooms[currentLevel.currentRoomIndex].enemies); i++ {
-		currentLevel.rooms[currentLevel.currentRoomIndex].enemies[i].eyeRender(viewCanvas)
+		currentLevel.rooms[currentLevel.currentRoomIndex].enemies[i].eyeRender(viewCanvas, imd)
 	}
 
 	if currentLevel.rooms[currentLevel.currentRoomIndex].hasRain {
