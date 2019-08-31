@@ -23,6 +23,7 @@ type L1ObjectImages struct {
 	gasLight     pixel.Picture
 	concreteWall pixel.Picture
 	woodFloor    pixel.Picture
+	trashCan     pixel.Picture
 }
 
 //SoundImages ... All the visible sound images
@@ -65,6 +66,7 @@ func loadObjectImages() {
 		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_light.png"),
 		loadPicture("./Resources/Art/Objects/Walls/l1/concrete_wall.png"),
 		loadPicture("./Resources/Art/Objects/Backgrounds/l1/floor.png"),
+		loadPicture("./Resources/Art/Objects/Scenery/l1/trash_can.png"),
 	}
 }
 

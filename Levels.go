@@ -18,6 +18,7 @@ func loadLevels() {
 						createObject(pixel.V(0., 0.), objectImages.gasRoof, 1., false, true, false, false, 0.),
 						createObject(pixel.V(0., 0.), objectImages.gasLight, 1., false, true, false, false, 0.),
 						createObject(pixel.V(518., 352.), objectImages.gasLeftPole, 15., false, false, true, true, 100.),
+						createObject(pixel.V(0., 0.), objectImages.trashCan, 1., true, false, false, true, 0.),
 						createObject(pixel.V(764., 352.), objectImages.gasRightPole, 15., false, false, true, true, 100.),
 					},
 					[]Enemy{ // Enemies in the room
@@ -61,7 +62,7 @@ func loadLevels() {
 						createObject(pixel.V(300., 180.), objectImages.box1, 2., false, false, true, true, 15.),
 					},
 					[]Enemy{
-						createEnemy(pixel.V(300., 50.), enemyImages.larvaImages.stillLeft, 1., 20., 5., 0.15, 0.5, 5., 70.),
+						createEnemy(pixel.V(300., 50.), enemyImages.larvaImages.stillLeft, 1., 20., 5., 0.15, 0.5, 5., 80.),
 					},
 					pixel.V(100., 100.),
 					false,
@@ -80,7 +81,7 @@ func loadLevels() {
 // Level 1
 func l1r1(player *Player) {
 	// Collision against gas station
-	if player.pos.Y > 422 && player.pos.X > 243 && player.pos.X < 716 {
+	if player.pos.Y > 422 && player.pos.X > 212 && player.pos.X < 716 {
 		player.pos.Y = 422
 	} else if player.pos.Y > 428 {
 		player.pos.Y = 428
