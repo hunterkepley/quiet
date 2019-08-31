@@ -38,6 +38,12 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 			foregroundObjects[i].renderHitboxes(imd, player)
 		}
 	}
+
+	// Render enemy eyes
+	for i := 0; i < len(currentLevel.rooms[currentLevel.currentRoomIndex].enemies); i++ {
+		currentLevel.rooms[currentLevel.currentRoomIndex].enemies[i].eyeRender(viewCanvas)
+	}
+
 	if currentLevel.rooms[currentLevel.currentRoomIndex].hasRain {
 		renderSplashes(viewCanvas)
 	}
@@ -93,8 +99,3 @@ func updateGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 		windowBounds.Y = win.Bounds().H()
 	}
 }
-
-//should in theory run the game song//OLD CODE, NOT NECESSARY RN
-/*func runMusic() {
-	songs.gameSong.play()
-}*/

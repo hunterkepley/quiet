@@ -39,17 +39,16 @@ func (n *Node) render(imd *imdraw.IMDraw) {
 	}
 }
 
-func createNodes(size pixel.Vec, nodes *[]Node) {
+func createNodes(size pixel.Vec, nodes *[]Node, enemySize pixel.Vec) {
 	for i := 0; i < int(winHeight/size.Y); i++ {
 		for j := 0; j < int(winWidth/size.X); j++ {
 			pos := pixel.V(float64(j)*size.X, float64(i)*size.Y)
 			// Check if an object occupies the node
-			objectGrowth := 15.0 // To make the nodes surrounding objects impassable
 			for _, o := range currentLevel.rooms[currentLevel.currentRoomIndex].objects {
-				if pos.X < o.pos.X+o.size.X+objectGrowth &&
-					pos.X+size.X > o.pos.X-objectGrowth &&
-					pos.Y < o.pos.Y+o.size.Y+objectGrowth &&
-					pos.Y+size.Y > o.pos.Y-objectGrowth {
+				if pos.X < o.pos.X+o.size.X+(enemySize.X/2.) &&
+					pos.X+size.X > o.pos.X-(enemySize.X/2.) &&
+					pos.Y < o.pos.Y+o.size.Y+(enemySize.Y/2.) &&
+					pos.Y+size.Y > o.pos.Y-(enemySize.Y/2.) {
 					if !o.backgroundObject {
 						*nodes = append(*nodes, createNode(pos, size, false, pixel.V(float64(j), float64(i)), Node{}))
 						break
@@ -61,7 +60,7 @@ func createNodes(size pixel.Vec, nodes *[]Node) {
 	}
 }
 
-func astar(start int, end int, nodes []Node) []Node { // start and end being the position
+func astar(start int, end int, nodes []Node, enemySize pixel.Vec) []Node { // start and end being the position
 
 	startNode := createNode(nodes[start].pos, nodes[start].size, nodes[start].passable, nodes[start].index, Node{})
 	endNode := createNode(nodes[end].pos, nodes[end].size, nodes[end].passable, nodes[end].index, Node{})
@@ -75,19 +74,16 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 	// Add start node
 	open = append(open, startNode)
 
-	// BS I had to do to fix this
-	objectGrowth := 15.0 // To make the nodes surrounding objects impassable
-
 	// Loop until end is found
 	for len(open) > 0 {
 		currentNode := open[0]
 		currentIndex := 0
 		for i, j := range open {
 			for _, o := range currentLevel.rooms[currentLevel.currentRoomIndex].objects {
-				if j.pos.X < o.pos.X+o.size.X+objectGrowth &&
-					j.pos.X+j.size.X > o.pos.X-objectGrowth &&
-					j.pos.Y < o.pos.Y+o.size.Y+objectGrowth &&
-					j.pos.Y+j.size.Y > o.pos.Y-objectGrowth {
+				if j.pos.X < o.pos.X+o.size.X+(enemySize.X/2.) &&
+					j.pos.X+j.size.X > o.pos.X-(enemySize.X/2.) &&
+					j.pos.Y < o.pos.Y+o.size.Y+(enemySize.Y/2.) &&
+					j.pos.Y+j.size.Y > o.pos.Y-(enemySize.Y/2.) {
 					if !o.backgroundObject {
 						j.f += 10000
 					}
@@ -156,9 +152,9 @@ func astar(start int, end int, nodes []Node) []Node { // start and end being the
 					}
 				}
 
-				//if newPosition.X != 0 && nodePosition.Y != 0 {
-				//	costAddition++
-				//}
+				if newPosition.X != 0 && nodePosition.Y != 0 {
+					costAddition++
+				}
 
 				// Create the f, g, and h values
 				child.g = currentNode.g + 1
