@@ -14,10 +14,11 @@ import (
 
 var (
 	dirname      = "./Resources/Sound/Audio" //directory of all in game audio files
-	playingAudio []bool                      //flags to tell if audio is currently playing or not
-	audioAddr    []Addr                      //addresses for the audio files
-	audioName    []AudioName                 //names for the audio files
-	gameAudio    []*beep.Buffer              //actual audio buffers
+	playingAudio [20]bool                    //flags to tell if audio is currently playing or not
+	audioAddr    [20]Addr                    //addresses for the audio files
+	audioName    [20]AudioName               //names for the audio files
+	gameAudio    [20]*beep.Buffer            //actual audio buffers
+	//ARRAY LENGTH ARBITRARILY SET TO 20 FOR TESTING PURPOSES
 )
 
 //Addr ... location of the audio file
