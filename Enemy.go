@@ -136,9 +136,9 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	sprite := e.animation.animate(dt)
 	sprite.Draw(viewCanvas, mat)
 	// Render nodes, temporary
-	for _, j := range e.currentPath {
+	/*for _, j := range e.currentPath {
 		j.render(imd)
-	}
+	}*/
 }
 
 func (e *Enemy) eyeRender(viewCanvas *pixelgl.Canvas) {
@@ -194,39 +194,41 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 			}
 		}
 	}
-	e.animation.frameSpeedMax = e.idleAnimationSpeed
-	if e.noSoundTimer > 0. {
-		for i := 0; i < len(soundWaves); i++ {
-			if soundWaves[i].pos.X < e.pos.X+e.size.X &&
-				soundWaves[i].pos.X+soundWaves[i].size.X > e.pos.X &&
-				soundWaves[i].pos.Y < e.pos.Y+e.size.Y/e.sizeDiminisher &&
-				soundWaves[i].pos.Y+soundWaves[i].size.Y > e.pos.Y {
-				soundWaves[i].dB = 0. // Destroy the wave to show it hit the enemy
-				e.noSoundTimer = e.noSoundTimerMax
-				nodeIndexStart := 0
-				nodeIndexEnd := 0
-				if len(e.currentPath) <= 0 {
-					for nI, n := range e.nodes {
-						if n.pos.X < e.pos.X+1 &&
-							n.pos.X+n.size.X > e.pos.X &&
-							n.pos.Y < e.pos.Y+1 &&
-							n.pos.Y+n.size.Y > e.pos.Y {
-							if n.passable {
-								nodeIndexStart = nI
-							}
-						} else if n.pos.X < player.pos.X+1 &&
-							n.pos.X+n.size.X > player.pos.X &&
-							n.pos.Y < player.pos.Y+1 &&
-							n.pos.Y+n.size.Y > player.pos.Y {
-							if n.passable {
-								nodeIndexEnd = nI
-							}
+	if !e.attacking {
+		e.animation.frameSpeedMax = e.idleAnimationSpeed
+	}
+	//	if e.noSoundTimer > 0. {
+	for i := 0; i < len(soundWaves); i++ {
+		if soundWaves[i].pos.X < e.pos.X+e.size.X &&
+			soundWaves[i].pos.X+soundWaves[i].size.X > e.pos.X &&
+			soundWaves[i].pos.Y < e.pos.Y+e.size.Y/e.sizeDiminisher &&
+			soundWaves[i].pos.Y+soundWaves[i].size.Y > e.pos.Y {
+			soundWaves[i].dB = 0. // Destroy the wave to show it hit the enemy
+			e.noSoundTimer = e.noSoundTimerMax
+			nodeIndexStart := 0
+			nodeIndexEnd := 0
+			if len(e.currentPath) <= 0 {
+				for nI, n := range e.nodes {
+					if n.pos.X < e.pos.X+1 &&
+						n.pos.X+n.size.X > e.pos.X &&
+						n.pos.Y < e.pos.Y+1 &&
+						n.pos.Y+n.size.Y > e.pos.Y {
+						if n.passable {
+							nodeIndexStart = nI
+						}
+					} else if n.pos.X < player.pos.X+1 &&
+						n.pos.X+n.size.X > player.pos.X &&
+						n.pos.Y < player.pos.Y+1 &&
+						n.pos.Y+n.size.Y > player.pos.Y {
+						if n.passable {
+							nodeIndexEnd = nI
 						}
 					}
-					e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes, e.size)
 				}
+				e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes, e.size)
 			}
 		}
+		//	}
 		if e.eye.state != 0 { // Open eye
 			if e.eye.animation.frameNumber >= e.eye.animation.frameNumberMax-1 {
 				e.eye.animation = e.eye.animations.lookingAnimation
@@ -283,7 +285,6 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 
 func (e *Enemy) attackHandler(p *Player, dt float64) {
 	if e.attacking {
-		// Add height because attack animation is normally taller than the actual enemy sprites
 		if !e.attackAnimationFlag {
 			e.attackAnimationFlag = true
 			if e.currentAnimation != 4 {
@@ -302,6 +303,7 @@ func (e *Enemy) attackHandler(p *Player, dt float64) {
 			if e.endAttackAnimationFlag && e.animation.frameNumber < e.animation.frameNumberMax-1 {
 				e.attackAnimationFlag = false
 				e.attacking = false
+				// Remove height because attack animation is normally taller than the actual enemy sprites
 				e.pos.Y -= e.animations.attackRaiseAnimationLeft.sheet.sheet.Bounds().H() - e.animations.leftAnimation.sheet.sheet.Bounds().H()
 				if e.currentAnimation == 4 {
 					e.animation = e.animations.leftAnimation
@@ -318,12 +320,13 @@ func (e *Enemy) attackHandler(p *Player, dt float64) {
 			e.attacking = true
 			e.attackCooldown = e.attackCooldownMax
 			e.endAttackAnimationFlag = false
+			// Add height because attack animation is normally taller than the actual enemy sprites
 			e.pos.Y += e.animations.attackRaiseAnimationLeft.sheet.sheet.Bounds().H() - e.animations.leftAnimation.sheet.sheet.Bounds().H()
 		}
 		/**
-		 * TODO:
-		 *
-		 * Add shockwave when the enemy hits ground
+		* TODO:
+		*
+		* Add shockwave when the enemy hits ground
 		 * Response from player when attacked (maybe work on death)
 		 * Maybe add a outline of where the enemy can attack?
 		 **/
