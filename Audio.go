@@ -4,6 +4,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/faiface/beep/effects"
+
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
@@ -15,7 +17,6 @@ var (
 	audioAddr    []Addr                      //addresses for the audio files
 	audioName    []AudioName                 //names for the audio files
 	gameAudio    []*beep.Buffer              //actual audio buffers
-	loadCounter  = 0                         //used for setup of the above arrays
 )
 
 //Addr ... location of the audio file
@@ -28,12 +29,21 @@ type AudioName struct {
 	name string
 }
 
-func (a *Addr) play(i int, buffer *beep.Buffer) {
+func (a *Addr) play(i int) {
+
+	buffer := gameAudio[i]
 
 	sound := buffer.Streamer(0, buffer.Len())
 
+	volume := &effects.Volume{
+		Streamer: sound,
+		Base:     2,
+		Volume:   -3,
+		Silent:   false,
+	}
+
 	done := make(chan bool) //prob wont need, will leave here as reminder just in case
-	speaker.Play(sound, beep.Callback(func() {
+	speaker.Play(volume, beep.Callback(func() {
 		//make flag false so that audio can be played again
 		playingAudio[i] = false
 		done <- true
@@ -64,6 +74,8 @@ func (a *Addr) setupBuffer() *beep.Buffer {
 }
 
 func loadAudio() {
+	loadCounter := 0 //used for setup of the above arrays
+
 	f, err := os.Open(dirname)
 	if err != nil {
 		log.Fatal(err)
@@ -73,7 +85,7 @@ func loadAudio() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	//sets up the flag, namd, and address arrays
+	//sets up the flag, name, and address arrays
 	for _, file := range files {
 		playingAudio[loadCounter] = false
 		audioName[loadCounter].name = file.Name()
@@ -93,6 +105,6 @@ func selectAudio(i int) {
 	}
 	//this code only executes if the audio selected isn't already playing
 	playingAudio[i] = true
-	audioAddr[i].play(i, gameAudio[i])
+	audioAddr[i].play(i)
 
 }
