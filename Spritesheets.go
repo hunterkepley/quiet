@@ -27,9 +27,10 @@ type PlayerSpritesheets struct {
 
 //LarvaSpriteSheets ... All the larva spritesheets in the game
 type LarvaSpriteSheets struct {
-	leftSpriteSheet        Spritesheet
-	rightSpriteSheet       Spritesheet
-	attackRaiseSpriteSheet Spritesheet
+	leftSpriteSheet             Spritesheet
+	rightSpriteSheet            Spritesheet
+	attackRaiseSpriteSheetLeft  Spritesheet
+	attackRaiseSpriteSheetRight Spritesheet
 }
 
 //EnemySpriteSheets ... All the enemy spritesheets in the game
@@ -64,7 +65,8 @@ func loadEnemySpriteSheets() {
 	// Enemy spritesheets
 	larvaLeftSheet := loadPicture("./Resources/Art/Enemies/Larva/left_spritesheet.png")
 	larvaRightSheet := loadPicture("./Resources/Art/Enemies/Larva/right_spritesheet.png")
-	larvaAttackRaiseSheet := loadPicture("./Resources/Art/Enemies/Larva/attack_raise_spritesheet.png")
+	larvaAttackRaiseSheetLeft := loadPicture("./Resources/Art/Enemies/Larva/attack_raise_spritesheet_left.png")
+	larvaAttackRaiseSheetRight := loadPicture("./Resources/Art/Enemies/Larva/attack_raise_spritesheet_right.png")
 	eyeLookingSheet := loadPicture("./Resources/Art/Enemies/eye_looking.png")
 	eyeOpeningSheet := loadPicture("./Resources/Art/Enemies/eye_opening.png")
 	eyeClosingSheet := loadPicture("./Resources/Art/Enemies/eye_closing.png")
@@ -72,7 +74,8 @@ func loadEnemySpriteSheets() {
 		LarvaSpriteSheets{
 			createSpriteSheet(larvaLeftSheet, 4),
 			createSpriteSheet(larvaRightSheet, 4),
-			createSpriteSheet(larvaAttackRaiseSheet, 4),
+			createSpriteSheet(larvaAttackRaiseSheetLeft, 4),
+			createSpriteSheet(larvaAttackRaiseSheetRight, 4),
 		},
 		createSpriteSheet(eyeLookingSheet, 12),
 		createSpriteSheet(eyeOpeningSheet, 4),

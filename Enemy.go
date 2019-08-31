@@ -41,7 +41,7 @@ type Enemy struct {
 	noSoundTimer           float64   // Timer for how long until they stop chasing after not hearing a sound
 	noSoundTimerMax        float64
 	targetPosition         pixel.Vec // The position the enemy will go to
-	currentAnimation       int       // Int of the current animation. 0 = top, 3 = left, 4 = attack
+	currentAnimation       int       // Int of the current animation. 0 = top, 3 = left, 4 = attackLeft, 5 attackRight
 	moveAnimationSpeed     float64
 	idleAnimationSpeed     float64
 	canAttack              bool
@@ -64,9 +64,10 @@ type Enemy struct {
 
 //EnemyAnimations .. Enemy animations in the game
 type EnemyAnimations struct {
-	leftAnimation        Animation
-	rightAnimation       Animation
-	attackRaiseAnimation Animation
+	leftAnimation             Animation
+	rightAnimation            Animation
+	attackRaiseAnimationLeft  Animation
+	attackRaiseAnimationRight Animation
 }
 
 func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveSpeed float64, noSoundTimer float64, moveAnimationSpeed float64, idleAnimationSpeed float64, attackCooldown float64, attackCheckRadius float64) Enemy {
@@ -116,7 +117,8 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 		EnemyAnimations{
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, idleAnimationSpeed),
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.rightSpriteSheet, idleAnimationSpeed),
-			createAnimation(enemySpriteSheets.larvaSpriteSheets.attackRaiseSpriteSheet, idleAnimationSpeed),
+			createAnimation(enemySpriteSheets.larvaSpriteSheets.attackRaiseSpriteSheetLeft, idleAnimationSpeed),
+			createAnimation(enemySpriteSheets.larvaSpriteSheets.attackRaiseSpriteSheetRight, idleAnimationSpeed),
 		},
 	}
 }
@@ -275,17 +277,23 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 	}
 	if e.attackCooldown > 0. {
 		e.attackCooldown -= 1 * dt
-		fmt.Println(e.attackCooldown)
 	}
+	fmt.Println(e.currentAnimation)
 }
 
 func (e *Enemy) attackHandler(p *Player, dt float64) {
 	if e.attacking {
+		// Add height because attack animation is normally taller than the actual enemy sprites
 		if !e.attackAnimationFlag {
 			e.attackAnimationFlag = true
 			if e.currentAnimation != 4 {
-				e.animation = e.animations.attackRaiseAnimation
-				e.currentAnimation = 4
+				if e.currentAnimation == 1 {
+					e.animation = e.animations.attackRaiseAnimationLeft
+					e.currentAnimation = 4
+				} else if e.currentAnimation == 2 {
+					e.animation = e.animations.attackRaiseAnimationRight
+					e.currentAnimation = 5
+				}
 			}
 		} else {
 			if e.animation.frameNumber >= e.animation.frameNumberMax-1 {
@@ -294,9 +302,13 @@ func (e *Enemy) attackHandler(p *Player, dt float64) {
 			if e.endAttackAnimationFlag && e.animation.frameNumber < e.animation.frameNumberMax-1 {
 				e.attackAnimationFlag = false
 				e.attacking = false
-				if e.currentAnimation != 3 {
+				e.pos.Y -= e.animations.attackRaiseAnimationLeft.sheet.sheet.Bounds().H() - e.animations.leftAnimation.sheet.sheet.Bounds().H()
+				if e.currentAnimation == 4 {
 					e.animation = e.animations.leftAnimation
-					e.currentAnimation = 3
+					e.currentAnimation = 1
+				} else if e.currentAnimation == 5 {
+					e.animation = e.animations.rightAnimation
+					e.currentAnimation = 2
 				}
 			}
 		}
@@ -306,12 +318,11 @@ func (e *Enemy) attackHandler(p *Player, dt float64) {
 			e.attacking = true
 			e.attackCooldown = e.attackCooldownMax
 			e.endAttackAnimationFlag = false
+			e.pos.Y += e.animations.attackRaiseAnimationLeft.sheet.sheet.Bounds().H() - e.animations.leftAnimation.sheet.sheet.Bounds().H()
 		}
 		/**
 		 * TODO:
 		 *
-		 * Add animation
-		 * Set attacking to false after animation finished
 		 * Add shockwave when the enemy hits ground
 		 * Response from player when attacked (maybe work on death)
 		 * Maybe add a outline of where the enemy can attack?
