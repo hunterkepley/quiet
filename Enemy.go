@@ -30,26 +30,28 @@ type EyeAnimations struct {
 
 //Enemy ... All basic enemies in the game
 type Enemy struct {
-	pos                pixel.Vec
-	center             pixel.Vec
-	size               pixel.Vec
-	pic                pixel.Picture
-	sprite             *pixel.Sprite
-	sizeDiminisher     float64
-	moveSpeed          float64
-	moveVector         pixel.Vec // 1, 1 for moving top right, 0, 1 for moving up, etc.
-	noSoundTimer       float64   // Timer for how long until they stop chasing after not hearing a sound
-	noSoundTimerMax    float64
-	targetPosition     pixel.Vec // The position the enemy will go to
-	currentAnimation   int       // Int of the current animation. 0 = top, 3 = left
-	moveAnimationSpeed float64
-	idleAnimationSpeed float64
-	canAttack          bool
-	attacking          bool
-	attackCooldown     float64
-	attackCooldownMax  float64
-	attackCheckRadius  float64
-	eye                Eye
+	pos                    pixel.Vec
+	center                 pixel.Vec
+	size                   pixel.Vec
+	pic                    pixel.Picture
+	sprite                 *pixel.Sprite
+	sizeDiminisher         float64
+	moveSpeed              float64
+	moveVector             pixel.Vec // 1, 1 for moving top right, 0, 1 for moving up, etc.
+	noSoundTimer           float64   // Timer for how long until they stop chasing after not hearing a sound
+	noSoundTimerMax        float64
+	targetPosition         pixel.Vec // The position the enemy will go to
+	currentAnimation       int       // Int of the current animation. 0 = top, 3 = left, 4 = attack
+	moveAnimationSpeed     float64
+	idleAnimationSpeed     float64
+	canAttack              bool
+	attacking              bool
+	attackAnimationFlag    bool
+	endAttackAnimationFlag bool
+	attackCooldown         float64
+	attackCooldownMax      float64
+	attackCheckRadius      float64
+	eye                    Eye
 
 	// Nodes
 	nodes       []Node
@@ -88,6 +90,8 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 		3,
 		moveAnimationSpeed,
 		idleAnimationSpeed,
+		false,
+		false,
 		false,
 		false,
 		attackCooldown,
@@ -271,25 +275,46 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 	}
 	if e.attackCooldown > 0. {
 		e.attackCooldown -= 1 * dt
+		fmt.Println(e.attackCooldown)
 	}
 }
 
 func (e *Enemy) attackHandler(p *Player, dt float64) {
+	if e.attacking {
+		if !e.attackAnimationFlag {
+			e.attackAnimationFlag = true
+			if e.currentAnimation != 4 {
+				e.animation = e.animations.attackRaiseAnimation
+				e.currentAnimation = 4
+			}
+		} else {
+			if e.animation.frameNumber >= e.animation.frameNumberMax-1 {
+				e.endAttackAnimationFlag = true
+			}
+			if e.endAttackAnimationFlag && e.animation.frameNumber < e.animation.frameNumberMax-1 {
+				e.attackAnimationFlag = false
+				e.attacking = false
+				if e.currentAnimation != 3 {
+					e.animation = e.animations.leftAnimation
+					e.currentAnimation = 3
+				}
+			}
+		}
+	}
 	if circlularCollisionCheck(e.attackCheckRadius, p.radius, calculateDistance(p.center, e.center)) {
 		if e.attackCooldown <= 0. && !e.attacking {
 			e.attacking = true
 			e.attackCooldown = e.attackCooldownMax
-		} else {
-			fmt.Println(e.attackCooldown)
-			/**
-			 * TODO:
-			 *
-			 * Add animation
-			 * Set attacking to false after animation finished
-			 * Add shockwave when the enemy hits ground
-			 * Response from player when attacked (maybe work on death)
-			 * Maybe add a outline of where the enemy can attack?
-			 **/
+			e.endAttackAnimationFlag = false
 		}
+		/**
+		 * TODO:
+		 *
+		 * Add animation
+		 * Set attacking to false after animation finished
+		 * Add shockwave when the enemy hits ground
+		 * Response from player when attacked (maybe work on death)
+		 * Maybe add a outline of where the enemy can attack?
+		 **/
 	}
 }
