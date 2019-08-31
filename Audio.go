@@ -10,28 +10,41 @@ import (
 )
 
 var (
-	soundBites   Audio
-	playingAudio []bool
+	dirname      = "./Resources/Sound/Audio" //directory of all in game audio files
+	playingAudio []bool                      //flags to tell if audio is currently playing or not
+	audioAddr    []Addr                      //addresses for the audio files
+	audioName    []AudioName                 //names for the audio files
+	gameAudio    []*beep.Buffer              //actual audio buffers
+	loadCounter  = 0                         //used for setup of the above arrays
 )
 
-//Audio ... bites that are played at different points during the game
-type Audio struct {
-	footstep Addr
-	wormSlam Addr
-}
-
-//Addr ... locations of the audio bites
+//Addr ... location of the audio file
 type Addr struct {
 	location string
 }
 
-func createAudio(location string) Addr {
-	return Addr{
-		location,
-	}
+//AudioName ... the name of the audio file
+type AudioName struct {
+	name string
 }
 
-func (a *Addr) play(i int) {
+func (a *Addr) play(i int, buffer *beep.Buffer) {
+
+	sound := buffer.Streamer(0, buffer.Len())
+
+	done := make(chan bool) //prob wont need, will leave here as reminder just in case
+	speaker.Play(sound, beep.Callback(func() {
+		//make flag false so that audio can be played again
+		playingAudio[i] = false
+		done <- true
+	}))
+
+	<-done
+
+}
+
+//setup the buffers for playing audio
+func (a *Addr) setupBuffer() *beep.Buffer {
 	audio, err := os.Open(a.location)
 	if err != nil {
 		log.Fatal(err)
@@ -47,26 +60,31 @@ func (a *Addr) play(i int) {
 	buffer.Append(streamer)
 	streamer.Close()
 
-	sound := buffer.Streamer(0, buffer.Len())
-
-	done := make(chan bool) //prob wont need, will leave here as reminder just in case
-	speaker.Play(sound, beep.Callback(func() {
-		//make flag false so that audio can be played again
-		playingAudio[i] = false
-		done <- true
-	}))
-
-	<-done
-
+	return buffer
 }
 
 func loadAudio() {
-	soundBites = Audio{
-		createAudio("./Resources/Sound/Audio/footstep.mp3"),
-		createAudio("./Resources/Sound/Audio/slam.mp3"),
+	f, err := os.Open(dirname)
+	if err != nil {
+		log.Fatal(err)
 	}
-	playingAudio[0] = false
-	playingAudio[1] = false
+	files, err := f.Readdir(-1)
+	f.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	//sets up the flag, namd, and address arrays
+	for _, file := range files {
+		playingAudio[loadCounter] = false
+		audioName[loadCounter].name = file.Name()
+		audioAddr[loadCounter].location = dirname + "/" + file.Name()
+		loadCounter++
+	}
+	//sets up the buffer array
+	for i := 0; i < loadCounter; i++ {
+		gameAudio[i] = audioAddr[i].setupBuffer()
+	}
+
 }
 
 func selectAudio(i int) {
@@ -75,10 +93,6 @@ func selectAudio(i int) {
 	}
 	//this code only executes if the audio selected isn't already playing
 	playingAudio[i] = true
-	if i == 0 { //audio id 0 footstep
-		soundBites.footstep.play(0)
-	} else if i == 1 { //audio id 1 worm slam
-		soundBites.wormSlam.play(1)
-	}
+	audioAddr[i].play(i, gameAudio[i])
 
 }
