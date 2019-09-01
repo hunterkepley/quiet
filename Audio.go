@@ -13,11 +13,11 @@ import (
 )
 
 var (
-	dirname      = "./Resources/Sound/Audio" //directory of all in game audio files
-	playingAudio [20]bool                    //flags to tell if audio is currently playing or not
-	audioAddr    [20]Addr                    //addresses for the audio files
-	audioName    [20]AudioName               //names for the audio files
-	gameAudio    [20]*beep.Buffer            //actual audio buffers
+	audioCounter = 0              //used for setup of the above arrays
+	playingAudio [20]bool         //flags to tell if audio is currently playing or not
+	audioAddr    [20]Addr         //addresses for the audio files
+	audioName    [20]AudioName    //names for the audio files
+	gameAudio    [20]*beep.Buffer //actual audio buffers
 	//ARRAY LENGTH ARBITRARILY SET TO 20 FOR TESTING PURPOSES
 )
 
@@ -31,6 +31,7 @@ type AudioName struct {
 	name string
 }
 
+//play audio
 func (a *Addr) play(i int) {
 
 	fmt.Sprintln("Grabbing audio file w/ name: " + audioName[i].name) //FOR TESTING PURPOSES
@@ -76,8 +77,9 @@ func (a *Addr) setupBuffer() *beep.Buffer {
 	return buffer
 }
 
+//run at startup, preloads audio files into buffers
 func loadAudio() {
-	loadCounter := 0 //used for setup of the above arrays
+	dirname := "./Resources/Sound/Audio" //directory of all in game audio files
 
 	f, err := os.Open(dirname)
 	if err != nil {
@@ -90,24 +92,43 @@ func loadAudio() {
 	}
 	//sets up the flag, name, and address arrays
 	for _, file := range files {
-		playingAudio[loadCounter] = false
-		audioName[loadCounter].name = file.Name()
-		audioAddr[loadCounter].location = dirname + "/" + file.Name()
-		loadCounter++
+		playingAudio[audioCounter] = false
+		audioName[audioCounter].name = file.Name()
+		audioAddr[audioCounter].location = dirname + "/" + file.Name()
+		audioCounter++
 	}
 	//sets up the buffer array
-	for i := 0; i < loadCounter; i++ {
+	for i := 0; i < audioCounter; i++ {
 		gameAudio[i] = audioAddr[i].setupBuffer()
 	}
 
 }
 
+//this func is for selecting the audio file to play
 func selectAudio(i int) {
+	//checks for index < 0
+	if i < 0 {
+		fmt.Sprintln("Error, desired audio file doesn't exist")
+		return
+	}
+
 	if playingAudio[i] {
 		return //don't want to repeat the same sound over and over again
 	}
 	//this code only executes if the audio selected isn't already playing
 	playingAudio[i] = true
 	audioAddr[i].play(i)
+
+}
+
+//pass in the name of the file you want to play and this func will return the index of the file to be played back
+func searchAudio(s string) int {
+	for i := 0; i < audioCounter; i++ {
+		if audioName[i].name == s {
+			return i //returns the index for the desired file
+		}
+	}
+	//no filename found
+	return -1
 
 }

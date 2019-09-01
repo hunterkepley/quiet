@@ -26,7 +26,9 @@ func (m *Menu) update(win *pixelgl.Window, viewCanvas *pixelgl.Canvas) {
 		currentLevel = levels[0]
 		currentLevel.setupRoom(&player, viewCanvas)
 		gameState = 0
-		go switchSong(1)
+
+		gameSongIndex := searchMusic("gameMusic.mp3")
+		go switchSong(gameSongIndex)
 	}
 	for i := 0; i < len(m.images); i++ {
 		m.images[i].update()
@@ -40,5 +42,8 @@ func (m *Menu) render(viewCanvas *pixelgl.Canvas) {
 }
 
 func (m *Menu) runMusic() {
-	songs.menuSong.play()
+	//songs.menuSong.play()
+	menuSongIndex := searchMusic("menuMusic.mp3")
+	currentSong = menuSongIndex
+	musicAddr[menuSongIndex].play()
 }
