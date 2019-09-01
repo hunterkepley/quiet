@@ -7,23 +7,86 @@ import (
 
 //SoundWave ... Sound waves emitted from sounds
 type SoundWave struct {
-	pos           pixel.Vec
-	startPos      pixel.Vec // Starting position for enemies to go to
-	center        pixel.Vec
-	velocity      pixel.Vec // 0 for no change, 1 for  change via dB level [-1 for reverse]
-	size          pixel.Vec
-	pic           pixel.Picture
-	sprite        *pixel.Sprite
-	dB            float64 // Speed/strength of the sound
-	startingDB    float64 // What dB it started with
-	depletionRate float64 // How quickly the sound wave loses dB
-	passedThrough []int   // Object indexes the soundwave passed through so it doesn't glitch and delete
+	pos                 pixel.Vec
+	startPos            pixel.Vec // Starting position for enemies to go to
+	center              pixel.Vec
+	velocity            pixel.Vec // 0 for no change, 1 for  change via dB level [-1 for reverse]
+	size                pixel.Vec
+	pic                 pixel.Picture
+	sprite              *pixel.Sprite
+	dB                  float64          // Speed/strength of the sound
+	startingDB          float64          // What dB it started with
+	depletionRate       float64          // How quickly the sound wave loses dB
+	passedThrough       []int            // Object indexes the soundwave passed through so it doesn't glitch and delete
+	trail               []SoundWaveTrail // THE TRAILS FOR THE SOUND WAVE
+	createTrailTimer    float64          // How quickly a new trail particle is made
+	createTrailTimerMax float64
+}
+
+//SoundWaveTrail ... Trails for the soundwaves dude
+type SoundWaveTrail struct {
+	pos            pixel.Vec
+	size           pixel.Vec
+	animationSheet Spritesheet
+	animation      Animation
+	center         pixel.Vec
+	velocity       pixel.Vec
+	sprite         *pixel.Sprite
+	animationEnded bool
+	end            bool
+	speed          float64
+}
+
+func createSoundWaveTrail(pos pixel.Vec, velocity pixel.Vec, animationSheet Spritesheet, speed float64) SoundWaveTrail {
+	animationSpeed := 0.25
+	sprite := pixel.NewSprite(animationSheet.sheet, animationSheet.sheet.Bounds())
+	size := pixel.V(animationSheet.sheet.Bounds().Size().X/float64(animationSheet.numberOfFrames), animationSheet.sheet.Bounds().Size().Y)
+	size = pixel.V(size.X*imageScale, size.Y*imageScale)
+	return SoundWaveTrail{
+		pos,
+		size,
+		animationSheet,
+		createAnimation(animationSheet, animationSpeed),
+		pixel.ZV,
+		velocity,
+		sprite,
+		false,
+		false,
+		speed,
+	}
+}
+
+func (t *SoundWaveTrail) update(dt float64) {
+	if !t.end {
+		t.pos = pixel.V(t.pos.X+((t.velocity.X*t.speed)*dt), t.pos.Y+((t.velocity.Y*t.speed)*dt))
+		t.center = pixel.V(t.pos.X+(t.size.X/2), t.pos.Y+(t.size.Y/2))
+		if t.animation.frameNumber >= t.animation.frameNumberMax-1 {
+			t.animationEnded = true
+		}
+		if t.animationEnded && t.animation.frameNumber < t.animation.frameNumberMax-1 {
+			t.end = true
+		}
+	}
+}
+
+func (t *SoundWaveTrail) render(viewCanvas *pixelgl.Canvas) {
+	//if !t.end {
+	if 1 == 0 {
+		mat := pixel.IM.
+			Moved(t.center).
+			Scaled(t.center, imageScale)
+
+		*t.sprite = t.animation.animate(dt)
+		t.sprite.Draw(viewCanvas, mat)
+	}
 }
 
 func createSoundWave(pos pixel.Vec, pic pixel.Picture, velocity pixel.Vec, dB float64, depletionRate float64, startPos pixel.Vec) SoundWave {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
+
+	trailTimer := 0.5
 
 	return SoundWave{
 		pixel.V(pos.X-size.X/2, pos.Y-size.Y/2),
@@ -37,6 +100,9 @@ func createSoundWave(pos pixel.Vec, pic pixel.Picture, velocity pixel.Vec, dB fl
 		dB,
 		depletionRate,
 		[]int{},
+		[]SoundWaveTrail{},
+		trailTimer,
+		trailTimer,
 	}
 }
 
@@ -44,12 +110,24 @@ func (w *SoundWave) update(dt float64) {
 	w.pos = pixel.V(w.pos.X+((w.velocity.X*w.startingDB)*dt), w.pos.Y+((w.velocity.Y*w.startingDB)*dt))
 	w.center = pixel.V(w.pos.X+(w.size.X/2), w.pos.Y+(w.size.Y/2))
 	w.objectCollision()
+	for i := 0; i < len(w.trail); i++ {
+		w.trail[i].update(dt)
+	}
+	if w.createTrailTimer > 0. {
+		w.createTrailTimer -= 1 * dt
+	} else {
+		w.createTrailTimer = w.createTrailTimerMax
+		w.trail = append(w.trail, createSoundWaveTrail(w.pos, w.velocity, playerSpritesheets.soundWaveBTrailSheet, w.dB/1.5))
+	}
 }
 
 func (w *SoundWave) render(viewCanvas *pixelgl.Canvas) {
 	mat := pixel.IM.
 		Moved(w.center).
 		Scaled(w.center, imageScale)
+	for i := 0; i < len(w.trail); i++ {
+		w.trail[i].render(viewCanvas)
+	}
 	w.sprite.Draw(viewCanvas, mat)
 }
 

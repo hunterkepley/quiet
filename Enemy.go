@@ -70,7 +70,7 @@ type EnemyAnimations struct {
 	attackRaiseAnimationRight Animation
 }
 
-func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveSpeed float64, noSoundTimer float64, moveAnimationSpeed float64, idleAnimationSpeed float64, attackCooldown float64, attackCheckRadius float64) Enemy {
+func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveSpeed float64, noSoundTimer float64, moveAnimationSpeed float64, idleAnimationSpeed float64, attackAnimationSpeed float64, attackCooldown float64, attackCheckRadius float64) Enemy {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
@@ -117,8 +117,8 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 		EnemyAnimations{
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.leftSpriteSheet, idleAnimationSpeed),
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.rightSpriteSheet, idleAnimationSpeed),
-			createAnimation(enemySpriteSheets.larvaSpriteSheets.attackRaiseSpriteSheetLeft, idleAnimationSpeed),
-			createAnimation(enemySpriteSheets.larvaSpriteSheets.attackRaiseSpriteSheetRight, idleAnimationSpeed),
+			createAnimation(enemySpriteSheets.larvaSpriteSheets.attackRaiseSpriteSheetLeft, attackAnimationSpeed),
+			createAnimation(enemySpriteSheets.larvaSpriteSheets.attackRaiseSpriteSheetRight, attackAnimationSpeed),
 		},
 	}
 }

@@ -18,6 +18,8 @@ type Object struct {
 	center           pixel.Vec
 	size             pixel.Vec
 	pic              pixel.Picture
+	animationSheet   Spritesheet
+	animation        Animation
 	sprite           pixel.Sprite
 	radius           float64
 	sizeDiminisher   float64
@@ -26,6 +28,7 @@ type Object struct {
 	foregroundObject bool    // true if in foreground
 	playerCollidable bool    // true if collides with player
 	soundCollidable  bool    // true if sound collides with the object
+	isAnimated       bool    // true if the object has an animation
 	dBDiminisher     float64 // Amount of dB it takes to go through the object.
 
 	// Collision rects
@@ -58,6 +61,8 @@ func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, back
 		pixel.ZV,
 		size,
 		pic,
+		Spritesheet{},
+		Animation{},
 		*sprite,
 		pic.Bounds().Size().Y / 2,
 		sizeDiminisher,
@@ -66,6 +71,50 @@ func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, back
 		foregroundObject,
 		playerCollidable,
 		soundCollidable,
+		false,
+		dBDiminisher,
+		top,
+		left,
+		right,
+		bottom,
+		collisionOffset,
+		hitboxes,
+	}
+}
+
+func createAnimatedObject(pos pixel.Vec, animationSheet Spritesheet, animationSpeed float64, sizeDiminisher float64, backgroundObject bool, foregroundObject bool, playerCollidable bool, soundCollidable bool, dBDiminisher float64) Object {
+	pic := objectSpritesheets.trashCanSheet.sheet
+	sprite := pixel.NewSprite(pic, objectSpritesheets.trashCanSheet.frames[0])
+	size := pixel.V(pic.Bounds().Size().X/float64(len(objectSpritesheets.trashCanSheet.frames)), pic.Bounds().Size().Y)
+	size = pixel.V(size.X*imageScale, size.Y*imageScale)
+	inFrontOfPlayer := true
+
+	collisionOffset := 2.
+	top := pixel.R(0, 0, 0, 0)
+	left := pixel.R(0, 0, 0, 0)
+	right := pixel.R(0, 0, 0, 0)
+	bottom := pixel.R(0, 0, 0, 0)
+	hitboxes := false
+
+	if backgroundObject {
+		inFrontOfPlayer = false
+	}
+	return Object{
+		pos,
+		pixel.ZV,
+		size,
+		pic,
+		animationSheet,
+		createAnimation(animationSheet, animationSpeed),
+		*sprite,
+		pic.Bounds().Size().Y / 2,
+		sizeDiminisher,
+		inFrontOfPlayer,
+		backgroundObject,
+		foregroundObject,
+		playerCollidable,
+		soundCollidable,
+		true,
 		dBDiminisher,
 		top,
 		left,
@@ -87,10 +136,13 @@ func (o *Object) update(p *Player) {
 	}
 }
 
-func (o Object) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw, p Player) {
+func (o *Object) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw, p Player) {
 	mat := pixel.IM.
 		Moved(o.center).
 		Scaled(o.center, imageScale)
+	if o.isAnimated {
+		o.sprite = o.animation.animate(dt)
+	}
 	o.sprite.Draw(viewCanvas, mat)
 	if o.hitboxes {
 		o.renderHitboxes(imd, player)
