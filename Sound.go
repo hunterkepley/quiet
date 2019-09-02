@@ -213,7 +213,8 @@ func (s *SoundEmitter) emit(dB float64, depletionRate float64) {
 	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X+offsetS, s.pos.Y), soundImages.playerSoundWaveR, pixel.V(1, 0), dB, depletionRate, s.pos))          // Right
 	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X-offsetS, s.pos.Y), soundImages.playerSoundWaveL, pixel.V(-1, 0), dB, depletionRate, s.pos))         // Left
 
-	go audioAddr[0].play(0) //should play audio
+	footstepIndex := searchAudio("footstep.mp3") //should look up file based on the provided string
+	go selectAudio(footstepIndex)           //should play audio
 }
 
 func (s *SoundEmitter) update(pos pixel.Vec, dt float64) {
