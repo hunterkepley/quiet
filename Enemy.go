@@ -136,9 +136,9 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	sprite := e.animation.animate(dt)
 	sprite.Draw(viewCanvas, mat)
 	// Render nodes, temporary
-	/*for _, j := range e.currentPath {
+	for _, j := range e.currentPath {
 		j.render(imd)
-	}*/
+	}
 }
 
 func (e *Enemy) eyeRender(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
@@ -175,8 +175,8 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 				soundWaves[i].pos.X+soundWaves[i].size.X > e.pos.X &&
 				soundWaves[i].pos.Y < e.pos.Y+e.size.Y/e.sizeDiminisher &&
 				soundWaves[i].pos.Y+soundWaves[i].size.Y > e.pos.Y {
-				nodeIndexStart := 0
-				nodeIndexEnd := 0
+				nodeIndexStart := 0 //might move
+				nodeIndexEnd := 0   //might move
 				for nI, n := range e.nodes {
 					if n.pos.X < e.pos.X+1 &&
 						n.pos.X+n.size.X > e.pos.X &&
@@ -194,7 +194,7 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 						}
 					}
 				}
-				e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes, e.size)
+				e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes, e.size) //might move
 
 				e.noSoundTimer = e.noSoundTimerMax
 				e.eye.state = 1
