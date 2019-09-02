@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
@@ -289,7 +287,7 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 	if e.attackCooldown > 0. {
 		e.attackCooldown -= 1 * dt
 	}
-	fmt.Println(e.currentAnimation)
+	//fmt.Println(e.currentAnimation)
 }
 
 func (e *Enemy) attackHandler(p *Player, dt float64) {

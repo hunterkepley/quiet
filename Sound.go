@@ -70,14 +70,13 @@ func (t *SoundWaveTrail) update(dt float64) {
 }
 
 func (t *SoundWaveTrail) render(viewCanvas *pixelgl.Canvas) {
-	//if !t.end {
-	if 1 == 0 {
+	if !t.end {
 		mat := pixel.IM.
 			Moved(t.center).
 			Scaled(t.center, imageScale)
 
 		*t.sprite = t.animation.animate(dt)
-		t.sprite.Draw(viewCanvas, mat)
+		t.sprite.Draw(soundWaveBatches.soundWaveBTrailBatch, mat)
 	}
 }
 
@@ -122,13 +121,27 @@ func (w *SoundWave) update(dt float64) {
 }
 
 func (w *SoundWave) render(viewCanvas *pixelgl.Canvas) {
+	// Don't be lazy clean this up it's disgusting and you should feel bad
 	mat := pixel.IM.
 		Moved(w.center).
 		Scaled(w.center, imageScale)
-	for i := 0; i < len(w.trail); i++ {
-		w.trail[i].render(viewCanvas)
+	if w.velocity == pixel.V(0, -1) {
+		w.sprite.Draw(soundWaveBatches.soundWaveBatches[0], mat)
+	} else if w.velocity == pixel.V(-1, -1) {
+		w.sprite.Draw(soundWaveBatches.soundWaveBatches[1], mat)
+	} else if w.velocity == pixel.V(1, -1) {
+		w.sprite.Draw(soundWaveBatches.soundWaveBatches[2], mat)
+	} else if w.velocity == pixel.V(-1, 0) {
+		w.sprite.Draw(soundWaveBatches.soundWaveBatches[3], mat)
+	} else if w.velocity == pixel.V(1, 0) {
+		w.sprite.Draw(soundWaveBatches.soundWaveBatches[4], mat)
+	} else if w.velocity == pixel.V(0, 1) {
+		w.sprite.Draw(soundWaveBatches.soundWaveBatches[5], mat)
+	} else if w.velocity == pixel.V(-1, 1) {
+		w.sprite.Draw(soundWaveBatches.soundWaveBatches[6], mat)
+	} else {
+		w.sprite.Draw(soundWaveBatches.soundWaveBatches[7], mat)
 	}
-	w.sprite.Draw(viewCanvas, mat)
 }
 
 func (w *SoundWave) objectCollision() {
@@ -222,7 +235,18 @@ func (s *SoundEmitter) update(pos pixel.Vec, dt float64) {
 }
 
 func (s *SoundEmitter) render(viewCanvas *pixelgl.Canvas) {
+	soundWaveBatches.soundWaveBTrailBatch.Clear()
+	for _, j := range soundWaveBatches.soundWaveBatches {
+		j.Clear()
+	}
 	for i := 0; i < len(s.waves); i++ {
 		s.waves[i].render(viewCanvas)
+		for j := 0; j < len(s.waves[i].trail); j++ {
+			s.waves[i].trail[j].render(viewCanvas)
+		}
+	}
+	soundWaveBatches.soundWaveBTrailBatch.Draw(viewCanvas)
+	for _, j := range soundWaveBatches.soundWaveBatches {
+		j.Draw(viewCanvas)
 	}
 }

@@ -121,6 +121,8 @@ func loadResources() {
 	loadPlayerSpritesheets()
 	//Load the player spritebatches for the game
 	loadPlayerBatches()
+	//Load the sound wave spritebatches for the game
+	loadSoundWaveBatches()
 	//Load the object spritesheets for the game
 	loadObjectSpritesheets()
 	//Load the object spritebatches for the game
