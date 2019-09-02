@@ -21,8 +21,10 @@ type L1ObjectImages struct {
 	gasStreet    pixel.Picture
 	gasFence     pixel.Picture
 	gasLight     pixel.Picture
-	concreteWall pixel.Picture
-	woodFloor    pixel.Picture
+	floor1       pixel.Picture
+	backWall1    pixel.Picture
+	bottomWall1  pixel.Picture
+	wall1        pixel.Picture
 }
 
 //SoundImages ... All the visible sound images
@@ -63,8 +65,10 @@ func loadObjectImages() {
 		loadPicture("./Resources/Art/Objects/Backgrounds/l1/street1.png"),
 		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_fence.png"),
 		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_light.png"),
-		loadPicture("./Resources/Art/Objects/Walls/l1/concrete_wall.png"),
-		loadPicture("./Resources/Art/Objects/Backgrounds/l1/floor.png"),
+		loadPicture("./Resources/Art/Objects/Backgrounds/l1/floor1.png"),
+		loadPicture("./Resources/Art/Objects/Walls/l1/back_wall1.png"),
+		loadPicture("./Resources/Art/Objects/Walls/l1/bottom_wall1.png"),
+		loadPicture("./Resources/Art/Objects/Walls/l1/wall1.png"),
 	}
 }
 

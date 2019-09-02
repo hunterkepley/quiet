@@ -55,8 +55,11 @@ func loadLevels() {
 				),
 				createRoom( // Inside 1
 					[]Object{
-						createObject(pixel.V(0., 0.), objectImages.woodFloor, 1., true, false, false, false, 0.),
-						createObject(pixel.V(0., 300.), objectImages.concreteWall, 2., false, false, true, true, 100.),
+						createObject(pixel.V(28., 639.), objectImages.backWall1, 1., false, false, true, true, 100.),
+						createObject(pixel.V(28., 0.), objectImages.bottomWall1, 2., false, false, true, true, 100.),
+						createObject(pixel.V(0., 0.), objectImages.wall1, 1., false, false, true, true, 0.),
+						createObject(pixel.V(996., 0.), objectImages.wall1, 1., false, false, true, true, 0.),
+						createObject(pixel.V(0., 0.), objectImages.floor1, 1., true, false, false, false, 0.),
 						createObject(pixel.V(100., 180.), objectImages.box1, 2., false, false, true, true, 15.),
 						createObject(pixel.V(200., 80.), objectImages.box1, 2., false, false, true, true, 15.),
 					},
