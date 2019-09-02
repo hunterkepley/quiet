@@ -12,8 +12,12 @@ import (
 )
 
 var (
-	songs       Songs
-	currentSong = 0
+	currentSong  = 0
+	musicCounter = 0 //used for seting up the audio
+	//musicAddr    [20]Music     //addresses for music files
+	//musicName    [20]MusicName //names of the music files
+	music []Music //literally music
+	//ARBITRARILY SET ARRAY LENGTH, CAN ADJUST LATER
 )
 
 //Songs ... Songs in the game
@@ -25,12 +29,12 @@ type Songs struct {
 //Music ... Music for the game in a simple-to-use system, must be mp3 for now
 type Music struct {
 	location string
+	name     string
 }
 
-func createMusic(location string) Music {
-	return Music{
-		location,
-	}
+//MusicName ... Names for the music files
+type MusicName struct {
+	name string
 }
 
 func (m *Music) play() {
@@ -65,40 +69,56 @@ func (m *Music) play() {
 }
 
 func loadMusic() {
-	songs = Songs{
-		createMusic("./Resources/Sound/Music/menuMusic.mp3"),
-		createMusic("./Resources/Sound/Music/gameMusic.mp3"),
+	dirname := "./Resources/Sound/Music"
+
+	f, err := os.Open(dirname)
+	if err != nil {
+		log.Fatal(err)
+	}
+	files, err := f.Readdir(-1)
+	f.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	//set up flag, name, and address
+	for _, file := range files {
+		name := file.Name()
+		location := dirname + "/" + file.Name()
+
+		music = append(music, Music{
+			location,
+			name,
+		})
+
+		//musicName[musicCounter].name = file.Name()
+		//musicAddr[musicCounter].location = dirname + "/" + file.Name()
+		musicCounter++
 	}
 }
 
-//for closing currently running songs
 func closeSong() {
-	//NEEDS TO BE CHANGED, FOR AUDIO TO WORK SPEAKER CAN'T BE CLOSED
-	//NEED TO END CURRENT STREAMER
 	speaker.Close()
 }
 
-//WIP attempting to simplify the process of closing a song and playing a new one
+//literally just change the song 4head
 func switchSong(i int) {
 
-	//fmt.Println("song id: ", i)
+	if i == currentSong {
+		return //literally just don't do anything
+	}
 
-	//kind of ugly but def functional and would allow for switching from menu music to game music and vice versa
-	if i == currentSong { //this if/else block added as a bugfix to speaker overload bug as a way to check before closing and restarting the speaker
-		//literally just don't do anything
-	} else {
+	currentSong = i
+	closeSong()
+	music[i].play()
+}
 
-		if i == 1 { //id 1 is normal game song
-			currentSong = i
-			closeSong()
-			songs.gameSong.play()
-		} else if i == 0 { //id 0 is menu song
-			currentSong = i
-			closeSong()
-			songs.menuSong.play()
-		} else { //id doesn't exist, some error has occurred
-			//fmt.Println("err")
-			return
+//pass in file name, index for file returned
+func searchMusic(s string) int {
+	for i := 0; i < musicCounter; i++ {
+		if music[i].name == s {
+			return i //returns the index for the desired song
 		}
 	}
+	//no filename found
+	return -1
 }
