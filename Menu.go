@@ -45,5 +45,5 @@ func (m *Menu) runMusic() {
 	//songs.menuSong.play()
 	menuSongIndex := searchMusic("menuMusic.mp3")
 	currentSong = menuSongIndex
-	musicAddr[menuSongIndex].play()
+	music[menuSongIndex].play()
 }

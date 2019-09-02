@@ -13,9 +13,10 @@ import (
 
 var (
 	currentSong  = 0
-	musicCounter = 0           //used for seting up the audio
-	musicAddr    [20]Music     //addresses for music files
-	musicName    [20]MusicName //names of the music files
+	musicCounter = 0 //used for seting up the audio
+	//musicAddr    [20]Music     //addresses for music files
+	//musicName    [20]MusicName //names of the music files
+	music []Music //literally music
 	//ARBITRARILY SET ARRAY LENGTH, CAN ADJUST LATER
 )
 
@@ -28,6 +29,7 @@ type Songs struct {
 //Music ... Music for the game in a simple-to-use system, must be mp3 for now
 type Music struct {
 	location string
+	name     string
 }
 
 //MusicName ... Names for the music files
@@ -80,8 +82,16 @@ func loadMusic() {
 	}
 	//set up flag, name, and address
 	for _, file := range files {
-		musicName[musicCounter].name = file.Name()
-		musicAddr[musicCounter].location = dirname + "/" + file.Name()
+		name := file.Name()
+		location := dirname + "/" + file.Name()
+
+		music = append(music, Music{
+			location,
+			name,
+		})
+
+		//musicName[musicCounter].name = file.Name()
+		//musicAddr[musicCounter].location = dirname + "/" + file.Name()
 		musicCounter++
 	}
 }
@@ -99,13 +109,13 @@ func switchSong(i int) {
 
 	currentSong = i
 	closeSong()
-	musicAddr[i].play()
+	music[i].play()
 }
 
 //pass in file name, index for file returned
 func searchMusic(s string) int {
 	for i := 0; i < musicCounter; i++ {
-		if musicName[i].name == s {
+		if music[i].name == s {
 			return i //returns the index for the desired song
 		}
 	}
