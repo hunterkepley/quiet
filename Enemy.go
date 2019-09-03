@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
@@ -182,6 +184,7 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 						n.pos.Y+n.size.Y > e.pos.Y {
 						if n.passable {
 							nodeIndexStart = nI
+
 						}
 					} else if n.pos.X < soundWaves[i].startPos.X+1 &&
 						n.pos.X+n.size.X > soundWaves[i].startPos.X &&
@@ -189,6 +192,7 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 						n.pos.Y+n.size.Y > soundWaves[i].startPos.Y {
 						if n.passable {
 							nodeIndexEnd = nI
+							fmt.Sprintln("End node: ", nI)
 						}
 					}
 				}
@@ -232,6 +236,8 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 							}
 						}
 					}
+					fmt.Println("start: ", e.nodes[nodeIndexStart].passable)
+					fmt.Println("end: ", e.nodes[nodeIndexEnd].passable)
 					e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes, e.size)
 				}
 			}
