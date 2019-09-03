@@ -7,6 +7,7 @@ import (
 	"github.com/faiface/pixel/pixelgl"
 )
 
+//ParticleEmitter ... particle emitter
 type ParticleEmitter struct {
 	pos           pixel.Vec
 	particles     []Particle
@@ -18,6 +19,7 @@ type ParticleEmitter struct {
 	reverseY      bool
 }
 
+//Particle ... particle
 type Particle struct {
 	pos         pixel.Vec
 	pic         pixel.Picture
