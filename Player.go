@@ -94,7 +94,6 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 			createAnimation(playerSpritesheets.playerIdleLeftSheet, idleAnimationSpeed),
 		},
 	}
-
 }
 
 func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player

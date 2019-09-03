@@ -23,6 +23,8 @@ type PlayerSpritesheets struct {
 	playerIdleUpSheet    Spritesheet
 	playerIdleDownSheet  Spritesheet
 	playerIdleLeftSheet  Spritesheet
+	// Sound wave stuff
+	soundWaveBTrailSheet Spritesheet
 }
 
 //LarvaSpriteSheets ... All the larva spritesheets in the game
@@ -45,6 +47,7 @@ type EnemySpriteSheets struct {
 type ObjectSpritesheets struct {
 	rainSheet       Spritesheet
 	rainSplashSheet Spritesheet
+	trashCanSheet   Spritesheet
 }
 
 func loadPlayerSpritesheets() {
@@ -53,11 +56,16 @@ func loadPlayerSpritesheets() {
 	playerIdleUpSheet := loadPicture("./Resources/Art/Player/idle_up.png")
 	playerIdleDownSheet := loadPicture("./Resources/Art/Player/idle_down.png")
 	playerIdleLeftSheet := loadPicture("./Resources/Art/Player/idle_left.png")
+
+	// Sound wave trail sheets
+	soundWaveBTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_b_trail_sheet.png")
 	playerSpritesheets = PlayerSpritesheets{
 		createSpriteSheet(playerIdleRightSheet, 4),
 		createSpriteSheet(playerIdleUpSheet, 4),
 		createSpriteSheet(playerIdleDownSheet, 4),
 		createSpriteSheet(playerIdleLeftSheet, 4),
+		// Sound wave trail sheets
+		createSpriteSheet(soundWaveBTrailSheet, 4),
 	}
 }
 
@@ -74,7 +82,7 @@ func loadEnemySpriteSheets() {
 		LarvaSpriteSheets{
 			createSpriteSheet(larvaLeftSheet, 4),
 			createSpriteSheet(larvaRightSheet, 4),
-			createSpriteSheet(larvaAttackRaiseSheetLeft, 4),
+			createSpriteSheet(larvaAttackRaiseSheetLeft, 7),
 			createSpriteSheet(larvaAttackRaiseSheetRight, 4),
 		},
 		createSpriteSheet(eyeLookingSheet, 12),
@@ -87,9 +95,11 @@ func loadObjectSpritesheets() {
 	// Object spritesheets
 	rainSheet := loadPicture("./Resources/Art/Weather/rain.png")
 	rainSplashSheet := loadPicture("./Resources/Art/Weather/rain_splash.png")
+	trashCanSheet := loadPicture("./Resources/Art/Objects/Scenery/l1/trash_can_sheet.png")
 	objectSpritesheets = ObjectSpritesheets{
 		createSpriteSheet(rainSheet, 5),
 		createSpriteSheet(rainSplashSheet, 6),
+		createSpriteSheet(trashCanSheet, 4),
 	}
 }
 
