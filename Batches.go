@@ -54,13 +54,13 @@ func loadObjectBatches() {
 
 func loadSoundWaveBatches() {
 	soundWaveBatches = SoundWaveBatches{
-		pixel.NewBatch(&pixel.TrianglesData{}, soundWaveSpritesheets.soundWaveBTrailSheet.sheet),
-		pixel.NewBatch(&pixel.TrianglesData{}, soundWaveSpritesheets.soundWaveRTrailSheet.sheet),
-		pixel.NewBatch(&pixel.TrianglesData{}, soundWaveSpritesheets.soundWaveLTrailSheet.sheet),
-		pixel.NewBatch(&pixel.TrianglesData{}, soundWaveSpritesheets.soundWaveUTrailSheet.sheet),
-		pixel.NewBatch(&pixel.TrianglesData{}, soundWaveSpritesheets.soundWaveTRTrailSheet.sheet),
-		pixel.NewBatch(&pixel.TrianglesData{}, soundWaveSpritesheets.soundWaveBLTrailSheet.sheet),
-		pixel.NewBatch(&pixel.TrianglesData{}, soundWaveSpritesheets.soundWaveTLTrailSheet.sheet),
-		pixel.NewBatch(&pixel.TrianglesData{}, soundWaveSpritesheets.soundWaveBRTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveBTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveRTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveLTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveUTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveTRTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveBLTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveTLTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveBRTrailSheet.sheet),
 	}
 }

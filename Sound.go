@@ -121,28 +121,28 @@ func (w *SoundWave) update(dt float64) {
 		var tempSheet Spritesheet
 		var tempBatch *pixel.Batch
 		if w.velocity == pixel.V(0, -1) {
-			tempSheet = soundWaveSpritesheets.soundWaveBTrailSheet
+			tempSheet = playerSpritesheets.soundWaveBTrailSheet
 			tempBatch = soundWaveBatches.soundWaveBTrailBatch
 		} else if w.velocity == pixel.V(1, 0) {
-			tempSheet = soundWaveSpritesheets.soundWaveRTrailSheet
+			tempSheet = playerSpritesheets.soundWaveRTrailSheet
 			tempBatch = soundWaveBatches.soundWaveRTrailBatch
 		} else if w.velocity == pixel.V(-1, 0) {
-			tempSheet = soundWaveSpritesheets.soundWaveLTrailSheet
+			tempSheet = playerSpritesheets.soundWaveLTrailSheet
 			tempBatch = soundWaveBatches.soundWaveLTrailBatch
 		} else if w.velocity == pixel.V(0, 1) {
-			tempSheet = soundWaveSpritesheets.soundWaveUTrailSheet
+			tempSheet = playerSpritesheets.soundWaveUTrailSheet
 			tempBatch = soundWaveBatches.soundWaveUTrailBatch
 		} else if w.velocity == pixel.V(1, 1) {
-			tempSheet = soundWaveSpritesheets.soundWaveTRTrailSheet
+			tempSheet = playerSpritesheets.soundWaveTRTrailSheet
 			tempBatch = soundWaveBatches.soundWaveTRTrailBatch
 		} else if w.velocity == pixel.V(-1, -1) {
-			tempSheet = soundWaveSpritesheets.soundWaveBLTrailSheet
+			tempSheet = playerSpritesheets.soundWaveBLTrailSheet
 			tempBatch = soundWaveBatches.soundWaveBLTrailBatch
 		} else if w.velocity == pixel.V(-1, 1) {
-			tempSheet = soundWaveSpritesheets.soundWaveTLTrailSheet
+			tempSheet = playerSpritesheets.soundWaveTLTrailSheet
 			tempBatch = soundWaveBatches.soundWaveTLTrailBatch
 		} else if w.velocity == pixel.V(1, -1) {
-			tempSheet = soundWaveSpritesheets.soundWaveBRTrailSheet
+			tempSheet = playerSpritesheets.soundWaveBRTrailSheet
 			tempBatch = soundWaveBatches.soundWaveBRTrailBatch
 		}
 		w.trail = append(w.trail, createSoundWaveTrail(w.pos, w.velocity, tempSheet, tempBatch, w.dB/1.5))
