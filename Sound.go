@@ -121,21 +121,29 @@ func (w *SoundWave) update(dt float64) {
 		var tempSheet Spritesheet
 		var tempBatch *pixel.Batch
 		if w.velocity == pixel.V(0, -1) {
-			tempSheet = playerSpritesheets.soundWaveBTrailSheet
+			tempSheet = soundWaveSpritesheets.soundWaveBTrailSheet
 			tempBatch = soundWaveBatches.soundWaveBTrailBatch
 		} else if w.velocity == pixel.V(1, 0) {
-			tempSheet = playerSpritesheets.soundWaveRTrailSheet
+			tempSheet = soundWaveSpritesheets.soundWaveRTrailSheet
 			tempBatch = soundWaveBatches.soundWaveRTrailBatch
 		} else if w.velocity == pixel.V(-1, 0) {
-			tempSheet = playerSpritesheets.soundWaveLTrailSheet
+			tempSheet = soundWaveSpritesheets.soundWaveLTrailSheet
 			tempBatch = soundWaveBatches.soundWaveLTrailBatch
 		} else if w.velocity == pixel.V(0, 1) {
-			tempSheet = playerSpritesheets.soundWaveUTrailSheet
+			tempSheet = soundWaveSpritesheets.soundWaveUTrailSheet
 			tempBatch = soundWaveBatches.soundWaveUTrailBatch
-
-		} else {
-			tempSheet = playerSpritesheets.soundWaveBTrailSheet
-			tempBatch = soundWaveBatches.soundWaveBTrailBatch
+		} else if w.velocity == pixel.V(1, 1) {
+			tempSheet = soundWaveSpritesheets.soundWaveTRTrailSheet
+			tempBatch = soundWaveBatches.soundWaveTRTrailBatch
+		} else if w.velocity == pixel.V(-1, -1) {
+			tempSheet = soundWaveSpritesheets.soundWaveBLTrailSheet
+			tempBatch = soundWaveBatches.soundWaveBLTrailBatch
+		} else if w.velocity == pixel.V(-1, 1) {
+			tempSheet = soundWaveSpritesheets.soundWaveTLTrailSheet
+			tempBatch = soundWaveBatches.soundWaveTLTrailBatch
+		} else if w.velocity == pixel.V(1, -1) {
+			tempSheet = soundWaveSpritesheets.soundWaveBRTrailSheet
+			tempBatch = soundWaveBatches.soundWaveBRTrailBatch
 		}
 		w.trail = append(w.trail, createSoundWaveTrail(w.pos, w.velocity, tempSheet, tempBatch, w.dB/1.5))
 	}
@@ -255,6 +263,10 @@ func soundWaveBatchClear() {
 	soundWaveBatches.soundWaveRTrailBatch.Clear()
 	soundWaveBatches.soundWaveLTrailBatch.Clear()
 	soundWaveBatches.soundWaveUTrailBatch.Clear()
+	soundWaveBatches.soundWaveTRTrailBatch.Clear()
+	soundWaveBatches.soundWaveBLTrailBatch.Clear()
+	soundWaveBatches.soundWaveTLTrailBatch.Clear()
+	soundWaveBatches.soundWaveBRTrailBatch.Clear()
 }
 
 func soundWaveBatchDraw(viewCanvas *pixelgl.Canvas) {
@@ -262,4 +274,8 @@ func soundWaveBatchDraw(viewCanvas *pixelgl.Canvas) {
 	soundWaveBatches.soundWaveRTrailBatch.Draw(viewCanvas)
 	soundWaveBatches.soundWaveLTrailBatch.Draw(viewCanvas)
 	soundWaveBatches.soundWaveUTrailBatch.Draw(viewCanvas)
+	soundWaveBatches.soundWaveTRTrailBatch.Draw(viewCanvas)
+	soundWaveBatches.soundWaveBLTrailBatch.Draw(viewCanvas)
+	soundWaveBatches.soundWaveTLTrailBatch.Draw(viewCanvas)
+	soundWaveBatches.soundWaveBRTrailBatch.Draw(viewCanvas)
 }

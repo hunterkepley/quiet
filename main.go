@@ -131,6 +131,8 @@ func loadResources() {
 	loadObjectImages()
 	//Load images for the visible sound bubbles/other sound images
 	loadSoundImages()
+	//Load spritesheets for sound waves
+	loadSoundWaveSpritesheets()
 	//Load images for the main menu
 	loadMenuImages()
 	//Load music for the game

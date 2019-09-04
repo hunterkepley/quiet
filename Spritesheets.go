@@ -5,9 +5,10 @@ import (
 )
 
 var (
-	playerSpritesheets PlayerSpritesheets
-	objectSpritesheets ObjectSpritesheets
-	enemySpriteSheets  EnemySpriteSheets
+	playerSpritesheets    PlayerSpritesheets
+	soundWaveSpritesheets SoundWaveSpritesheets
+	objectSpritesheets    ObjectSpritesheets
+	enemySpriteSheets     EnemySpriteSheets
 )
 
 /*Spritesheet ... Holds a picture of a spritesheet and the frames of each single picture*/
@@ -23,11 +24,18 @@ type PlayerSpritesheets struct {
 	playerIdleUpSheet    Spritesheet
 	playerIdleDownSheet  Spritesheet
 	playerIdleLeftSheet  Spritesheet
-	// Sound wave stuff
-	soundWaveBTrailSheet Spritesheet
-	soundWaveRTrailSheet Spritesheet
-	soundWaveLTrailSheet Spritesheet
-	soundWaveUTrailSheet Spritesheet
+}
+
+/*SoundWaveSpritesheets ... All the sound wave spritesheets in the game*/
+type SoundWaveSpritesheets struct {
+	soundWaveBTrailSheet  Spritesheet
+	soundWaveRTrailSheet  Spritesheet
+	soundWaveLTrailSheet  Spritesheet
+	soundWaveUTrailSheet  Spritesheet
+	soundWaveTRTrailSheet Spritesheet
+	soundWaveBLTrailSheet Spritesheet
+	soundWaveTLTrailSheet Spritesheet
+	soundWaveBRTrailSheet Spritesheet
 }
 
 //LarvaSpriteSheets ... All the larva spritesheets in the game
@@ -53,6 +61,29 @@ type ObjectSpritesheets struct {
 	trashCanSheet   Spritesheet
 }
 
+func loadSoundWaveSpritesheets() {
+	// Sound wave trail sheets
+	soundWaveBTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_b_trail_sheet.png")
+	soundWaveRTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_r_trail_sheet.png")
+	soundWaveLTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_l_trail_sheet.png")
+	soundWaveUTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_u_trail_sheet.png")
+	soundWaveTRTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_tr_trail_sheet.png")
+	soundWaveBLTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_bl_trail_sheet.png")
+	soundWaveTLTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_tl_trail_sheet.png")
+	soundWaveBRTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_br_trail_sheet.png")
+
+	soundWaveSpritesheets = SoundWaveSpritesheets{
+		createSpriteSheet(soundWaveBTrailSheet, 4),
+		createSpriteSheet(soundWaveRTrailSheet, 4),
+		createSpriteSheet(soundWaveLTrailSheet, 4),
+		createSpriteSheet(soundWaveUTrailSheet, 4),
+		createSpriteSheet(soundWaveTRTrailSheet, 4),
+		createSpriteSheet(soundWaveBLTrailSheet, 4),
+		createSpriteSheet(soundWaveTLTrailSheet, 4),
+		createSpriteSheet(soundWaveBRTrailSheet, 4),
+	}
+}
+
 func loadPlayerSpritesheets() {
 	// Player spritesheets
 	playerIdleRightSheet := loadPicture("./Resources/Art/Player/idle_right.png")
@@ -60,21 +91,11 @@ func loadPlayerSpritesheets() {
 	playerIdleDownSheet := loadPicture("./Resources/Art/Player/idle_down.png")
 	playerIdleLeftSheet := loadPicture("./Resources/Art/Player/idle_left.png")
 
-	// Sound wave trail sheets
-	soundWaveBTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_b_trail_sheet.png")
-	soundWaveRTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_r_trail_sheet.png")
-	soundWaveLTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_l_trail_sheet.png")
-	soundWaveUTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_u_trail_sheet.png")
 	playerSpritesheets = PlayerSpritesheets{
 		createSpriteSheet(playerIdleRightSheet, 4),
 		createSpriteSheet(playerIdleUpSheet, 4),
 		createSpriteSheet(playerIdleDownSheet, 4),
 		createSpriteSheet(playerIdleLeftSheet, 4),
-		// Sound wave trail sheets
-		createSpriteSheet(soundWaveBTrailSheet, 4),
-		createSpriteSheet(soundWaveRTrailSheet, 4),
-		createSpriteSheet(soundWaveLTrailSheet, 4),
-		createSpriteSheet(soundWaveUTrailSheet, 4),
 	}
 }
 
