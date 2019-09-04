@@ -32,12 +32,13 @@ type SoundWaveTrail struct {
 	center         pixel.Vec
 	velocity       pixel.Vec
 	sprite         *pixel.Sprite
+	batch          *pixel.Batch
 	animationEnded bool
 	end            bool
 	speed          float64
 }
 
-func createSoundWaveTrail(pos pixel.Vec, velocity pixel.Vec, animationSheet Spritesheet, speed float64) SoundWaveTrail {
+func createSoundWaveTrail(pos pixel.Vec, velocity pixel.Vec, animationSheet Spritesheet, batch *pixel.Batch, speed float64) SoundWaveTrail {
 	animationSpeed := 0.25
 	sprite := pixel.NewSprite(animationSheet.sheet, animationSheet.sheet.Bounds())
 	size := pixel.V(animationSheet.sheet.Bounds().Size().X/float64(animationSheet.numberOfFrames), animationSheet.sheet.Bounds().Size().Y)
@@ -50,6 +51,7 @@ func createSoundWaveTrail(pos pixel.Vec, velocity pixel.Vec, animationSheet Spri
 		pixel.ZV,
 		velocity,
 		sprite,
+		batch,
 		false,
 		false,
 		speed,
@@ -76,7 +78,7 @@ func (t *SoundWaveTrail) render(viewCanvas *pixelgl.Canvas) {
 			Scaled(t.center, imageScale)
 
 		*t.sprite = t.animation.animate(dt)
-		t.sprite.Draw(soundWaveBatches.soundWaveBTrailBatch, mat)
+		t.sprite.Draw(t.batch, mat)
 	}
 }
 
@@ -116,7 +118,26 @@ func (w *SoundWave) update(dt float64) {
 		w.createTrailTimer -= 1 * dt
 	} else {
 		w.createTrailTimer = w.createTrailTimerMax
-		w.trail = append(w.trail, createSoundWaveTrail(w.pos, w.velocity, playerSpritesheets.soundWaveBTrailSheet, w.dB/1.5))
+		var tempSheet Spritesheet
+		var tempBatch *pixel.Batch
+		if w.velocity == pixel.V(0, -1) {
+			tempSheet = playerSpritesheets.soundWaveBTrailSheet
+			tempBatch = soundWaveBatches.soundWaveBTrailBatch
+		} else if w.velocity == pixel.V(1, 0) {
+			tempSheet = playerSpritesheets.soundWaveRTrailSheet
+			tempBatch = soundWaveBatches.soundWaveRTrailBatch
+		} else if w.velocity == pixel.V(-1, 0) {
+			tempSheet = playerSpritesheets.soundWaveLTrailSheet
+			tempBatch = soundWaveBatches.soundWaveLTrailBatch
+		} else if w.velocity == pixel.V(0, 1) {
+			tempSheet = playerSpritesheets.soundWaveUTrailSheet
+			tempBatch = soundWaveBatches.soundWaveUTrailBatch
+
+		} else {
+			tempSheet = playerSpritesheets.soundWaveBTrailSheet
+			tempBatch = soundWaveBatches.soundWaveBTrailBatch
+		}
+		w.trail = append(w.trail, createSoundWaveTrail(w.pos, w.velocity, tempSheet, tempBatch, w.dB/1.5))
 	}
 }
 
@@ -197,7 +218,7 @@ func (s *SoundEmitter) emit(dB float64, depletionRate float64) {
 	s.waves = append(s.waves, createSoundWave(pixel.V(s.pos.X-offsetS, s.pos.Y), soundImages.playerSoundWaveL, pixel.V(-1, 0), dB, depletionRate, s.pos))         // Left
 
 	footstepIndex := searchAudio("footstep.mp3") //should look up file based on the provided string
-	go selectAudio(footstepIndex)           //should play audio
+	go selectAudio(footstepIndex)                //should play audio
 }
 
 func (s *SoundEmitter) update(pos pixel.Vec, dt float64) {
@@ -219,12 +240,26 @@ func (s *SoundEmitter) update(pos pixel.Vec, dt float64) {
 }
 
 func (s *SoundEmitter) render(viewCanvas *pixelgl.Canvas) {
-	soundWaveBatches.soundWaveBTrailBatch.Clear()
+	soundWaveBatchClear()
 	for i := 0; i < len(s.waves); i++ {
 		s.waves[i].render(viewCanvas)
 		for j := 0; j < len(s.waves[i].trail); j++ {
 			s.waves[i].trail[j].render(viewCanvas)
 		}
 	}
+	soundWaveBatchDraw(viewCanvas)
+}
+
+func soundWaveBatchClear() {
+	soundWaveBatches.soundWaveBTrailBatch.Clear()
+	soundWaveBatches.soundWaveRTrailBatch.Clear()
+	soundWaveBatches.soundWaveLTrailBatch.Clear()
+	soundWaveBatches.soundWaveUTrailBatch.Clear()
+}
+
+func soundWaveBatchDraw(viewCanvas *pixelgl.Canvas) {
 	soundWaveBatches.soundWaveBTrailBatch.Draw(viewCanvas)
+	soundWaveBatches.soundWaveRTrailBatch.Draw(viewCanvas)
+	soundWaveBatches.soundWaveLTrailBatch.Draw(viewCanvas)
+	soundWaveBatches.soundWaveUTrailBatch.Draw(viewCanvas)
 }

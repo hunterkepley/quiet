@@ -25,6 +25,9 @@ type PlayerSpritesheets struct {
 	playerIdleLeftSheet  Spritesheet
 	// Sound wave stuff
 	soundWaveBTrailSheet Spritesheet
+	soundWaveRTrailSheet Spritesheet
+	soundWaveLTrailSheet Spritesheet
+	soundWaveUTrailSheet Spritesheet
 }
 
 //LarvaSpriteSheets ... All the larva spritesheets in the game
@@ -59,6 +62,9 @@ func loadPlayerSpritesheets() {
 
 	// Sound wave trail sheets
 	soundWaveBTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_b_trail_sheet.png")
+	soundWaveRTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_r_trail_sheet.png")
+	soundWaveLTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_l_trail_sheet.png")
+	soundWaveUTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_u_trail_sheet.png")
 	playerSpritesheets = PlayerSpritesheets{
 		createSpriteSheet(playerIdleRightSheet, 4),
 		createSpriteSheet(playerIdleUpSheet, 4),
@@ -66,6 +72,9 @@ func loadPlayerSpritesheets() {
 		createSpriteSheet(playerIdleLeftSheet, 4),
 		// Sound wave trail sheets
 		createSpriteSheet(soundWaveBTrailSheet, 4),
+		createSpriteSheet(soundWaveRTrailSheet, 4),
+		createSpriteSheet(soundWaveLTrailSheet, 4),
+		createSpriteSheet(soundWaveUTrailSheet, 4),
 	}
 }
 
