@@ -106,8 +106,8 @@ func loadEnemySpriteSheets() {
 		LarvaSpriteSheets{
 			createSpriteSheet(larvaLeftSheet, 4),
 			createSpriteSheet(larvaRightSheet, 4),
-			createSpriteSheet(larvaAttackRaiseSheetLeft, 7),
-			createSpriteSheet(larvaAttackRaiseSheetRight, 7),
+			createSpriteSheet(larvaAttackRaiseSheetLeft, 6),
+			createSpriteSheet(larvaAttackRaiseSheetRight, 6),
 			createSpriteSheet(shockWaveSpritesheet, 5),
 		},
 		createSpriteSheet(eyeLookingSheet, 12),

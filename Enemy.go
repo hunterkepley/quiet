@@ -28,29 +28,30 @@ type EyeAnimations struct {
 
 //Enemy ... All basic enemies in the game
 type Enemy struct {
-	pos                    pixel.Vec
-	center                 pixel.Vec
-	size                   pixel.Vec
-	pic                    pixel.Picture
-	sprite                 *pixel.Sprite
-	sizeDiminisher         float64
-	moveSpeed              float64
-	moveVector             pixel.Vec // 1, 1 for moving top right, 0, 1 for moving up, etc.
-	noSoundTimer           float64   // Timer for how long until they stop chasing after not hearing a sound
-	noSoundTimerMax        float64
-	targetPosition         pixel.Vec // The position the enemy will go to
-	currentAnimation       int       // Int of the current animation. 0 = top, 3 = left, 4 = attackLeft, 5 attackRight
-	moveAnimationSpeed     float64
-	idleAnimationSpeed     float64
-	canAttack              bool // If the enemy can attack
-	attacking              bool // If the enemy is attacking
-	attackAnimationFlag    bool // If the enemy is currently doing an attack animation, in the grub's case, the slam
-	endAttackAnimationFlag bool // The end of the attacking animation, in the grub's case, when it slams the ground
-	startAttack            bool // Starts the actual attack, in the grub's case, the shockwave
-	attackCooldown         float64
-	attackCooldownMax      float64
-	attackCheckRadius      float64
-	eye                    Eye
+	pos                      pixel.Vec
+	center                   pixel.Vec
+	size                     pixel.Vec
+	pic                      pixel.Picture
+	sprite                   *pixel.Sprite
+	sizeDiminisher           float64
+	moveSpeed                float64
+	moveVector               pixel.Vec // 1, 1 for moving top right, 0, 1 for moving up, etc.
+	noSoundTimer             float64   // Timer for how long until they stop chasing after not hearing a sound
+	noSoundTimerMax          float64
+	targetPosition           pixel.Vec // The position the enemy will go to
+	currentAnimation         int       // Int of the current animation. 0 = top, 3 = left, 4 = attackLeft, 5 attackRight
+	moveAnimationSpeed       float64
+	idleAnimationSpeed       float64
+	canAttack                bool // If the enemy can attack
+	attacking                bool // If the enemy is attacking
+	attackAnimationFlag      bool // If the enemy is currently doing an attack animation, in the grub's case, the slam
+	endAttackAnimationFlag   bool // The end of the attacking animation, in the grub's case, when it slams the ground
+	startAttack              bool // Starts the actual attack, in the grub's case, the shockwave
+	startAttackAnimationFlag bool // Checks if the animation has ended for the melee attack, in the grub's case, the shockwave
+	attackCooldown           float64
+	attackCooldownMax        float64
+	attackCheckRadius        float64
+	eye                      Eye
 
 	// Nodes
 	nodes       []Node
@@ -96,6 +97,7 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 		false,
 		false,
 		false,
+		false,
 		attackCooldown,
 		attackCooldown,
 		attackCheckRadius,
@@ -120,7 +122,7 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.rightSpriteSheet, idleAnimationSpeed),
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.attackRaiseSpriteSheetLeft, attackAnimationSpeed),
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.attackRaiseSpriteSheetRight, attackAnimationSpeed),
-			createAnimation(enemySpriteSheets.larvaSpriteSheets.shockWaveSpriteSheet, idleAnimationSpeed),
+			createAnimation(enemySpriteSheets.larvaSpriteSheets.shockWaveSpriteSheet, attackAnimationSpeed),
 		},
 	}
 }
@@ -136,16 +138,15 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	}
 
 	if e.startAttack {
-		attackAnimationSize := pixel.V(e.animations.meleeAttackAnimation.sheet.sheet.Bounds().Size().X/float64(e.animations.meleeAttackAnimation.frameNumberMax), e.animations.meleeAttackAnimation.sheet.sheet.Bounds().Size().Y)
-		z := pixel.V((attackAnimationSize.X*imageScale)/2.0, (attackAnimationSize.Y*imageScale)/2.0)
-		attackPosition := pixel.V(e.pos.X+e.size.X-z.X, e.pos.Y+e.size.Y+e.size.Y-z.Y)
-		// Oh my god figure this out
-		// You also need to stop the animation after it's finished by changing startAttack
-		attackMat := pixel.IM.
-			Moved(attackPosition).
-			Scaled(attackPosition, imageScale)
 		attackSprite := e.animations.meleeAttackAnimation.animate(dt)
-		attackSprite.Draw(viewCanvas, attackMat)
+		attackSprite.Draw(viewCanvas, mat)
+		if e.animations.meleeAttackAnimation.frameNumber == e.animations.meleeAttackAnimation.frameNumberMax-1 {
+			e.startAttackAnimationFlag = true
+		}
+		if e.startAttackAnimationFlag && e.animations.meleeAttackAnimation.frameNumber == 1 {
+			e.startAttack = false
+			e.startAttackAnimationFlag = false
+		}
 	}
 
 	sprite := e.animation.animate(dt)
@@ -260,7 +261,9 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 			}
 		}
 
-		e.animation.frameSpeedMax = e.moveAnimationSpeed
+		if !e.attacking {
+			e.animation.frameSpeedMax = e.moveAnimationSpeed
+		}
 
 		if len(e.currentPath) > 0 {
 			if e.center.X < e.currentPath[0].pos.X+e.currentPath[0].size.X &&
@@ -304,7 +307,6 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 	if e.attackCooldown > 0. {
 		e.attackCooldown -= 1 * dt
 	}
-	//fmt.Println(e.currentAnimation)
 }
 
 func (e *Enemy) attackHandler(p *Player, dt float64) {
@@ -351,7 +353,6 @@ func (e *Enemy) attackHandler(p *Player, dt float64) {
 		/**
 		* TODO:
 		*
-		* Add shockwave when the enemy hits ground
 		 * Response from player when attacked (maybe work on death)
 		 * Maybe add a outline of where the enemy can attack?
 		 **/
