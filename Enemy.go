@@ -42,10 +42,11 @@ type Enemy struct {
 	currentAnimation       int       // Int of the current animation. 0 = top, 3 = left, 4 = attackLeft, 5 attackRight
 	moveAnimationSpeed     float64
 	idleAnimationSpeed     float64
-	canAttack              bool
-	attacking              bool
-	attackAnimationFlag    bool
-	endAttackAnimationFlag bool
+	canAttack              bool // If the enemy can attack
+	attacking              bool // If the enemy is attacking
+	attackAnimationFlag    bool // If the enemy is currently doing an attack animation, in the grub's case, the slam
+	endAttackAnimationFlag bool // The end of the attacking animation, in the grub's case, when it slams the ground
+	startAttack            bool // Starts the actual attack, in the grub's case, the shockwave
 	attackCooldown         float64
 	attackCooldownMax      float64
 	attackCheckRadius      float64
@@ -66,6 +67,7 @@ type EnemyAnimations struct {
 	rightAnimation            Animation
 	attackRaiseAnimationLeft  Animation
 	attackRaiseAnimationRight Animation
+	meleeAttackAnimation      Animation
 }
 
 func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveSpeed float64, noSoundTimer float64, moveAnimationSpeed float64, idleAnimationSpeed float64, attackAnimationSpeed float64, attackCooldown float64, attackCheckRadius float64) Enemy {
@@ -89,6 +91,7 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 		3,
 		moveAnimationSpeed,
 		idleAnimationSpeed,
+		false,
 		false,
 		false,
 		false,
@@ -117,6 +120,7 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.rightSpriteSheet, idleAnimationSpeed),
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.attackRaiseSpriteSheetLeft, attackAnimationSpeed),
 			createAnimation(enemySpriteSheets.larvaSpriteSheets.attackRaiseSpriteSheetRight, attackAnimationSpeed),
+			createAnimation(enemySpriteSheets.larvaSpriteSheets.shockWaveSpriteSheet, idleAnimationSpeed),
 		},
 	}
 }
@@ -129,6 +133,19 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 		*e.eye.sprite = e.eye.animation.animate(dt)
 	} else {
 		e.eye.sprite = pixel.NewSprite(enemyImages.eye, enemyImages.eye.Bounds())
+	}
+
+	if e.startAttack {
+		attackAnimationSize := pixel.V(e.animations.meleeAttackAnimation.sheet.sheet.Bounds().Size().X/float64(e.animations.meleeAttackAnimation.frameNumberMax), e.animations.meleeAttackAnimation.sheet.sheet.Bounds().Size().Y)
+		z := pixel.V((attackAnimationSize.X*imageScale)/2.0, (attackAnimationSize.Y*imageScale)/2.0)
+		attackPosition := pixel.V(e.pos.X+e.size.X-z.X, e.pos.Y+e.size.Y+e.size.Y-z.Y)
+		// Oh my god figure this out
+		// You also need to stop the animation after it's finished by changing startAttack
+		attackMat := pixel.IM.
+			Moved(attackPosition).
+			Scaled(attackPosition, imageScale)
+		attackSprite := e.animations.meleeAttackAnimation.animate(dt)
+		attackSprite.Draw(viewCanvas, attackMat)
 	}
 
 	sprite := e.animation.animate(dt)
@@ -310,6 +327,7 @@ func (e *Enemy) attackHandler(p *Player, dt float64) {
 			if e.endAttackAnimationFlag && e.animation.frameNumber < e.animation.frameNumberMax-1 {
 				e.attackAnimationFlag = false
 				e.attacking = false
+				e.startAttack = true
 				// Remove height because attack animation is normally taller than the actual enemy sprites
 				e.pos.Y -= e.animations.attackRaiseAnimationLeft.sheet.sheet.Bounds().H() - e.animations.leftAnimation.sheet.sheet.Bounds().H()
 				if e.currentAnimation == 4 {
