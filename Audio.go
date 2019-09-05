@@ -37,7 +37,7 @@ func (a *Audio) play() {
 		Streamer: sound,
 		Base:     2,
 		Volume:   -3,
-		Silent:   false,
+		Silent:   true,
 	}
 
 	done := make(chan bool) //prob wont need, will leave here as reminder just in case

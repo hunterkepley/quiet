@@ -57,7 +57,7 @@ func (m *Music) play() {
 		Streamer: loop,
 		Base:     2,
 		Volume:   -4.5,
-		Silent:   false,
+		Silent:   true,
 	}
 
 	done := make(chan bool)

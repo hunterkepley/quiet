@@ -183,19 +183,33 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 						n.pos.Y < e.pos.Y+1 &&
 						n.pos.Y+n.size.Y > e.pos.Y {
 						if n.passable {
+							if nI < int(maxNodePosition.X*maxNodePosition.Y) {
+								nodeIndexStart = nI
+								fmt.Println("Start node: ", nI)
+							}
+						} /*else if nodeIndexStart == 0 { //testing
+							fmt.Println("start node still zero, setting to enemy current pos")
 							nodeIndexStart = nI
-
-						}
+						}*/
 					} else if n.pos.X < soundWaves[i].startPos.X+1 &&
 						n.pos.X+n.size.X > soundWaves[i].startPos.X &&
 						n.pos.Y < soundWaves[i].startPos.Y+1 &&
 						n.pos.Y+n.size.Y > soundWaves[i].startPos.Y {
 						if n.passable {
+							if nI < int(maxNodePosition.X*maxNodePosition.Y) {
+								nodeIndexEnd = nI
+								fmt.Println("End node: ", nI)
+							}
+						} /*else if nodeIndexEnd == 0 { //testing
+							fmt.Println("end node still zero setting to soundwave start pos")
 							nodeIndexEnd = nI
-							fmt.Sprintln("End node: ", nI)
-						}
+						}*/
 					}
 				}
+				/*if nodeIndexEnd == 0 {
+					fmt.Println("end node still zero setting to soundwave start pos")
+					nodeIndexEnd
+				}*/
 				e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes, e.size) //might move
 
 				e.noSoundTimer = e.noSoundTimerMax
@@ -225,15 +239,27 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 							n.pos.Y < e.pos.Y+1 &&
 							n.pos.Y+n.size.Y > e.pos.Y {
 							if n.passable {
+								if nI < int(maxNodePosition.X*maxNodePosition.Y) {
+									nodeIndexStart = nI
+									fmt.Println("Start node: ", nI)
+								}
+							} /*else if nodeIndexStart == 0 { //testing
+								fmt.Println("start node still zero, setting to enemy current pos")
 								nodeIndexStart = nI
-							}
+							}*/
 						} else if n.pos.X < player.pos.X+1 &&
 							n.pos.X+n.size.X > player.pos.X &&
 							n.pos.Y < player.pos.Y+1 &&
 							n.pos.Y+n.size.Y > player.pos.Y {
 							if n.passable {
+								if nI < int(maxNodePosition.X*maxNodePosition.Y) {
+									nodeIndexEnd = nI
+									fmt.Println("End node: ", nI)
+								}
+							} /*else if nodeIndexEnd == 0 { //testing
+								fmt.Println("end node still zero setting to soundwave start pos")
 								nodeIndexEnd = nI
-							}
+							}*/
 						}
 					}
 					fmt.Println("start: ", e.nodes[nodeIndexStart].passable)
