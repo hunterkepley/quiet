@@ -127,6 +127,8 @@ func loadResources() {
 	loadObjectSpritesheets()
 	//Load the object spritebatches for the game
 	loadObjectBatches()
+	//Load images for floating UI in the game (Like an E above a door)
+	loadFloatingImages()
 	//Load images for game that aren't spritesheets
 	loadObjectImages()
 	//Load images for the visible sound bubbles/other sound images
