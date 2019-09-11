@@ -44,6 +44,11 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 		currentLevel.rooms[currentLevel.currentRoomIndex].enemies[i].eyeRender(viewCanvas, imd)
 	}
 
+	// Render floating UI
+	for i := 0; i < len(currentLevel.rooms[currentLevel.currentRoomIndex].entrances); i++ {
+		currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].render(viewCanvas)
+	}
+
 	if currentLevel.rooms[currentLevel.currentRoomIndex].hasRain {
 		renderSplashes(viewCanvas)
 	}

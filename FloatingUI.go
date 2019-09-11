@@ -47,15 +47,16 @@ func (f *FloatingUI) render(viewCanvas *pixelgl.Canvas) {
 }
 
 func (f *FloatingUI) update(dt float64) {
+	f.center = pixel.V(f.pos.X+(f.size.X/2), f.pos.Y+(f.size.Y/2))
 	if f.bouncingUp {
 		if f.currentBounceOffset < f.bounceRange {
-			f.currentBounceOffset += 1. * dt
+			f.currentBounceOffset += 5. * dt
 		} else {
 			f.bouncingUp = false
 		}
 	} else {
 		if f.currentBounceOffset > (-1. * f.bounceRange) {
-			f.currentBounceOffset -= 1. * dt
+			f.currentBounceOffset -= 5. * dt
 		} else {
 			f.bouncingUp = true
 		}

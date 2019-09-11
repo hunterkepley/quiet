@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/faiface/pixel"
-	//"github.com/faiface/pixel/pixelgl"
+	"github.com/faiface/pixel/pixelgl"
 )
 
 /**
@@ -16,4 +16,23 @@ type Entrance struct {
 	floatingUI FloatingUI
 	roomIndex  int // What room to switch to in the current level, if -1, changes level instead
 	levelIndex int // What level to switch to, if -1, changes room instead
+}
+
+func createEntrance(pos pixel.Vec, size pixel.Vec, bounceRange float64, roomIndex int, levelIndex int) Entrance {
+	floatingUIPosition := pixel.V((pos.X+size.X/2.)-(floatingImages.e.Bounds().Size().X/2), pos.Y+size.Y)
+	return Entrance{
+		pos,
+		size,
+		createFloatingUI(floatingUIPosition, floatingImages.e, bounceRange),
+		roomIndex,
+		levelIndex,
+	}
+}
+
+func (e *Entrance) update(dt float64) {
+	e.floatingUI.update(dt)
+}
+
+func (e *Entrance) render(viewCanvas *pixelgl.Canvas) {
+	e.floatingUI.render(viewCanvas)
 }
