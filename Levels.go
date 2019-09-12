@@ -25,7 +25,7 @@ func loadLevels() {
 
 					},
 					[]Entrance{ // Entrances in the room
-						createEntrance(pixel.V(167.5, 211), pixel.V(70, 85), 15., 1, -1),
+						createEntrance(pixel.V(340, 421), pixel.V(70, 85), 15., 1, -1),
 					},
 					pixel.V(50., 50.), // Player starting position
 					true,              // Has rain

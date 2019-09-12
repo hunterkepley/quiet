@@ -47,6 +47,13 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 	// Render floating UI
 	for i := 0; i < len(currentLevel.rooms[currentLevel.currentRoomIndex].entrances); i++ {
 		currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].render(viewCanvas)
+		imd.Color = colornames.Cyan
+		width := 1.
+		for i := 0; i < len(currentLevel.rooms[currentLevel.currentRoomIndex].entrances); i++ {
+			z := pixel.V(currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].size.X+currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].pos.X, currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].size.Y+currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].pos.Y)
+			imd.Push(currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].pos, z)
+			imd.Rectangle(width)
+		}
 	}
 
 	if currentLevel.rooms[currentLevel.currentRoomIndex].hasRain {
