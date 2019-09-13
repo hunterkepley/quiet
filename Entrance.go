@@ -19,7 +19,7 @@ type Entrance struct {
 }
 
 func createEntrance(pos pixel.Vec, size pixel.Vec, bounceRange float64, roomIndex int, levelIndex int) Entrance {
-	floatingUIPosition := pixel.V(pos.X, pos.Y)
+	floatingUIPosition := pixel.V(pos.X, pos.Y+size.Y)
 	return Entrance{
 		pos,
 		size,

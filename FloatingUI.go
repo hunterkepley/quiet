@@ -28,8 +28,8 @@ func createFloatingUI(pos pixel.Vec, pic pixel.Picture, bounceRange float64) Flo
 	center := pixel.V(pos.X+(size.X/2), pos.Y+(size.Y/2))
 	return FloatingUI{
 		pos,
-		center,
 		size,
+		center,
 		sprite,
 		pic,
 		bounceRange,
@@ -55,7 +55,7 @@ func (f *FloatingUI) update(dt float64) {
 			f.bouncingUp = false
 		}
 	} else {
-		if f.currentBounceOffset > (-1. * f.bounceRange) {
+		if f.currentBounceOffset > (0) {
 			f.currentBounceOffset -= 5. * dt
 		} else {
 			f.bouncingUp = true
