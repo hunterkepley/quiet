@@ -136,7 +136,7 @@ func (e *Enemy) render(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	sprite := e.animation.animate(dt)
 	sprite.Draw(viewCanvas, mat)
 	// Render nodes, temporary
-	for _, j := range e.nodes {
+	for _, j := range e.currentPath {
 		j.render(imd)
 	}
 }

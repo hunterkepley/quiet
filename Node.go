@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	maxNodePosition = pixel.V(204, 153)
+	maxNodePosition = pixel.V(78, 59)
 )
 
 //Node ... A* nodes
@@ -138,7 +138,7 @@ func astar(start int, end int, nodes []Node, enemySize pixel.Vec) []Node { // st
 			}
 
 			// Create new node
-			newNode := createNode(pixel.V(nodePosition.X*5, nodePosition.Y*5), pixel.V(5., 5.), nodes[int(nodePosition.X+(nodePosition.Y*maxNodePosition.X))].passable, nodePosition, currentNode)
+			newNode := createNode(pixel.V(nodePosition.X*10, nodePosition.Y*10), pixel.V(10., 10.), nodes[int(nodePosition.X+(nodePosition.Y*maxNodePosition.X))].passable, nodePosition, currentNode)
 
 			// Append
 			children = append(children, newNode)
