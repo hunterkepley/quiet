@@ -8,6 +8,7 @@ import (
 type Room struct {
 	objects        []Object
 	enemies        []Enemy
+	entrances      []Entrance
 	playerStartPos pixel.Vec
 	hasRain        bool
 	rainDeadZones  []pixel.Rect
@@ -18,12 +19,13 @@ type Room struct {
 	hasSoundWaves  bool
 }
 
-func createRoom(objects []Object, enemies []Enemy, playerStartPos pixel.Vec, hasRain bool, rainDeadZones []pixel.Rect, shader string, exec func(player *Player), hasSoundWaves bool) Room {
+func createRoom(objects []Object, enemies []Enemy, entrances []Entrance, playerStartPos pixel.Vec, hasRain bool, rainDeadZones []pixel.Rect, shader string, exec func(player *Player), hasSoundWaves bool) Room {
 	rainTimer := 0.000001
 	rainTimerMax := rainTimer
 	return Room{
 		objects,
 		enemies,
+		entrances,
 		playerStartPos,
 		hasRain,
 		rainDeadZones,

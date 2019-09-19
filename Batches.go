@@ -26,7 +26,14 @@ type ObjectBatches struct {
 
 // SoundWaveBatches ... The batches for the sound waves (waves and trails)
 type SoundWaveBatches struct {
-	soundWaveBTrailBatch *pixel.Batch
+	soundWaveBTrailBatch  *pixel.Batch
+	soundWaveRTrailBatch  *pixel.Batch
+	soundWaveLTrailBatch  *pixel.Batch
+	soundWaveUTrailBatch  *pixel.Batch
+	soundWaveTRTrailBatch *pixel.Batch
+	soundWaveBLTrailBatch *pixel.Batch
+	soundWaveTLTrailBatch *pixel.Batch
+	soundWaveBRTrailBatch *pixel.Batch
 }
 
 func loadPlayerBatches() {
@@ -48,5 +55,12 @@ func loadObjectBatches() {
 func loadSoundWaveBatches() {
 	soundWaveBatches = SoundWaveBatches{
 		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveBTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveRTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveLTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveUTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveTRTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveBLTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveTLTrailSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, playerSpritesheets.soundWaveBRTrailSheet.sheet),
 	}
 }

@@ -5,10 +5,11 @@ import (
 )
 
 var (
-	objectImages L1ObjectImages
-	menuImages   MenuImages
-	soundImages  SoundImages
-	enemyImages  EnemyImages
+	objectImages   L1ObjectImages
+	menuImages     MenuImages
+	soundImages    SoundImages
+	enemyImages    EnemyImages
+	floatingImages FloatingImages
 )
 
 //L1ObjectImages ... All the non-spritesheet images in the game in level 1
@@ -44,6 +45,11 @@ type MenuImages struct {
 	title pixel.Picture
 }
 
+//FloatingImages ... All the floating UI in the game (Like an E above a door)
+type FloatingImages struct {
+	e pixel.Picture
+}
+
 //LarvaImages ... All the larva enemy images in the game
 type LarvaImages struct {
 	stillLeft pixel.Picture
@@ -53,6 +59,12 @@ type LarvaImages struct {
 type EnemyImages struct {
 	larvaImages LarvaImages
 	eye         pixel.Picture
+}
+
+func loadFloatingImages() {
+	floatingImages = FloatingImages{
+		loadPicture("./Resources/Art/UI/Floating/E.png"),
+	}
 }
 
 func loadObjectImages() {

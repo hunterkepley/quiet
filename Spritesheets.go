@@ -23,8 +23,15 @@ type PlayerSpritesheets struct {
 	playerIdleUpSheet    Spritesheet
 	playerIdleDownSheet  Spritesheet
 	playerIdleLeftSheet  Spritesheet
-	// Sound wave stuff
-	soundWaveBTrailSheet Spritesheet
+
+	soundWaveBTrailSheet  Spritesheet
+	soundWaveRTrailSheet  Spritesheet
+	soundWaveLTrailSheet  Spritesheet
+	soundWaveUTrailSheet  Spritesheet
+	soundWaveTRTrailSheet Spritesheet
+	soundWaveBLTrailSheet Spritesheet
+	soundWaveTLTrailSheet Spritesheet
+	soundWaveBRTrailSheet Spritesheet
 }
 
 //LarvaSpriteSheets ... All the larva spritesheets in the game
@@ -33,6 +40,7 @@ type LarvaSpriteSheets struct {
 	rightSpriteSheet            Spritesheet
 	attackRaiseSpriteSheetLeft  Spritesheet
 	attackRaiseSpriteSheetRight Spritesheet
+	shockWaveSpriteSheet        Spritesheet
 }
 
 //EnemySpriteSheets ... All the enemy spritesheets in the game
@@ -57,15 +65,30 @@ func loadPlayerSpritesheets() {
 	playerIdleDownSheet := loadPicture("./Resources/Art/Player/idle_down.png")
 	playerIdleLeftSheet := loadPicture("./Resources/Art/Player/idle_left.png")
 
-	// Sound wave trail sheets
+	// Soundwave spritesheets
 	soundWaveBTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_b_trail_sheet.png")
+	soundWaveRTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_r_trail_sheet.png")
+	soundWaveLTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_l_trail_sheet.png")
+	soundWaveUTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_u_trail_sheet.png")
+	soundWaveTRTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_tr_trail_sheet.png")
+	soundWaveBLTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_bl_trail_sheet.png")
+	soundWaveTLTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_tl_trail_sheet.png")
+	soundWaveBRTrailSheet := loadPicture("./Resources/Art/Player/sound_wave_br_trail_sheet.png")
+
 	playerSpritesheets = PlayerSpritesheets{
 		createSpriteSheet(playerIdleRightSheet, 4),
 		createSpriteSheet(playerIdleUpSheet, 4),
 		createSpriteSheet(playerIdleDownSheet, 4),
 		createSpriteSheet(playerIdleLeftSheet, 4),
-		// Sound wave trail sheets
+
 		createSpriteSheet(soundWaveBTrailSheet, 4),
+		createSpriteSheet(soundWaveRTrailSheet, 4),
+		createSpriteSheet(soundWaveLTrailSheet, 4),
+		createSpriteSheet(soundWaveUTrailSheet, 4),
+		createSpriteSheet(soundWaveTRTrailSheet, 4),
+		createSpriteSheet(soundWaveBLTrailSheet, 4),
+		createSpriteSheet(soundWaveTLTrailSheet, 4),
+		createSpriteSheet(soundWaveBRTrailSheet, 4),
 	}
 }
 
@@ -75,6 +98,7 @@ func loadEnemySpriteSheets() {
 	larvaRightSheet := loadPicture("./Resources/Art/Enemies/Larva/right_spritesheet.png")
 	larvaAttackRaiseSheetLeft := loadPicture("./Resources/Art/Enemies/Larva/attack_raise_spritesheet_left.png")
 	larvaAttackRaiseSheetRight := loadPicture("./Resources/Art/Enemies/Larva/attack_raise_spritesheet_right.png")
+	shockWaveSpritesheet := loadPicture("./Resources/Art/Enemies/Larva/shock_wave_spritesheet.png")
 	eyeLookingSheet := loadPicture("./Resources/Art/Enemies/eye_looking.png")
 	eyeOpeningSheet := loadPicture("./Resources/Art/Enemies/eye_opening.png")
 	eyeClosingSheet := loadPicture("./Resources/Art/Enemies/eye_closing.png")
@@ -82,8 +106,9 @@ func loadEnemySpriteSheets() {
 		LarvaSpriteSheets{
 			createSpriteSheet(larvaLeftSheet, 4),
 			createSpriteSheet(larvaRightSheet, 4),
-			createSpriteSheet(larvaAttackRaiseSheetLeft, 7),
-			createSpriteSheet(larvaAttackRaiseSheetRight, 4),
+			createSpriteSheet(larvaAttackRaiseSheetLeft, 6),
+			createSpriteSheet(larvaAttackRaiseSheetRight, 6),
+			createSpriteSheet(shockWaveSpritesheet, 5),
 		},
 		createSpriteSheet(eyeLookingSheet, 12),
 		createSpriteSheet(eyeOpeningSheet, 4),
