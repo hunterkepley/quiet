@@ -22,7 +22,7 @@ func createLevel(rooms []Room) Level {
 	}
 }
 
-func (l *Level) updateRoom(player *Player, dt float64, win *pixelgl.Window) {
+func (l *Level) updateRoom(player *Player, dt float64, win *pixelgl.Window, viewCanvas *pixelgl.Canvas) {
 	for i := 0; i < len(l.rooms[l.currentRoomIndex].objects); i++ {
 		l.rooms[l.currentRoomIndex].objects[i].update(player)
 	}
@@ -30,7 +30,7 @@ func (l *Level) updateRoom(player *Player, dt float64, win *pixelgl.Window) {
 		l.rooms[l.currentRoomIndex].enemies[i].update(dt, player.soundEmitter.waves, player)
 	}
 	for i := 0; i < len(l.rooms[l.currentRoomIndex].entrances); i++ {
-		l.rooms[l.currentRoomIndex].entrances[i].update(dt)
+		l.rooms[l.currentRoomIndex].entrances[i].update(win, viewCanvas, dt)
 	}
 	l.rooms[l.currentRoomIndex].exec(player)
 	if l.rooms[l.currentRoomIndex].hasRain {

@@ -1,6 +1,9 @@
 package main
 
-import "github.com/faiface/pixel"
+import (
+	"github.com/faiface/pixel"
+	"github.com/faiface/pixel/pixelgl"
+)
 
 var (
 	levels = []Level{}
@@ -25,7 +28,7 @@ func loadLevels() {
 
 					},
 					[]Entrance{ // Entrances in the room
-						createEntrance(pixel.V(340, 421), pixel.V(70, 95), 5., 1, -1),
+						createEntrance(pixel.V(340, 421), pixel.V(70, 95), 5., 1, -1, pixelgl.KeyE),
 					},
 					pixel.V(50., 50.), // Player starting position
 					true,              // Has rain
