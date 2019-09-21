@@ -1,2 +1,6 @@
-enemy attack speed not changing
-do sprite batching for sound waves and sound wave trails bc lag
+enemy attack speed not changing -- DONE
+do sprite batching for sound waves and sound wave trails bc lag -- DONE
+spritebatch splashes from rain to increase performance
+work on player taking damage
+work on death screen
+work on saving/loading/restarting from dying

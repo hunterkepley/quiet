@@ -54,7 +54,9 @@ func (e *Entrance) playerCollision(win *pixelgl.Window, viewCanvas *pixelgl.Canv
 		e.renderFloatingUI = true
 
 		if win.Pressed(e.key) {
-			currentLevel.changeRoom(1, &player, viewCanvas)
+			if e.levelIndex == -1 {
+				currentLevel.changeRoom(e.roomIndex, &player, viewCanvas)
+			}
 			//go runMusic() //should start playing the game song//DISABLED
 			//go switchSong(1)
 		}

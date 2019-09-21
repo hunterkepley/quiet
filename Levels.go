@@ -73,12 +73,25 @@ func loadLevels() {
 						createEnemy(pixel.V(300., 50.), enemyImages.larvaImages.stillLeft, 1., 20., 5., 0.15, 0.5, 0.1, 5., 80.),
 					},
 					[]Entrance{
-						// Empty for now
+						createEntrance(pixel.V(150, 150), pixel.V(50, 50), 5., 2, -1, pixelgl.KeyE),
 					},
 					pixel.V(100., 100.),
 					false,
 					[]pixel.Rect{},
 					grayscaleShader,
+					l1r2,
+					true,
+				),
+				createRoom( // Inside 2? Testing room for now
+					[]Object{
+						createObject(pixel.V(100., 180.), objectImages.box1, 2., false, false, true, true, 15.),
+					},
+					[]Enemy{},
+					[]Entrance{},
+					pixel.V(100., 100.),
+					false,
+					[]pixel.Rect{},
+					stormShader,
 					l1r2,
 					true,
 				),
