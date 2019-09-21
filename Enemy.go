@@ -304,8 +304,8 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 							}*/
 						}
 					}
-					fmt.Println("start: ", e.nodes[nodeIndexStart].passable)
-					fmt.Println("end: ", e.nodes[nodeIndexEnd].passable)
+					//fmt.Println("start: ", e.nodes[nodeIndexStart].passable)
+					//fmt.Println("end: ", e.nodes[nodeIndexEnd].passable)
 					e.currentPath = astar(nodeIndexStart, nodeIndexEnd, e.nodes, e.size)
 				}
 			}
