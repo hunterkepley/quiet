@@ -205,12 +205,12 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 								nodeIndexStart = nI
 								fmt.Println("Start node: ", nI)
 							}
-						} else {
+						} /*else {
 							if nI < int(maxNodePosition.X*maxNodePosition.Y) {
 								nodeIndexStart = nI
 								fmt.Println("NOT PASSABLE, Start node: ", nI)
 							}
-						}
+						}*/
 						/*else if nodeIndexStart == 0 { //testing
 							fmt.Println("start node still zero, setting to enemy current pos")
 							nodeIndexStart = nI
@@ -224,12 +224,12 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 								nodeIndexEnd = nI
 								fmt.Println("End node: ", nI)
 							}
-						} else {
+						} /*else {
 							if nI < int(maxNodePosition.X*maxNodePosition.Y) {
 								nodeIndexEnd = nI
 								fmt.Println("NOT PASSABLE, End node: ", nI)
 							}
-						}
+						}*/
 						/*else if nodeIndexEnd == 0 { //testing
 							fmt.Println("end node still zero setting to soundwave start pos")
 							nodeIndexEnd = nI
@@ -273,12 +273,12 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 									nodeIndexStart = nI
 									fmt.Println("Start node: ", nI)
 								}
-							} else {
+							} /*else {
 								if nI < int(maxNodePosition.X*maxNodePosition.Y) {
 									nodeIndexStart = nI
 									fmt.Println("NOT PASSABLE, Start node: ", nI)
 								}
-							}
+							}*/
 							/*else if nodeIndexStart == 0 { //testing
 								fmt.Println("start node still zero, setting to enemy current pos")
 								nodeIndexStart = nI
@@ -292,12 +292,12 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 									nodeIndexEnd = nI
 									fmt.Println("End node: ", nI)
 								}
-							} else {
+							} /*else {
 								if nI < int(maxNodePosition.X*maxNodePosition.Y) {
 									nodeIndexEnd = nI
 									fmt.Println("NOT PASSABLE, End node: ", nI)
 								}
-							}
+							}*/
 							/*else if nodeIndexEnd == 0 { //testing
 								fmt.Println("end node still zero setting to soundwave start pos")
 								nodeIndexEnd = nI

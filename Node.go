@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 
 	"github.com/faiface/pixel"
@@ -105,6 +106,7 @@ func astar(start int, end int, nodes []Node, enemySize pixel.Vec) []Node { // st
 
 		// Found the goal
 		if currentNode.index == nodes[end].index {
+			fmt.Println("found the goal")
 			path := []Node{}
 			current := currentNode
 			emptyNode := Node{}
@@ -174,5 +176,6 @@ func astar(start int, end int, nodes []Node, enemySize pixel.Vec) []Node { // st
 		}
 	}
 	// Didn't work
+	fmt.Println("didn't work")
 	return []Node{}
 }
