@@ -175,6 +175,7 @@ func (e *Enemy) eyeRender(viewCanvas *pixelgl.Canvas, imd *imdraw.IMDraw) {
 	 **/
 }
 
+//NEED TO WORK ON ASSIGNING START & END NODE BC CURRENTLY BUSTED
 func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 	e.moveVector = pixel.V(0, 0)
 	if e.noSoundTimer <= 0. {
