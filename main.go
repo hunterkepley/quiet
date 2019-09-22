@@ -29,7 +29,8 @@ var (
 
 	viewMatrix pixel.Matrix
 
-	currentLevel Level
+	currentLevel      Level
+	currentLevelIndex int
 
 	currentShader string
 

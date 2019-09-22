@@ -38,6 +38,12 @@ func (e *Entrance) update(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt fl
 	if e.renderFloatingUI {
 		e.floatingUI.update(dt)
 	}
+	/*if win.Pressed(e.key) {
+		saveGame(0, 2)
+		loadGame(viewCanvas)
+	}
+	* Disabled, used for testing save/load
+	*/
 }
 
 func (e *Entrance) render(viewCanvas *pixelgl.Canvas) {
