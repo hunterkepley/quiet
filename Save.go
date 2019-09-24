@@ -21,7 +21,7 @@ yeah uh, pretty much it for now lol
 */
 
 func saveGame(level int, room int) {
-	f, err := os.Create("save.txt") // Create file if it doesn't exist
+	f, err := os.Create("game.dat") // Create file if it doesn't exist
 	if err != nil {
 		fmt.Println(err)
 		return
