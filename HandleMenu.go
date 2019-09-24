@@ -16,4 +16,8 @@ func renderMenu(win *pixelgl.Window, viewCanvas *pixelgl.Canvas) {
 
 func updateMenu(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 	mainMenu.update(win, viewCanvas)
+	if win.Pressed(pixelgl.KeyEscape) {
+		gameState = 0
+		loadGame(viewCanvas)
+	}
 }

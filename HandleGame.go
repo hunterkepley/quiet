@@ -62,6 +62,7 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 	}
 	if currentLevel.rooms[currentLevel.currentRoomIndex].hasRain {
 		renderRain(viewCanvas)
+		//drawRainDeadzones = true
 		if drawRainDeadzones {
 			imd.Color = colornames.Cyan
 			width := 1.
@@ -75,6 +76,10 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 
 func updateGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 	player.update(win, dt)
+
+	if win.Pressed(pixelgl.KeyEscape) {
+		saveGame(currentLevelIndex, currentLevel.currentRoomIndex)
+	}
 
 	currentLevel.updateRoom(&player, dt, win, viewCanvas)
 
