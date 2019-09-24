@@ -78,7 +78,7 @@ func loadLevels() {
 					pixel.V(100., 100.),
 					false,
 					[]pixel.Rect{},
-					grayscaleShader,
+					redShader1,
 					l1r2,
 					true,
 				),
