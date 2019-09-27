@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
@@ -313,9 +311,10 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 	e.playerHitHandler(p, dt)
 }
 
+// When the player just gets touched by the dude, nothing to do with the actual attack
 func (e *Enemy) playerHitHandler(p *Player, dt float64) {
 	if circlularCollisionCheck(p.radius, e.animation.sheet.frames[0].Max.X, calculateDistance(p.center, e.center)) {
-		fmt.Println("Egg")
+		p.takeDamage()
 	}
 }
 
