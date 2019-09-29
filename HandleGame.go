@@ -62,6 +62,7 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 	}
 	if currentLevel.rooms[currentLevel.currentRoomIndex].hasRain {
 		renderRain(viewCanvas)
+		//drawRainDeadzones = true
 		if drawRainDeadzones {
 			imd.Color = colornames.Cyan
 			width := 1.
@@ -76,13 +77,11 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 func updateGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 	player.update(win, dt)
 
-	if win.Pressed(pixelgl.KeyE) {
-		currentLevel.changeRoom(1, &player, viewCanvas)
-		//go runMusic() //should start playing the game song//DISABLED
-		//go switchSong(1)
+	if win.Pressed(pixelgl.KeyEscape) {
+		saveGame(currentLevelIndex, currentLevel.currentRoomIndex)
 	}
 
-	currentLevel.updateRoom(&player, dt, win)
+	currentLevel.updateRoom(&player, dt, win, viewCanvas)
 
 	if len(backgroundObjects) >= 1 {
 		for i := 0; i < len(backgroundObjects); i++ {

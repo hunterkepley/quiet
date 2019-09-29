@@ -17,9 +17,10 @@ type Entrance struct {
 	roomIndex        int // What room to switch to in the current level, if -1, changes level instead
 	levelIndex       int // What level to switch to, if -1, changes room instead
 	renderFloatingUI bool
+	key              pixelgl.Button
 }
 
-func createEntrance(pos pixel.Vec, size pixel.Vec, bounceRange float64, roomIndex int, levelIndex int) Entrance {
+func createEntrance(pos pixel.Vec, size pixel.Vec, bounceRange float64, roomIndex int, levelIndex int, key pixelgl.Button) Entrance {
 	floatingUIPosition := pixel.V(pos.X, pos.Y+size.Y)
 	return Entrance{
 		pos,
@@ -28,14 +29,21 @@ func createEntrance(pos pixel.Vec, size pixel.Vec, bounceRange float64, roomInde
 		roomIndex,
 		levelIndex,
 		false,
+		key,
 	}
 }
 
-func (e *Entrance) update(dt float64) {
-	e.playerCollision(&player)
+func (e *Entrance) update(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
+	e.playerCollision(win, viewCanvas, &player)
 	if e.renderFloatingUI {
 		e.floatingUI.update(dt)
 	}
+	/*if win.Pressed(e.key) {
+		saveGame(0, 2)
+		loadGame(viewCanvas)
+	}
+	* Disabled, used for testing save/load
+	*/
 }
 
 func (e *Entrance) render(viewCanvas *pixelgl.Canvas) {
@@ -44,12 +52,21 @@ func (e *Entrance) render(viewCanvas *pixelgl.Canvas) {
 	}
 }
 
-func (e *Entrance) playerCollision(p *Player) {
+func (e *Entrance) playerCollision(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, p *Player) {
 	if p.pos.X < e.pos.X+e.size.X &&
 		p.pos.X+p.size.X > e.pos.X &&
 		p.pos.Y < e.pos.Y+e.size.Y &&
 		p.pos.Y+p.size.Y > e.pos.Y {
 		e.renderFloatingUI = true
+
+		if win.Pressed(e.key) {
+			if e.levelIndex == -1 {
+				currentLevel.changeRoom(e.roomIndex, &player, viewCanvas)
+			}
+			//go runMusic() //should start playing the game song//DISABLED
+			//go switchSong(1)
+		}
+
 	} else {
 		e.renderFloatingUI = false
 	}

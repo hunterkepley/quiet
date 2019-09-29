@@ -364,6 +364,15 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 	if e.attackCooldown > 0. {
 		e.attackCooldown -= 1 * dt
 	}
+
+	e.playerHitHandler(p, dt)
+}
+
+// When the player just gets touched by the dude, nothing to do with the actual attack
+func (e *Enemy) playerHitHandler(p *Player, dt float64) {
+	if circlularCollisionCheck(p.radius, e.animation.sheet.frames[0].Max.X, calculateDistance(p.center, e.center)) {
+		p.takeDamage()
+	}
 }
 
 func (e *Enemy) attackHandler(p *Player, dt float64) {

@@ -18,6 +18,12 @@ type Player struct {
 	currDir            int // Current direction of moving, 0 W, 1 D, 2 S, 3 A
 	canMove            bool
 	activeMovement     bool
+	blink              bool // Blink when damage is taken
+	blinkRender        bool // When to render while blinking
+	blinkTimer         float64
+	blinkTimerMax      float64 // How long each blink lasts
+	blinkAmount        int
+	blinkAmountMax     int // How many times to blink
 	pic                pixel.Picture
 	health             int8
 	maxHealth          int8
@@ -70,6 +76,12 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 		1,
 		movable,
 		false,
+		false,
+		false,
+		0.5,
+		0.5,
+		3,
+		3,
 		pic,
 		100,
 		100,
@@ -149,8 +161,29 @@ func (p *Player) updateHitboxes() { // Also updates size
 func (p *Player) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) { // Draws the player
 	p.batch.Clear()
 	sprite := p.animation.animate(dt)
-	sprite.Draw(p.batch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center).Scaled(p.center, p.imageScale))
-	p.batch.Draw(viewCanvas)
+	if p.blink { // Blink from damage
+		if p.blinkTimer > 0 {
+			p.blinkTimer -= 1. * dt
+		} else {
+			p.blinkTimer = p.blinkTimerMax
+			p.blinkAmount--
+		}
+		if p.blinkTimer > p.blinkTimerMax/2. {
+			p.blinkRender = true
+		} else {
+			p.blinkRender = false
+		}
+		if p.blinkAmount < 0 {
+			p.blinkAmount = p.blinkAmountMax
+			p.blinkTimer = p.blinkTimerMax
+			p.blinkRender = false
+			p.blink = false
+		}
+	}
+	if !p.blinkRender {
+		sprite.Draw(p.batch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center).Scaled(p.center, p.imageScale))
+		p.batch.Draw(viewCanvas)
+	}
 }
 
 func (p *Player) input(win *pixelgl.Window, dt float64) {
@@ -249,5 +282,11 @@ func (p *Player) isMoving(win *pixelgl.Window) {
 		p.activeMovement = true
 	} else {
 		p.activeMovement = false
+	}
+}
+
+func (p *Player) takeDamage() {
+	if !p.blink {
+		p.blink = true
 	}
 }
