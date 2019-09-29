@@ -77,8 +77,16 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 func updateGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 	player.update(win, dt)
 
+<<<<<<< HEAD
 	if win.Pressed(pixelgl.KeyEscape) {
 		saveGame(currentLevelIndex, currentLevel.currentRoomIndex)
+=======
+	if win.Pressed(pixelgl.KeyE) {
+		currentLevel.changeRoom(1, &player, viewCanvas)
+		//this switches the song from the menu music to the song for level 1
+		//this should be changed later, probably implemented in level.go or levels.go for better control of music based on level
+		go switchSong(1)
+>>>>>>> 2be0ab132e72d61cfc9db5ad159aa8026f1aff5c
 	}
 
 	currentLevel.updateRoom(&player, dt, win, viewCanvas)

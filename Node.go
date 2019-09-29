@@ -194,6 +194,37 @@ func newAstar(start int, end int, nodes []Node, enemySize pixel.Vec) []Node {
 	// Add start node
 	open = append(open, startNode)
 
+	// Loop until end is found
+	for len(open) > 0 {
+		currentNode := open[0]
+		currentIndex := 0
+		for i, j := range open {
+			for _, o := range currentLevel.rooms[currentLevel.currentRoomIndex].objects {
+				if j.pos.X < o.pos.X+o.size.X+(enemySize.X/2.) &&
+					j.pos.X+j.size.X > o.pos.X-(enemySize.X/2.) &&
+					j.pos.Y < o.pos.Y+o.size.Y+(enemySize.Y/2.) &&
+					j.pos.Y+j.size.Y > o.pos.Y-(enemySize.Y/2.) {
+					if !o.backgroundObject {
+						j.f += 10000
+					}
+				}
+			}
+			if j.f < currentNode.f {
+				currentNode = j
+				currentIndex = i
+			}
+			totalIterations++
+			if totalIterations > 100000 {
+				nodes[end].index = currentNode.index
+			}
+		}
+
+		// Pop current off open list, add to closed list
+		open = append(open[:currentIndex], open[currentIndex+1:]...)
+		closed = append(closed, currentNode)
+
+	}
 	//failure
+	fmt.Println("FAILURE IN ASTAR")
 	return []Node{}
 }
