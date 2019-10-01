@@ -25,8 +25,8 @@ type Player struct {
 	blinkAmount        int
 	blinkAmountMax     int // How many times to blink
 	pic                pixel.Picture
-	health             int8
-	maxHealth          int8
+	health             int
+	maxHealth          int
 	animation          Animation
 	batch              *pixel.Batch
 	footSizeDiminisher float64 // Diminisher for where the feet are for collisions
@@ -285,8 +285,9 @@ func (p *Player) isMoving(win *pixelgl.Window) {
 	}
 }
 
-func (p *Player) takeDamage() {
+func (p *Player) takeDamage(damage int) {
 	if !p.blink {
 		p.blink = true
 	}
+	p.health -= damage
 }

@@ -33,6 +33,8 @@ type Enemy struct {
 	size                     pixel.Vec
 	pic                      pixel.Picture
 	sprite                   *pixel.Sprite
+	baseDamage               int // Damage when just touched
+	attackDamage             int // Damage when special attack used
 	sizeDiminisher           float64
 	moveSpeed                float64
 	moveVector               pixel.Vec // 1, 1 for moving top right, 0, 1 for moving up, etc.
@@ -71,7 +73,7 @@ type EnemyAnimations struct {
 	meleeAttackAnimation      Animation
 }
 
-func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveSpeed float64, noSoundTimer float64, moveAnimationSpeed float64, idleAnimationSpeed float64, attackAnimationSpeed float64, attackCooldown float64, attackCheckRadius float64) Enemy {
+func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveSpeed float64, noSoundTimer float64, moveAnimationSpeed float64, idleAnimationSpeed float64, attackAnimationSpeed float64, attackCooldown float64, attackCheckRadius float64, baseDamage int, attackDamage int) Enemy {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
@@ -83,6 +85,8 @@ func createEnemy(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, moveS
 		size,
 		pic,
 		sprite,
+		baseDamage,
+		attackDamage,
 		sizeDiminisher,
 		moveSpeed,
 		pixel.ZV,
@@ -314,7 +318,7 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 // When the player just gets touched by the dude, nothing to do with the actual attack
 func (e *Enemy) playerHitHandler(p *Player, dt float64) {
 	if circlularCollisionCheck(p.radius, e.animation.sheet.frames[0].Max.X, calculateDistance(p.center, e.center)) {
-		p.takeDamage()
+		p.takeDamage(e.baseDamage)
 	}
 }
 
