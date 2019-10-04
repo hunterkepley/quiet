@@ -206,7 +206,8 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 								nodeIndexStart = nI
 								fmt.Println("Start node: ", nI)
 							}
-						} /*else {
+						}
+						/*else {
 							if nI < int(maxNodePosition.X*maxNodePosition.Y) {
 								nodeIndexStart = nI
 								fmt.Println("NOT PASSABLE, Start node: ", nI)
@@ -225,7 +226,36 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 								nodeIndexEnd = nI
 								fmt.Println("End node: ", nI)
 							}
-						} /*else {
+						} else {
+							//dumb logic to find out whether the node is left/right up/down
+							left := false
+							down := false
+							ready := false
+							if n.pos.X < e.pos.X {
+								left = true
+							}
+							if n.pos.Y < e.pos.Y {
+								down = true
+							}
+
+							//begin logic to set arbitrary node
+							tempNode1 := n
+							tempNode2 := n
+							for ready {
+								if left {
+									tempNode1.pos.X--
+								} else {
+									tempNode1.pos.X++
+								}
+
+								if down {
+									tempNode2.pos.Y--
+								} else {
+									tempNode2.pos.Y++
+								}
+							}
+						}
+						/*else {
 							if nI < int(maxNodePosition.X*maxNodePosition.Y) {
 								nodeIndexEnd = nI
 								fmt.Println("NOT PASSABLE, End node: ", nI)
