@@ -14,7 +14,7 @@ import (
  */
 
 func loadGame(viewCanvas *pixelgl.Canvas) {
-	split := strings.Split(string(decryptFile("game.dat", "egg")), "\n")
+	split := strings.Split(string(decryptFile("Resources/game.dat", "egg")), "\n")
 	currentLevelIndex, _ = strconv.Atoi(split[0]) // Set current level index
 	currentLevel = levels[currentLevelIndex]      // Set current level to that index
 	room, _ := strconv.Atoi(split[1])

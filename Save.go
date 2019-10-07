@@ -21,7 +21,7 @@ yeah uh, pretty much it for now lol
 */
 
 func saveGame(level int, room int) {
-	f, err := os.Create("game.dat") // Create file if it doesn't exist
+	f, err := os.Create("Resources/game.dat") // Create file if it doesn't exist
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -38,7 +38,7 @@ func saveGame(level int, room int) {
 		fmt.Println(err)
 		return
 	}
-	encryptFile("game.dat", []byte(strconv.Itoa(level)+"\n"+strconv.Itoa(room)), "egg")
+	encryptFile("Resources/game.dat", []byte(strconv.Itoa(level)+"\n"+strconv.Itoa(room)), "egg")
 	// Yes, egg is the password. It doesn't matter because they'd have to decompile
 	// a go exe, which is pretty much impossible because it compiles into machine code
 	// and no one's gone the extra mile to make it translate back into Go. The only

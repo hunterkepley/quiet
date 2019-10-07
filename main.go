@@ -53,6 +53,9 @@ func run() {
 		panic(err)
 	}
 
+	// Set vsync, temporary
+	win.SetVSync(true)
+
 	viewCanvas := pixelgl.NewCanvas(pixel.R(win.Bounds().Min.X, win.Bounds().Min.Y, win.Bounds().W(), win.Bounds().H()))
 
 	loadResources()
