@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 )
@@ -24,6 +26,8 @@ type Player struct {
 	blinkTimerMax      float64 // How long each blink lasts
 	blinkAmount        int
 	blinkAmountMax     int // How many times to blink
+	knockbackTimer     float64
+	knockbackTimerMax  float64 // How long to be knocked back for
 	pic                pixel.Picture
 	health             int
 	maxHealth          int
@@ -82,6 +86,8 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 		0.5,
 		3,
 		3,
+		0,
+		0.5,
 		pic,
 		100,
 		100,
@@ -136,6 +142,14 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 				p.soundTimer = p.soundTimerMax
 			}
 		}
+	}
+
+	if p.knockbackTimer > 0 { // Knockback!
+		p.canMove = false
+		p.knockbackTimer -= 1 * dt
+		fmt.Println(p.knockbackTimer)
+	} else {
+		p.canMove = true
 	}
 
 	// Screen edge collision detection/response
@@ -272,7 +286,9 @@ func (p *Player) input(win *pixelgl.Window, dt float64) {
 		}
 	}
 
-	p.pos = pixel.V(p.pos.X+p.velocity.X*dt, p.pos.Y+p.velocity.Y*dt)
+	if p.canMove {
+		p.pos = pixel.V(p.pos.X+p.velocity.X*dt, p.pos.Y+p.velocity.Y*dt)
+	}
 
 	p.isMoving(win)
 }
@@ -285,9 +301,11 @@ func (p *Player) isMoving(win *pixelgl.Window) {
 	}
 }
 
-func (p *Player) takeDamage(damage int) {
+func (p *Player) takeDamage(damage int, knockbackTimer float64) {
 	if !p.blink {
 		p.blink = true
+		p.knockbackTimerMax = knockbackTimer
+		p.knockbackTimer = p.knockbackTimerMax
 	}
 	p.health -= damage
 }

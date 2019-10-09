@@ -18,6 +18,7 @@ type Options struct {
 	videoOptions VideoOptions
 }
 
+//VideoOptions ... The video options for the game, like vsync
 type VideoOptions struct {
 	vsync bool
 }
