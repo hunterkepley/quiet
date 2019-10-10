@@ -36,7 +36,7 @@ func createEntrance(pos pixel.Vec, size pixel.Vec, bounceRange float64, roomInde
 func (e *Entrance) update(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 	e.playerCollision(win, viewCanvas, &player)
 	if e.renderFloatingUI {
-		e.floatingUI.update(dt, e.size.X)
+		e.floatingUI.update(dt, e.size.X, e.pos.X)
 	}
 	/*if win.Pressed(e.key) {
 		saveGame(0, 2)
