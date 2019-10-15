@@ -367,7 +367,6 @@ func (e *Enemy) attackHandler(p *Player, dt float64) {
 		* TODO:
 		*
 		 * Response from player when attacked (maybe work on death)
-		 * Maybe add a outline of where the enemy can attack?
 		 **/
 	}
 }

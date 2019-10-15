@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 )
@@ -26,8 +24,8 @@ type FloatingUI struct {
 func createFloatingUI(pos pixel.Vec, pic pixel.Picture, bounceRange float64) FloatingUI {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
-	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	center := pixel.V(pos.X+(size.X/2), pos.Y+(size.Y/2))
+	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	return FloatingUI{
 		pos,
 		size,
@@ -49,8 +47,7 @@ func (f *FloatingUI) render(viewCanvas *pixelgl.Canvas) {
 }
 
 func (f *FloatingUI) update(dt float64, entranceWidth float64, entrancePosition float64) {
-	fmt.Println(entranceWidth)
-	f.center = pixel.V(entrancePosition+(entranceWidth/4), f.pos.Y+(f.size.Y/2))
+	f.center = pixel.V(entrancePosition+(entranceWidth/2), f.pos.Y+(f.size.Y/2))
 	if f.bouncingUp {
 		if f.currentBounceOffset < f.bounceRange {
 			f.currentBounceOffset += 5. * dt
