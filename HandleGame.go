@@ -47,14 +47,14 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 	// Render floating UI
 	for i := 0; i < len(currentLevel.rooms[currentLevel.currentRoomIndex].entrances); i++ {
 		currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].render(viewCanvas)
-		/*
-			imd.Color = colornames.Cyan
-			width := 1.
-				for i := 0; i < len(currentLevel.rooms[currentLevel.currentRoomIndex].entrances); i++ {
-					z := pixel.V(currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].size.X+currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].pos.X, currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].size.Y+currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].pos.Y)
-					imd.Push(currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].pos, z)
-					imd.Rectangle(width)
-				}*/
+
+		imd.Color = colornames.Cyan
+		width := 1.
+		for i := 0; i < len(currentLevel.rooms[currentLevel.currentRoomIndex].entrances); i++ {
+			z := pixel.V(currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].size.X+currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].pos.X, currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].size.Y+currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].pos.Y)
+			imd.Push(currentLevel.rooms[currentLevel.currentRoomIndex].entrances[i].pos, z)
+			imd.Rectangle(width)
+		}
 	}
 
 	if currentLevel.rooms[currentLevel.currentRoomIndex].hasRain {
@@ -62,6 +62,7 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 	}
 	if currentLevel.rooms[currentLevel.currentRoomIndex].hasRain {
 		renderRain(viewCanvas)
+		//drawRainDeadzones = true
 		if drawRainDeadzones {
 			imd.Color = colornames.Cyan
 			width := 1.
@@ -76,14 +77,11 @@ func renderGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, imd *imdraw.IMD
 func updateGame(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) {
 	player.update(win, dt)
 
-	if win.Pressed(pixelgl.KeyE) {
-		currentLevel.changeRoom(1, &player, viewCanvas)
-		//this switches the song from the menu music to the song for level 1
-		//this should be changed later, probably implemented in level.go or levels.go for better control of music based on level
-		go switchSong(1)
+	if win.Pressed(pixelgl.KeyEscape) {
+		saveGame(currentLevelIndex, currentLevel.currentRoomIndex)
 	}
 
-	currentLevel.updateRoom(&player, dt, win)
+	currentLevel.updateRoom(&player, dt, win, viewCanvas)
 
 	if len(backgroundObjects) >= 1 {
 		for i := 0; i < len(backgroundObjects); i++ {

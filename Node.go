@@ -183,7 +183,7 @@ func astar(start int, end int, nodes []Node, enemySize pixel.Vec) []Node { // st
 //this function will replace the current astar function whenever it is completed and working
 func newAstar(start int, end int, nodes []Node, enemySize pixel.Vec) []Node {
 	startNode := createNode(nodes[start].pos, nodes[start].size, nodes[start].passable, nodes[start].index, Node{})
-	endNode := createNode(nodes[end].pos, nodes[end].size, nodes[end].passable, nodes[end].index, Node{})
+	//endNode := createNode(nodes[end].pos, nodes[end].size, nodes[end].passable, nodes[end].index, Node{})
 
 	totalIterations := 0
 

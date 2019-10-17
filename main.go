@@ -29,7 +29,8 @@ var (
 
 	viewMatrix pixel.Matrix
 
-	currentLevel Level
+	currentLevel      Level
+	currentLevelIndex int
 
 	currentShader string
 
@@ -51,6 +52,9 @@ func run() {
 	if err != nil {                    // Deals with error
 		panic(err)
 	}
+
+	// Set vsync, temporary
+	win.SetVSync(true)
 
 	viewCanvas := pixelgl.NewCanvas(pixel.R(win.Bounds().Min.X, win.Bounds().Min.Y, win.Bounds().W(), win.Bounds().H()))
 

@@ -24,8 +24,8 @@ type FloatingUI struct {
 func createFloatingUI(pos pixel.Vec, pic pixel.Picture, bounceRange float64) FloatingUI {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
-	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	center := pixel.V(pos.X+(size.X/2), pos.Y+(size.Y/2))
+	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	return FloatingUI{
 		pos,
 		size,
@@ -46,7 +46,8 @@ func (f *FloatingUI) render(viewCanvas *pixelgl.Canvas) {
 	f.sprite.Draw(viewCanvas, mat)
 }
 
-func (f *FloatingUI) update(dt float64) {
+func (f *FloatingUI) update(dt float64, entranceWidth float64, entrancePosition float64) {
+	f.pos = pixel.V(entrancePosition+entranceWidth/2, f.pos.Y)
 	f.center = pixel.V(f.pos.X+(f.size.X/2), f.pos.Y+(f.size.Y/2))
 	if f.bouncingUp {
 		if f.currentBounceOffset < f.bounceRange {

@@ -1,2 +1,19 @@
-enemy attack speed not changing
-do sprite batching for sound waves and sound wave trails bc lag
+enemy attack speed not changing -- DONE
+do sprite batching for sound waves and sound wave trails bc lag -- DONE
+spritebatch splashes from rain to increase performance -- Already a thing, need to improve performance in another way -- DONE
+work on player taking damage
+player blinking when damage taken -- DONE
+work on death screen
+work on saving/loading -- DONE
+restarting when dying
+?? Red shader flashing (when hurt)
+Red shader -- DONE
+Add damage system to enemies -- DONE
+FIX STUPID E FROM NOT BEING CENTERED WTF
+finish knockback for player
+disable player movement when hit -- DONE
+
+Options loading -- DONE
+Options parsing
+Options default
+Options file generation using default

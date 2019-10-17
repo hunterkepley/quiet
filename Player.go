@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 )
@@ -18,9 +20,17 @@ type Player struct {
 	currDir            int // Current direction of moving, 0 W, 1 D, 2 S, 3 A
 	canMove            bool
 	activeMovement     bool
+	blink              bool // Blink when damage is taken
+	blinkRender        bool // When to render while blinking
+	blinkTimer         float64
+	blinkTimerMax      float64 // How long each blink lasts
+	blinkAmount        int
+	blinkAmountMax     int // How many times to blink
+	knockbackTimer     float64
+	knockbackTimerMax  float64 // How long to be knocked back for
 	pic                pixel.Picture
-	health             int8
-	maxHealth          int8
+	health             int
+	maxHealth          int
 	animation          Animation
 	batch              *pixel.Batch
 	footSizeDiminisher float64 // Diminisher for where the feet are for collisions
@@ -70,6 +80,14 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 		1,
 		movable,
 		false,
+		false,
+		false,
+		0.5,
+		0.5,
+		3,
+		3,
+		0,
+		0.5,
 		pic,
 		100,
 		100,
@@ -126,6 +144,14 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 		}
 	}
 
+	if p.knockbackTimer > 0 { // Knockback!
+		p.canMove = false
+		p.knockbackTimer -= 1 * dt
+		fmt.Println(p.knockbackTimer)
+	} else {
+		p.canMove = true
+	}
+
 	// Screen edge collision detection/response
 	if p.center.X-p.size.X/2 < 0. || p.center.X+p.size.X/2 > winWidth { // Left / Right
 		p.pos.X += (p.velocity.X * -1) * dt
@@ -149,8 +175,29 @@ func (p *Player) updateHitboxes() { // Also updates size
 func (p *Player) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) { // Draws the player
 	p.batch.Clear()
 	sprite := p.animation.animate(dt)
-	sprite.Draw(p.batch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center).Scaled(p.center, p.imageScale))
-	p.batch.Draw(viewCanvas)
+	if p.blink { // Blink from damage
+		if p.blinkTimer > 0 {
+			p.blinkTimer -= 1. * dt
+		} else {
+			p.blinkTimer = p.blinkTimerMax
+			p.blinkAmount--
+		}
+		if p.blinkTimer > p.blinkTimerMax/2. {
+			p.blinkRender = true
+		} else {
+			p.blinkRender = false
+		}
+		if p.blinkAmount < 0 {
+			p.blinkAmount = p.blinkAmountMax
+			p.blinkTimer = p.blinkTimerMax
+			p.blinkRender = false
+			p.blink = false
+		}
+	}
+	if !p.blinkRender {
+		sprite.Draw(p.batch, pixel.IM.Rotated(pixel.ZV, p.rotation).Moved(p.center).Scaled(p.center, p.imageScale))
+		p.batch.Draw(viewCanvas)
+	}
 }
 
 func (p *Player) input(win *pixelgl.Window, dt float64) {
@@ -239,7 +286,9 @@ func (p *Player) input(win *pixelgl.Window, dt float64) {
 		}
 	}
 
-	p.pos = pixel.V(p.pos.X+p.velocity.X*dt, p.pos.Y+p.velocity.Y*dt)
+	if p.canMove {
+		p.pos = pixel.V(p.pos.X+p.velocity.X*dt, p.pos.Y+p.velocity.Y*dt)
+	}
 
 	p.isMoving(win)
 }
@@ -250,4 +299,13 @@ func (p *Player) isMoving(win *pixelgl.Window) {
 	} else {
 		p.activeMovement = false
 	}
+}
+
+func (p *Player) takeDamage(damage int, knockbackTimer float64) {
+	if !p.blink {
+		p.blink = true
+		p.knockbackTimerMax = knockbackTimer
+		p.knockbackTimer = p.knockbackTimerMax
+	}
+	p.health -= damage
 }

@@ -38,8 +38,8 @@ func createRain(pos pixel.Vec) Rain {
 	rainChoice := rand.Intn(objectSpritesheets.rainSheet.numberOfFrames)
 	pic := objectSpritesheets.rainSheet.sheet
 	sprite := pixel.NewSprite(pic, objectSpritesheets.rainSheet.frames[rainChoice])
-	rainSpeedY := float64(rand.Intn(1000) + 600)
-	rainSpeedX := float64(rand.Intn(200) + 10)
+	rainSpeedY := float64(rand.Intn(1500) + 600)
+	rainSpeedX := float64(rand.Intn(300) + 10)
 	endHeight := float64(rand.Intn(int(winHeight)))
 	size := pixel.V(pic.Bounds().Size().X/float64(len(objectSpritesheets.rainSheet.frames)), pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
