@@ -210,7 +210,8 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 								nodeIndexStart = nI
 								fmt.Println("Start node: ", nI)
 							}
-						} /*else {
+						}
+						/*else {
 							if nI < int(maxNodePosition.X*maxNodePosition.Y) {
 								nodeIndexStart = nI
 								fmt.Println("NOT PASSABLE, Start node: ", nI)
@@ -229,7 +230,55 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 								nodeIndexEnd = nI
 								fmt.Println("End node: ", nI)
 							}
-						} /*else {
+						} else { //NEED TO SPEND MORE TIME WITH THIS SHIT, NOT SURE IF IT'S EVEN GOOD OR NOT, PLS THINK YOU MONKEY
+							//dumb logic to find out whether the node is left/right up/down
+							left := false
+							//down := false
+							ready := false
+							if n.pos.X < e.pos.X {
+								left = true
+							}
+							if n.pos.Y < e.pos.Y {
+								//down = true
+							}
+
+							//begin logic to set arbitrary node
+							//var nodeIndexArray []int
+							var nodeArray []Node
+							//tempNode1 := n
+							//tempNode2 := n
+							currentIndex := nI
+							for _, m := range e.nodes {
+								//nodeIndexArray = append(nodeIndexArray, aI)
+								nodeArray = append(nodeArray, m)
+							}
+
+							for !ready {
+								if left {
+									//tempNode1.pos.X--
+									currentIndex--
+									//nodeIndexArray[currentIndex]
+									if nodeArray[currentIndex].passable {
+										nodeIndexEnd = currentIndex
+										ready = true
+									}
+								} else {
+									//tempNode1.pos.X++
+									currentIndex++
+									if nodeArray[currentIndex].passable {
+										nodeIndexEnd = currentIndex
+										ready = true
+									}
+								}
+								//this is for whenever i figure out how to calculate the difference b/w rows
+								/*if down {
+									//tempNode2.pos.Y--
+								} else {
+									//tempNode2.pos.Y++
+								}*/
+							}
+						}
+						/*else {
 							if nI < int(maxNodePosition.X*maxNodePosition.Y) {
 								nodeIndexEnd = nI
 								fmt.Println("NOT PASSABLE, End node: ", nI)
