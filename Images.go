@@ -5,11 +5,12 @@ import (
 )
 
 var (
-	objectImages   L1ObjectImages
-	menuImages     MenuImages
-	soundImages    SoundImages
-	enemyImages    EnemyImages
-	floatingImages FloatingImages
+	l1ObjectImages   L1ObjectImages
+	menuImages       MenuImages
+	soundImages      SoundImages
+	enemyImages      EnemyImages
+	floatingImages   FloatingImages
+	throwablesImages ThrowableImages
 )
 
 //L1ObjectImages ... All the non-spritesheet images in the game in level 1
@@ -26,6 +27,11 @@ type L1ObjectImages struct {
 	backWall1    pixel.Picture
 	bottomWall1  pixel.Picture
 	wall1        pixel.Picture
+}
+
+//ThrowablesImages ... All the throwable images [like the pebble] -- things the player can throw
+type ThrowableImages struct {
+	pebble pixel.Picture
 }
 
 //SoundImages ... All the visible sound images
@@ -61,6 +67,12 @@ type EnemyImages struct {
 	eye         pixel.Picture
 }
 
+func loadThrowablesImages() {
+	throwablesImages = ThrowableImages{
+		loadPicture("./Resources/Art/Throwables/pebble.png"),
+	}
+}
+
 func loadFloatingImages() {
 	floatingImages = FloatingImages{
 		loadPicture("./Resources/Art/UI/Floating/E.png"),
@@ -68,7 +80,7 @@ func loadFloatingImages() {
 }
 
 func loadObjectImages() {
-	objectImages = L1ObjectImages{
+	l1ObjectImages = L1ObjectImages{
 		loadPicture("./Resources/Art/Objects/Scenery/l1/box1.png"),
 		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_body.png"),
 		loadPicture("./Resources/Art/Objects/Buildings/l1/gas_roof.png"),

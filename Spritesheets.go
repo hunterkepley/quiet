@@ -5,9 +5,9 @@ import (
 )
 
 var (
-	playerSpritesheets PlayerSpritesheets
-	objectSpritesheets ObjectSpritesheets
-	enemySpriteSheets  EnemySpriteSheets
+	playerSpritesheets   PlayerSpritesheets
+	l1ObjectSpritesheets ObjectSpritesheets
+	enemySpriteSheets    EnemySpriteSheets
 )
 
 /*Spritesheet ... Holds a picture of a spritesheet and the frames of each single picture*/
@@ -121,7 +121,7 @@ func loadObjectSpritesheets() {
 	rainSheet := loadPicture("./Resources/Art/Weather/rain.png")
 	rainSplashSheet := loadPicture("./Resources/Art/Weather/rain_splash.png")
 	trashCanSheet := loadPicture("./Resources/Art/Objects/Scenery/l1/trash_can_sheet.png")
-	objectSpritesheets = ObjectSpritesheets{
+	l1ObjectSpritesheets = ObjectSpritesheets{
 		createSpriteSheet(rainSheet, 5),
 		createSpriteSheet(rainSplashSheet, 6),
 		createSpriteSheet(trashCanSheet, 4),

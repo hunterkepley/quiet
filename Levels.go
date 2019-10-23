@@ -15,14 +15,14 @@ func loadLevels() {
 			[]Room{
 				createRoom( // Outside 1
 					[]Object{ // Objects in room
-						createObject(pixel.V(0., 0.), objectImages.gasStreet, 1., true, false, false, false, 0.),
-						createObject(pixel.V(0., 0.), objectImages.gasFence, 1., true, false, false, true, 100.),
-						createObject(pixel.V(0., 0.), objectImages.gasBody, 1., true, false, false, true, 100.),
-						createObject(pixel.V(0., 0.), objectImages.gasRoof, 1., false, true, false, false, 0.),
-						createObject(pixel.V(0., 0.), objectImages.gasLight, 1., false, true, false, false, 0.),
-						createObject(pixel.V(518., 352.), objectImages.gasLeftPole, 15., false, false, true, true, 100.),
-						createAnimatedObject(pixel.V(654., 411.), objectSpritesheets.trashCanSheet, 0.03, 1., false, true, true, true, 0.),
-						createObject(pixel.V(764., 352.), objectImages.gasRightPole, 15., false, false, true, true, 100.),
+						createObject(pixel.V(0., 0.), l1ObjectImages.gasStreet, 1., true, false, false, false, 0.),
+						createObject(pixel.V(0., 0.), l1ObjectImages.gasFence, 1., true, false, false, true, 100.),
+						createObject(pixel.V(0., 0.), l1ObjectImages.gasBody, 1., true, false, false, true, 100.),
+						createObject(pixel.V(0., 0.), l1ObjectImages.gasRoof, 1., false, true, false, false, 0.),
+						createObject(pixel.V(0., 0.), l1ObjectImages.gasLight, 1., false, true, false, false, 0.),
+						createObject(pixel.V(518., 352.), l1ObjectImages.gasLeftPole, 15., false, false, true, true, 100.),
+						createAnimatedObject(pixel.V(654., 411.), l1ObjectSpritesheets.trashCanSheet, 0.03, 1., false, true, true, true, 0.),
+						createObject(pixel.V(764., 352.), l1ObjectImages.gasRightPole, 15., false, false, true, true, 100.),
 					},
 					[]Enemy{ // Enemies in the room
 
@@ -61,13 +61,13 @@ func loadLevels() {
 				),
 				createRoom( // Inside 1
 					[]Object{
-						createObject(pixel.V(28., 639.), objectImages.backWall1, 1., false, false, true, true, 100.),
-						createObject(pixel.V(28., 0.), objectImages.bottomWall1, 2., false, false, true, true, 100.),
-						createObject(pixel.V(0., 0.), objectImages.wall1, 1., false, false, true, true, 0.),
-						createObject(pixel.V(996., 0.), objectImages.wall1, 1., false, false, true, true, 0.),
-						createObject(pixel.V(0., 0.), objectImages.floor1, 1., true, false, false, false, 0.),
-						createObject(pixel.V(100., 180.), objectImages.box1, 2., false, false, true, true, 15.),
-						createObject(pixel.V(200., 80.), objectImages.box1, 2., false, false, true, true, 15.),
+						createObject(pixel.V(28., 639.), l1ObjectImages.backWall1, 1., false, false, true, true, 100.),
+						createObject(pixel.V(28., 0.), l1ObjectImages.bottomWall1, 2., false, false, true, true, 100.),
+						createObject(pixel.V(0., 0.), l1ObjectImages.wall1, 1., false, false, true, true, 0.),
+						createObject(pixel.V(996., 0.), l1ObjectImages.wall1, 1., false, false, true, true, 0.),
+						createObject(pixel.V(0., 0.), l1ObjectImages.floor1, 1., true, false, false, false, 0.),
+						createObject(pixel.V(100., 180.), l1ObjectImages.box1, 2., false, false, true, true, 15.),
+						createObject(pixel.V(200., 80.), l1ObjectImages.box1, 2., false, false, true, true, 15.),
 					},
 					[]Enemy{
 						createEnemy(pixel.V(300., 50.), enemyImages.larvaImages.stillLeft, 1., 20., 5., 0.15, 0.5, 0.1, 5., 80., 10, 30),
@@ -84,7 +84,7 @@ func loadLevels() {
 				),
 				createRoom( // Inside 2? Testing room for now
 					[]Object{
-						createObject(pixel.V(100., 180.), objectImages.box1, 2., false, false, true, true, 15.),
+						createObject(pixel.V(100., 180.), l1ObjectImages.box1, 2., false, false, true, true, 15.),
 					},
 					[]Enemy{},
 					[]Entrance{},
@@ -92,7 +92,7 @@ func loadLevels() {
 					false,
 					[]pixel.Rect{},
 					redShader1,
-					l1r2,
+					l1r3,
 					true,
 				),
 			},
@@ -103,6 +103,7 @@ func loadLevels() {
 // Functions for rooms
 
 // Level 1
+// Room 1
 func l1r1(player *Player) {
 	// Collision against gas station
 	if player.pos.Y > 422 && player.pos.X > 243 && player.pos.X < 716 {
@@ -112,7 +113,13 @@ func l1r1(player *Player) {
 	}
 }
 
+// Room 2
 func l1r2(player *Player) {
+
+}
+
+// Room 3
+func l1r3(player *Player) {
 
 }
 

@@ -2,12 +2,14 @@ package main
 
 import (
 	"github.com/faiface/pixel"
+	"github.com/faiface/pixel/pixelgl"
 )
 
 //Pebble ... Throwable objects in game that make sound
 type Pebble struct {
 	pos      pixel.Vec
 	size     pixel.Vec
+	center   pixel.Vec
 	pic      pixel.Picture
 	sprite   *pixel.Sprite
 	velocity pixel.Vec
@@ -29,9 +31,10 @@ func createPebble(startPos pixel.Vec, pic pixel.Picture, maxSpeed float64, sound
 	return Pebble{
 		startPos,
 		size,
+		pixel.V(0, 0),
 		pic,
 		sprite,
-		pixel.V(0, 0),
+		pixel.V(1, 1),
 		maxSpeed,
 		// Sound emitter
 		false,
@@ -41,4 +44,17 @@ func createPebble(startPos pixel.Vec, pic pixel.Picture, maxSpeed float64, sound
 		1.,
 		soundDB,
 	}
+}
+
+func (p *Pebble) update(dt float64) {
+	p.pos.X += (p.velocity.X * p.maxSpeed) * dt
+	p.pos.Y += (p.velocity.Y * p.maxSpeed) * dt
+	p.center = pixel.V(p.pos.X+p.size.X/2, p.pos.Y+p.size.Y/2)
+}
+
+func (p *Pebble) render(viewCanvas *pixelgl.Canvas) {
+	mat := pixel.IM.
+		Moved(p.center).
+		Scaled(p.center, imageScale)
+	p.sprite.Draw(viewCanvas, mat)
 }

@@ -35,13 +35,13 @@ type Splash struct {
 }
 
 func createRain(pos pixel.Vec) Rain {
-	rainChoice := rand.Intn(objectSpritesheets.rainSheet.numberOfFrames)
-	pic := objectSpritesheets.rainSheet.sheet
-	sprite := pixel.NewSprite(pic, objectSpritesheets.rainSheet.frames[rainChoice])
+	rainChoice := rand.Intn(l1ObjectSpritesheets.rainSheet.numberOfFrames)
+	pic := l1ObjectSpritesheets.rainSheet.sheet
+	sprite := pixel.NewSprite(pic, l1ObjectSpritesheets.rainSheet.frames[rainChoice])
 	rainSpeedY := float64(rand.Intn(1500) + 600)
 	rainSpeedX := float64(rand.Intn(300) + 10)
 	endHeight := float64(rand.Intn(int(winHeight)))
-	size := pixel.V(pic.Bounds().Size().X/float64(len(objectSpritesheets.rainSheet.frames)), pic.Bounds().Size().Y)
+	size := pixel.V(pic.Bounds().Size().X/float64(len(l1ObjectSpritesheets.rainSheet.frames)), pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	return Rain{
 		pos,
@@ -56,9 +56,9 @@ func createRain(pos pixel.Vec) Rain {
 }
 
 func createSplash(pos pixel.Vec) Splash {
-	pic := objectSpritesheets.rainSplashSheet.sheet
-	sprite := pixel.NewSprite(pic, objectSpritesheets.rainSplashSheet.frames[0])
-	size := pixel.V(pic.Bounds().Size().X/float64(len(objectSpritesheets.rainSplashSheet.frames)), pic.Bounds().Size().Y)
+	pic := l1ObjectSpritesheets.rainSplashSheet.sheet
+	sprite := pixel.NewSprite(pic, l1ObjectSpritesheets.rainSplashSheet.frames[0])
+	size := pixel.V(pic.Bounds().Size().X/float64(len(l1ObjectSpritesheets.rainSplashSheet.frames)), pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	center := pixel.V(pos.X+(size.X/2), pos.Y+(size.Y/2))
 	rainSplashSpeed := 0.04
@@ -69,7 +69,7 @@ func createSplash(pos pixel.Vec) Splash {
 		size,
 		pic,
 		*sprite,
-		createAnimation(objectSpritesheets.rainSplashSheet, rainSplashSpeed),
+		createAnimation(l1ObjectSpritesheets.rainSplashSheet, rainSplashSpeed),
 	}
 }
 

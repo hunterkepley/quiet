@@ -83,9 +83,9 @@ func createObject(pos pixel.Vec, pic pixel.Picture, sizeDiminisher float64, back
 }
 
 func createAnimatedObject(pos pixel.Vec, animationSheet Spritesheet, animationSpeed float64, sizeDiminisher float64, backgroundObject bool, foregroundObject bool, playerCollidable bool, soundCollidable bool, dBDiminisher float64) Object {
-	pic := objectSpritesheets.trashCanSheet.sheet
-	sprite := pixel.NewSprite(pic, objectSpritesheets.trashCanSheet.frames[0])
-	size := pixel.V(pic.Bounds().Size().X/float64(len(objectSpritesheets.trashCanSheet.frames)), pic.Bounds().Size().Y)
+	pic := l1ObjectSpritesheets.trashCanSheet.sheet
+	sprite := pixel.NewSprite(pic, l1ObjectSpritesheets.trashCanSheet.frames[0])
+	size := pixel.V(pic.Bounds().Size().X/float64(len(l1ObjectSpritesheets.trashCanSheet.frames)), pic.Bounds().Size().Y)
 	size = pixel.V(size.X*imageScale, size.Y*imageScale)
 	inFrontOfPlayer := true
 

@@ -47,8 +47,8 @@ func loadPlayerBatches() {
 
 func loadObjectBatches() {
 	objectBatches = ObjectBatches{
-		pixel.NewBatch(&pixel.TrianglesData{}, objectSpritesheets.rainSheet.sheet),
-		pixel.NewBatch(&pixel.TrianglesData{}, objectSpritesheets.rainSplashSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, l1ObjectSpritesheets.rainSheet.sheet),
+		pixel.NewBatch(&pixel.TrianglesData{}, l1ObjectSpritesheets.rainSplashSheet.sheet),
 	}
 }
 

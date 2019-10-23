@@ -37,6 +37,8 @@ type Player struct {
 	imageScale         float64
 	hitBox             pixel.Rect
 	footHitBox         pixel.Rect
+	// Throwables
+	throwables []Pebble
 	// Sound emitter
 	activateSoundEmitter bool
 	allowSoundEmitter    bool
@@ -97,6 +99,7 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 		playerImageScale,
 		pixel.R(0, 0, 0, 0),
 		pixel.R(0, 0, 0, 0),
+		[]Pebble{},
 		true,
 		true,
 		createSoundEmitter(pos),
@@ -119,6 +122,10 @@ func (p *Player) update(win *pixelgl.Window, dt float64) { // Updates player
 		p.input(win, dt)
 	}
 	p.center = pixel.V(p.pos.X+(p.size.X/2), p.pos.Y+(p.size.Y/2))
+
+	for i := range p.throwables {
+		p.throwables[i].update(dt)
+	}
 
 	p.updateHitboxes()
 
@@ -174,6 +181,9 @@ func (p *Player) updateHitboxes() { // Also updates size
 
 func (p *Player) render(win *pixelgl.Window, viewCanvas *pixelgl.Canvas, dt float64) { // Draws the player
 	p.batch.Clear()
+	for i := range p.throwables {
+		p.throwables[i].render(viewCanvas)
+	}
 	sprite := p.animation.animate(dt)
 	if p.blink { // Blink from damage
 		if p.blinkTimer > 0 {
@@ -214,6 +224,10 @@ func (p *Player) input(win *pixelgl.Window, dt float64) {
 
 	if p.canMove {
 		p.velocity = pixel.V(0., 0.)
+	}
+
+	if win.Pressed(pixelgl.KeyQ) {
+		p.throwables = append(p.throwables, createPebble(p.center, throwablesImages.pebble, 50., 15.))
 	}
 
 	if win.Pressed(pixelgl.KeyW) && win.Pressed(pixelgl.KeyD) {
