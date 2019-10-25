@@ -211,16 +211,6 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 								fmt.Println("Start node: ", nI)
 							}
 						}
-						/*else {
-							if nI < int(maxNodePosition.X*maxNodePosition.Y) {
-								nodeIndexStart = nI
-								fmt.Println("NOT PASSABLE, Start node: ", nI)
-							}
-						}*/
-						/*else if nodeIndexStart == 0 { //testing
-							fmt.Println("start node still zero, setting to enemy current pos")
-							nodeIndexStart = nI
-						}*/
 					} else if n.pos.X < soundWaves[i].startPos.X+1 &&
 						n.pos.X+n.size.X > soundWaves[i].startPos.X &&
 						n.pos.Y < soundWaves[i].startPos.Y+1 &&
@@ -233,61 +223,24 @@ func (e *Enemy) update(dt float64, soundWaves []SoundWave, p *Player) {
 						} else { //NEED TO SPEND MORE TIME WITH THIS SHIT, NOT SURE IF IT'S EVEN GOOD OR NOT, PLS THINK YOU MONKEY
 							//dumb logic to find out whether the node is left/right up/down
 							left := false
-							//down := false
 							ready := false
 							if n.pos.X < e.pos.X {
 								left = true
 							}
-							if n.pos.Y < e.pos.Y {
-								//down = true
-							}
 
 							//begin logic to set arbitrary node
-							//var nodeIndexArray []int
-							var nodeArray []Node
-							//tempNode1 := n
-							//tempNode2 := n
-							currentIndex := nI
-							for _, m := range e.nodes {
-								//nodeIndexArray = append(nodeIndexArray, aI)
-								nodeArray = append(nodeArray, m)
-							}
-
+							tempNode := n
 							for !ready {
-								if left {
-									//tempNode1.pos.X--
-									currentIndex--
-									//nodeIndexArray[currentIndex]
-									if nodeArray[currentIndex].passable {
-										nodeIndexEnd = currentIndex
-										ready = true
-									}
-								} else {
-									//tempNode1.pos.X++
-									currentIndex++
-									if nodeArray[currentIndex].passable {
-										nodeIndexEnd = currentIndex
+								if left { //logic to find arbitrary end node when the player is to the left of the enemy
+									//tempNode = e.nodes[tempNode.index - 1] //THIS CAUSES AN ERROR
+									//ASK HUNTER HOW YOU COULD GET THIS TRANSLATED USING PIXEL.VEC BC THAT'S WHAT YOU NEED TO USE
+
+									if tempNode.passable {
 										ready = true
 									}
 								}
-								//this is for whenever i figure out how to calculate the difference b/w rows
-								/*if down {
-									//tempNode2.pos.Y--
-								} else {
-									//tempNode2.pos.Y++
-								}*/
 							}
 						}
-						/*else {
-							if nI < int(maxNodePosition.X*maxNodePosition.Y) {
-								nodeIndexEnd = nI
-								fmt.Println("NOT PASSABLE, End node: ", nI)
-							}
-						}*/
-						/*else if nodeIndexEnd == 0 { //testing
-							fmt.Println("end node still zero setting to soundwave start pos")
-							nodeIndexEnd = nI
-						}*/
 					}
 				}
 				/*if nodeIndexEnd == 0 {
