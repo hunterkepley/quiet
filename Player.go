@@ -227,7 +227,7 @@ func (p *Player) input(win *pixelgl.Window, dt float64) {
 	}
 
 	if win.Pressed(pixelgl.KeyQ) {
-		p.throwables = append(p.throwables, createPebble(p.center, throwablesImages.pebble, 50., 15., p.currDir, p.pos.Y))
+		p.throwables = append(p.throwables, createPebble(pixel.V(p.center.X, p.pos.Y), throwablesImages.pebble, 50., 15., p.currDir, p.pos.Y))
 	}
 
 	if win.Pressed(pixelgl.KeyW) && win.Pressed(pixelgl.KeyD) {

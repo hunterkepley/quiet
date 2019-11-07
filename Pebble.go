@@ -1,6 +1,8 @@
 package main
 
 import (
+	"math"
+
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 )
@@ -8,6 +10,7 @@ import (
 //Pebble ... Throwable objects in game that make sound
 type Pebble struct {
 	pos             pixel.Vec
+	startPos        pixel.Vec
 	size            pixel.Vec
 	center          pixel.Vec
 	pic             pixel.Picture
@@ -15,6 +18,7 @@ type Pebble struct {
 	velocity        pixel.Vec
 	maxSpeed        float64
 	declinationRate float64
+	diminisher      float64
 	direction       int
 	groundLevel     float64
 	gravityVelocity pixel.Vec
@@ -49,13 +53,15 @@ func createPebble(startPos pixel.Vec, pic pixel.Picture, maxSpeed float64, sound
 	}
 	return Pebble{
 		startPos,
+		startPos,
 		size,
 		pixel.V(0, 0),
 		pic,
 		sprite,
 		velocity,
 		maxSpeed,
-		8,             // Decination rate
+		8, // Decination rate
+		1,
 		direction,     // The direction in which the object in thrown
 		groundLevel,   // The level at which the object touches the ground
 		pixel.V(0, 0), // Velocity at which gravity affects the object
@@ -74,7 +80,7 @@ func createPebble(startPos pixel.Vec, pic pixel.Picture, maxSpeed float64, sound
 func (p *Pebble) update(dt float64) {
 
 	bounceMultiplier := 4.
-	gravityVelocityMax := 50.
+	//gravityVelocityMax := 50.
 
 	switch p.direction {
 	case (0):
@@ -93,31 +99,22 @@ func (p *Pebble) update(dt float64) {
 		}
 		break
 	case (1):
-		p.gravityVelocity.X = p.maxSpeed
-		if p.bounce {
-			if p.gravityVelocity.Y < gravityVelocityMax {
-				p.gravityVelocity.Y += p.maxSpeed * bounceMultiplier * dt
-			} else {
-				p.bounce = false
-			}
-		} else {
-			if p.gravityVelocity.Y > -gravityVelocityMax {
-				p.gravityVelocity.Y -= p.maxSpeed * bounceMultiplier * dt
-			} else {
-				p.bounce = true
-				gravityVelocityMax /= 2
-			}
+		sin := math.Abs(math.Sin((p.startPos.X-p.pos.X)/15)) * 100 / p.diminisher
+		if sin <= 2 {
+			p.diminisher++
+		}
+		p.gravityVelocity.X = p.maxSpeed * p.velocity.X
+		p.gravityVelocity.Y = sin
+		if p.maxSpeed > 0 {
+			p.pos.X += (p.velocity.X * p.gravityVelocity.X) * dt
+			p.pos.Y = p.startPos.Y + p.gravityVelocity.Y //+= (p.velocity.Y * p.gravityVelocity.Y) * dt
+			p.center = pixel.V(p.pos.X+p.size.X/2, p.pos.Y+p.size.Y/2)
+			p.maxSpeed -= p.diminisher * dt
+		}
+		if p.maxSpeed <= 45 && sin <= 2 {
+			p.maxSpeed = 0
 		}
 		break
-	}
-	if p.maxSpeed > 0 {
-		p.pos.X += (p.velocity.X * p.gravityVelocity.X) * dt
-		p.pos.Y += (p.velocity.Y * p.gravityVelocity.Y) * dt
-		p.center = pixel.V(p.pos.X+p.size.X/2, p.pos.Y+p.size.Y/2)
-		p.maxSpeed -= p.declinationRate * dt
-	}
-	if p.maxSpeed <= 0 {
-		p.maxSpeed = 0
 	}
 }
 
