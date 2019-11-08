@@ -41,12 +41,14 @@ func createPebble(startPos pixel.Vec, pic pixel.Picture, maxSpeed float64, sound
 	switch direction {
 	case (0):
 		velocity = pixel.V(1, 1)
+		startPos.Y = player.center.Y
 		break
 	case (1):
 		velocity = pixel.V(1, 1)
 		break
 	case (2):
 		velocity = pixel.V(1, -1)
+		startPos.Y = player.center.Y - player.size.Y/2
 		break
 	case (3):
 		velocity = pixel.V(-1, 1)
@@ -79,23 +81,18 @@ func createPebble(startPos pixel.Vec, pic pixel.Picture, maxSpeed float64, sound
 
 func (p *Pebble) update(dt float64) {
 
-	bounceMultiplier := 4.
-	//gravityVelocityMax := 50.
-
 	switch p.direction {
 	case (0):
-		if p.bounce {
-			if p.gravityVelocity.Y < 10 {
-				p.gravityVelocity.Y += p.maxSpeed * bounceMultiplier * dt
-			} else {
-				p.bounce = false
-			}
-		} else {
-			if p.gravityVelocity.Y > 0 {
-				p.gravityVelocity.Y -= p.maxSpeed * bounceMultiplier * dt
-			} else {
-				p.bounce = true
-			}
+		sin := math.Abs(math.Sin((p.startPos.X-p.pos.X)/15)) * 100 / p.diminisher
+		if sin <= 0 {
+			p.diminisher += 0.5
+		}
+		p.gravityVelocity.X = p.maxSpeed * p.velocity.X
+		p.gravityVelocity.Y = sin
+		if p.maxSpeed > 0 {
+			p.pos.Y += p.gravityVelocity.X * p.velocity.X * dt
+			p.center = pixel.V(p.pos.X+p.size.X/2, p.pos.Y+p.size.Y/2)
+			p.maxSpeed -= p.diminisher * dt
 		}
 		break
 	case (1):
@@ -107,7 +104,37 @@ func (p *Pebble) update(dt float64) {
 		p.gravityVelocity.Y = sin
 		if p.maxSpeed > 0 {
 			p.pos.X += (p.velocity.X * p.gravityVelocity.X) * dt
-			p.pos.Y = p.startPos.Y + p.gravityVelocity.Y //+= (p.velocity.Y * p.gravityVelocity.Y) * dt
+			p.pos.Y = p.startPos.Y + p.gravityVelocity.Y
+			p.center = pixel.V(p.pos.X+p.size.X/2, p.pos.Y+p.size.Y/2)
+			p.maxSpeed -= p.diminisher * dt
+		}
+		if p.maxSpeed <= 45 && sin <= 2 {
+			p.maxSpeed = 0
+		}
+		break
+	case (2):
+		sin := math.Abs(math.Sin((p.startPos.X-p.pos.X)/15)) * 100 / p.diminisher
+		if sin <= 0 {
+			p.diminisher += 0.5
+		}
+		p.gravityVelocity.X = p.maxSpeed * p.velocity.X
+		p.gravityVelocity.Y = sin
+		if p.maxSpeed > 0 {
+			p.pos.Y -= p.gravityVelocity.X * p.velocity.X * dt
+			p.center = pixel.V(p.pos.X+p.size.X/2, p.pos.Y+p.size.Y/2)
+			p.maxSpeed -= p.diminisher * dt
+		}
+		break
+	case (3):
+		sin := math.Abs(math.Sin((p.startPos.X-p.pos.X)/15)) * 100 / p.diminisher
+		if sin <= 2 {
+			p.diminisher++
+		}
+		p.gravityVelocity.X = p.maxSpeed * p.velocity.X
+		p.gravityVelocity.Y = sin
+		if p.maxSpeed > 0 {
+			p.pos.X -= (p.velocity.X * p.gravityVelocity.X) * dt
+			p.pos.Y = p.startPos.Y + p.gravityVelocity.Y
 			p.center = pixel.V(p.pos.X+p.size.X/2, p.pos.Y+p.size.Y/2)
 			p.maxSpeed -= p.diminisher * dt
 		}

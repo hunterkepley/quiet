@@ -38,7 +38,9 @@ type Player struct {
 	hitBox             pixel.Rect
 	footHitBox         pixel.Rect
 	// Throwables
-	throwables []Pebble
+	throwables       []Pebble
+	throwCooldown    float64
+	throwCooldownMax float64
 	// Sound emitter
 	activateSoundEmitter bool
 	allowSoundEmitter    bool
@@ -100,6 +102,8 @@ func createPlayer(pos pixel.Vec, cID int, pic pixel.Picture, movable bool, playe
 		pixel.R(0, 0, 0, 0),
 		pixel.R(0, 0, 0, 0),
 		[]Pebble{},
+		0,
+		5,
 		true,
 		true,
 		createSoundEmitter(pos),
@@ -226,8 +230,12 @@ func (p *Player) input(win *pixelgl.Window, dt float64) {
 		p.velocity = pixel.V(0., 0.)
 	}
 
-	if win.Pressed(pixelgl.KeyQ) {
+	if p.throwCooldown > 0 {
+		p.throwCooldown -= 1 * dt
+	}
+	if win.Pressed(pixelgl.KeyQ) && p.throwCooldown <= 0 {
 		p.throwables = append(p.throwables, createPebble(pixel.V(p.center.X, p.pos.Y), throwablesImages.pebble, 50., 15., p.currDir, p.pos.Y))
+		p.throwCooldown = p.throwCooldownMax
 	}
 
 	if win.Pressed(pixelgl.KeyW) && win.Pressed(pixelgl.KeyD) {
