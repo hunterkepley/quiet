@@ -17,6 +17,7 @@ type Pebble struct {
 	sprite          *pixel.Sprite
 	velocity        pixel.Vec
 	maxSpeed        float64
+	maxSpeedBase    float64
 	declinationRate float64
 	diminisher      float64
 	direction       int
@@ -64,6 +65,7 @@ func createPebble(startPos pixel.Vec, pic pixel.Picture, maxSpeed float64, sound
 		sprite,
 		velocity,
 		maxSpeed,
+		maxSpeed,
 		8, // Decination rate
 		1,
 		direction,     // The direction in which the object in thrown
@@ -88,22 +90,20 @@ func (p *Pebble) update(dt float64) {
 	// ~~please don't look~~
 	switch p.direction {
 	case (0):
-		sin := math.Abs(math.Sin((p.startPos.X-p.pos.X)/15)) * 100 / p.diminisher
-		if sin <= 0 {
-			p.diminisher += 0.5
-		}
-		p.gravityVelocity.X = p.maxSpeed * p.velocity.X
-		p.gravityVelocity.Y = sin
+		p.maxSpeed -= 140 * dt
 		if p.maxSpeed > 0 {
-			p.pos.Y += p.gravityVelocity.X * p.velocity.X * dt
+			p.pos.Y += p.maxSpeedBase * dt
 			p.center = pixel.V(p.pos.X+p.size.X/2, p.pos.Y+p.size.Y/2)
 			p.maxSpeed -= p.diminisher * dt
 		}
+		if p.maxSpeed <= 0 {
+			p.maxSpeedBase = 0
+		}
 		break
 	case (1):
-		sin := math.Abs(math.Sin((p.startPos.X-p.pos.X)/15)) * 100 / p.diminisher
+		sin := math.Abs(math.Sin((p.startPos.X-p.pos.X)/80)) * 400 / p.diminisher
 		if sin <= 2 {
-			p.diminisher++
+			p.diminisher += 200 * dt
 		}
 		p.gravityVelocity.X = p.maxSpeed * p.velocity.X
 		p.gravityVelocity.Y = sin
@@ -113,27 +113,25 @@ func (p *Pebble) update(dt float64) {
 			p.center = pixel.V(p.pos.X+p.size.X/2, p.pos.Y+p.size.Y/2)
 			p.maxSpeed -= p.diminisher * dt
 		}
-		if p.maxSpeed <= 45 && sin <= 2 {
+		if p.maxSpeed <= 146 && sin <= 2 {
 			p.maxSpeed = 0
 		}
 		break
 	case (2):
-		sin := math.Abs(math.Sin((p.startPos.X-p.pos.X)/15)) * 100 / p.diminisher
-		if sin <= 0 {
-			p.diminisher += 0.5
-		}
-		p.gravityVelocity.X = p.maxSpeed * p.velocity.X
-		p.gravityVelocity.Y = sin
+		p.maxSpeed -= 140 * dt
 		if p.maxSpeed > 0 {
-			p.pos.Y -= p.gravityVelocity.X * p.velocity.X * dt
+			p.pos.Y -= p.maxSpeedBase * dt
 			p.center = pixel.V(p.pos.X+p.size.X/2, p.pos.Y+p.size.Y/2)
 			p.maxSpeed -= p.diminisher * dt
 		}
+		if p.maxSpeed <= 0 {
+			p.maxSpeedBase = 0
+		}
 		break
 	case (3):
-		sin := math.Abs(math.Sin((p.startPos.X-p.pos.X)/15)) * 100 / p.diminisher
+		sin := math.Abs(math.Sin((p.startPos.X-p.pos.X)/80)) * 400 / p.diminisher
 		if sin <= 2 {
-			p.diminisher++
+			p.diminisher += 200 * dt
 		}
 		p.gravityVelocity.X = p.maxSpeed * p.velocity.X
 		p.gravityVelocity.Y = sin
@@ -143,7 +141,7 @@ func (p *Pebble) update(dt float64) {
 			p.center = pixel.V(p.pos.X+p.size.X/2, p.pos.Y+p.size.Y/2)
 			p.maxSpeed -= p.diminisher * dt
 		}
-		if p.maxSpeed <= 45 && sin <= 2 {
+		if p.maxSpeed <= 146 && sin <= 2 {
 			p.maxSpeed = 0
 		}
 		break
