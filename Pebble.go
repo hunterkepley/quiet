@@ -33,6 +33,8 @@ type Pebble struct {
 	soundDB              float64 // The starting dB of sound currently
 }
 
+// And thus, throwable objects became one of the most filled and complicated structs in the game
+
 func createPebble(startPos pixel.Vec, pic pixel.Picture, maxSpeed float64, soundDB float64, direction int, groundLevel float64) Pebble {
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	size := pixel.V(pic.Bounds().Size().X, pic.Bounds().Size().Y)
@@ -81,6 +83,9 @@ func createPebble(startPos pixel.Vec, pic pixel.Picture, maxSpeed float64, sound
 
 func (p *Pebble) update(dt float64) {
 
+	// This shit got a lil complicated a lil quickly :)
+	// Lots of badly done physics that work somehow,
+	// ~~please don't look~~
 	switch p.direction {
 	case (0):
 		sin := math.Abs(math.Sin((p.startPos.X-p.pos.X)/15)) * 100 / p.diminisher
